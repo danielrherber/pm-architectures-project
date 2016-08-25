@@ -27,8 +27,8 @@ See [INSTALL_PM_Architectures_Project.m](https://github.com/danielrherber/pm-arc
 
 ##### Python #####
 * Python 3.5
-* numpy package? 
-* igraph module?
+* numpy package
+* igraph package
 
 ##### MATLAB File Exchange Submission IDs #####
 * 10922
