@@ -10,9 +10,9 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function INSTALL_pm_architectures_project
+function INSTALL_PM_Architectures_Project
 
-	% warning('off','MATLAB:dispatcher:nameConflict');
+	warning('off','MATLAB:dispatcher:nameConflict');
 
 	% Add project contents to path
 	AddProjectContents
@@ -29,7 +29,7 @@ function INSTALL_pm_architectures_project
 	% Open example
 	OpenExample 
 
-	% warning('on','MATLAB:dispatcher:nameConflict');
+	warning('on','MATLAB:dispatcher:nameConflict');
 
 end
 %--------------------------------------------------------------------------
@@ -91,7 +91,7 @@ end
 function DownloadWebZips(zips,outputdir)
     for k = 1:length(zips)
         % first check if the test file is in the path
-        if isempty(exist(zips(k).test,'file'))
+        if exist(zips(k).test,'file') == 0
             % get data
             url = zips(k).url;
             name = zips(k).name;
