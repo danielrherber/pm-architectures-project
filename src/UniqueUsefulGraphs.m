@@ -18,7 +18,7 @@ if ~exist('N','var'), N = []; end
 Graphs = GenerateFeasibleGraphs(C,R,P,NCS,opts,N);
 
 %% check for colored graph isomorphisms
-[UniqueFeasibleGraphs,typearray] = RemovedColoredIsos(Graphs);
+[UniqueFeasibleGraphs,typearray] = RemovedColoredIsos(Graphs,opts);
 
 %% plot the unique designs
 if isfield(opts,'plotfun')

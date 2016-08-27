@@ -5,6 +5,7 @@
 clear
 clc
 close all
+closeallbio
 
 P = [1 2 3]'; % ports vector 
 R = [3 2 1]'; % replicates vector
@@ -19,7 +20,7 @@ NCS.A = ones(length(P)); % provide potential adjacency matrix
 % options
 opts.algorithm = 'tree_v1';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
-opts.parallel = 1; % 1 to enable parallel computing, 0 to disable it
+opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
 opts.IntPortTypeIsoFilter = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example1_Extra_Constraints(pp,A,infeasibleFlag);
 opts.plotfun = 'circle'; % 'circle' % 'bgl' % 'bio'
@@ -30,6 +31,4 @@ opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to sa
 % provide potential adjacency matrix
 % A(1,1) = 0; % non R-R connections
 
-tic
 UniqueUsefulGraphs;
-toc

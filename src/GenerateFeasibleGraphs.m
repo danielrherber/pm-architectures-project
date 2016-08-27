@@ -49,7 +49,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NCS,opts,varargin)
     
     % loop through the candidate graphs and check if they are
     % feasible/useful
-    parfor i = 1:N
+    parfor (i = 1:N, opts.parallel)
  
         % graph is initially feasible
         unusefulFlag = 0;

@@ -139,20 +139,11 @@ end
 N = size(M,1);
 
 I = ones(N,1);
-if opts.parallel
-    parfor i = 1:N
-        O = M(i,:);
-        O = SortAsPerfectMatching(O); % sort M to make them perfect matchings
-        I(i) = InversePerfectMatchings(O);
-        M(i,:) = O;
-    end
-else 
-    for i = 1:N
-        O = M(i,:);
-        O = SortAsPerfectMatching(O); % sort M to make them perfect matchings
-        I(i) = InversePerfectMatchings(O);
-        M(i,:) = O;
-    end
+parfor (i = 1:N, opts.parallel)
+    O = M(i,:);
+    O = SortAsPerfectMatching(O); % sort M to make them perfect matchings
+    I(i) = InversePerfectMatchings(O);
+    M(i,:) = O;
 end
 
 %% potentially remove, no two perfect indentical PMs should be found

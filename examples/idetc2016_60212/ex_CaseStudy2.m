@@ -6,6 +6,7 @@
 clear
 clc
 close all
+closeallbio
 
 % test number
 num = 3; 
@@ -56,7 +57,7 @@ end
 % options
 opts.algorithm = 'tree_v1'; % 
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
-opts.parallel = 0; % 1 to enable parallel computing, 0 to disable it
+opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
 opts.IntPortTypeIsoFilter = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example2_Extra_Constraints(pp,A,infeasibleFlag);
 opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'
@@ -64,6 +65,4 @@ opts.plotmax = 20; % maximum number of graphs to display/save
 opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
 
-tic
 UniqueUsefulGraphs;
-toc

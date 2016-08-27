@@ -9,43 +9,42 @@
 % Urbana-Champaign
 % Date: 08/20/2016
 %--------------------------------------------------------------------------
-function [UniqueFeasibleGraphs,typearray] = RemovedColoredIsos(Graphs)
+function [UniqueFeasibleGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
 
 disp('Now checking graphs for uniqueness...')
 
-%% import isomorph checking function
-mypath1 = mfoldername(mfilename('fullpath'),'python');
-cd(mypath1)
-py.importlib.import_module('detectiso_func3'); 
+% import isomorphism checking function
+origdir = pwd; % original directory
+pydir = mfoldername(mfilename('fullpath'),'python'); % python directory
+cd(pydir) % change directory
+py.importlib.import_module('detectiso_func4'); % import module 
 
 tic % start timer
 
-% Graphs = fliplr(Graphs);
-
 n = length(Graphs); % number of graphs to check
+if n < 2000 % parallel computing would be slower
+   opts.paralleltemp = 0; 
+else
+   opts.paralleltemp = opts.parallel; 
+end
 typearray =  zeros(n,1);
 Nbin = 1; % number of cores
-v =zeros(1,n); v(1) = 1;
+v = zeros(1,n); v(1) = 1;
 ind = 1;
 bin = cell(1,Nbin); % initialize bins
-iso = cell(1,Nbin);
+% iso = cell(1,Nbin);
 
-% make python lists once
+% compute various metrics once
 pylists = cell(n,1);
 colors = pylists;
-adjs = colors;
 nnodes = zeros(n,1);
 sumadj = nnodes;
-parfor i = 1:n
-    adj = Graphs{i}.A
+parfor (i = 1:n, opts.paralleltemp)
+    adj = Graphs{i}.A;
     nnodes(i) = size(adj,1);
-    colors{i} = Graphs{i}.Ln;
+    colors{i} = uint64(Graphs{i}.Ln);
     sumadj(i) = sum(adj(:));
-end
-pylists = cell(n,1);
-for i = 1:n
-    pyVector = py.numpy.matrixlib.defmatrix.matrix( reshape(Graphs{i}.A,1,[]));
-    pylists{i} = py.numpy.reshape(pyVector, [nnodes(i) , nnodes(i)]);
+    pylists{i} = int8(adj(:)');
 end
 
 % first graph is always unique
@@ -61,14 +60,16 @@ bin{1}.Graphs{1}.colors = colors{1};
 bin{1}.Graphs{1}.sumadj = sumadj(1);
 
 % check remaining graphs for uniqueness
-dispstat('','init')      %Initialization. Does not print anything.
+dispstat('','init') % Initialization. Does not print anything.
+Ndispstat = floor((n-1)/100);
 for i = 2:n
     nnode1 = nnodes(i);
     color1 = colors{i};
     pyadj1 = pylists{i};
     sumadj1 = sumadj(i);
     
-    for c = 1:min(Nbin,ind)
+% 	parfor (c = 1:min(Nbin,ind), Nbin) % this works now but is slow        
+	for c = 1:min(Nbin,ind)
         j = length(bin{c}.Graphs);
         IsoFlag = 0;
         while (j > 0) && (IsoFlag == 0)
@@ -79,7 +80,8 @@ for i = 2:n
                 if cdisFlag
                     if ( bin{c}.Graphs{j}.sumadj == sumadj1 )
                         pyadj2 = bin{c}.Graphs{j}.pylist;
-                        IsoFlag = py.detectiso_func3.detectiso(pyadj1,pyadj2,color1,color2);
+                        IsoFlag = py.detectiso_func4.detectiso(pyadj1,pyadj2,...
+                            color1,color2,nnode1,bin{c}.Graphs{j}.nnode);
                     end
 %                     if IsoFlag
 %                         typearray(i) = bin{c}.Graphs{j}.N;
@@ -89,7 +91,7 @@ for i = 2:n
             j = j - 1;
         end
         results(c) = IsoFlag;
-    end
+	end
     if any(results) % not unique
         v(i) = 0;
     else
@@ -105,7 +107,7 @@ for i = 2:n
             bin{J}.Graphs{1}.pylist = pyadj1;
             bin{J}.Graphs{1}.nnode = nnode1;
             bin{J}.Graphs{1}.colors = color1;        
-            bin{J}.Graphs{1}.sumadj = sumadj1;  
+            bin{J}.Graphs{1}.sumadj = sumadj1;   
         else
             bin{J}.Graphs{end+1}.A = Graphs{i}.A;
             bin{J}.Graphs{end}.L = Graphs{i}.L;
@@ -123,8 +125,9 @@ for i = 2:n
         ind = ind + 1;
     end
     
-
-dispstat(['Percentage complete: ',int2str(i/n*100),' %'])
+    if mod(i,Ndispstat) == 0
+        dispstat(['Percentage complete: ',int2str(i/n*100),' %'])
+    end
     
 end
 
@@ -132,12 +135,9 @@ UniqueFeasibleGraphs = [];
 for c = 1:Nbin
    UniqueFeasibleGraphs = [UniqueFeasibleGraphs, bin{c}.Graphs];
 end
-
     
-ttime = toc;
+ttime = toc; % stop the timer
+
+cd(origdir); % return to the original directory
 
 disp(['Found ',num2str(length(UniqueFeasibleGraphs)),' unique graphs in ', num2str(ttime),' s'])
-
-% pctRunOnAll py.list;
-% py.importlib.import_module('multiprocessing'); % import
-% num_cores = py.multiprocessing.cpu_count();
