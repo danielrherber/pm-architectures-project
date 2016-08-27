@@ -6,7 +6,7 @@ Generate the set of unique useful architectures with a perfect matching-based ap
 
 ### Install ###
 * Download the [PM Architectures Project](https://github.com/danielrherber/pm-architectures-project/archive/master.zip)
-* Run [INSTALL_PM_Architectures_Project.m](https://github.com/danielrherber/pm-architectures-project/blob/master/INSTALL_PM_Architectures_Project.m) in the MATLAB Command Window
+* Run [INSTALL_PM_Architectures_Project.m](https://github.com/danielrherber/pm-architectures-project/blob/master/INSTALL_PM_Architectures_Project.m) in the MATLAB Command Window until no errors are seen
 (*automatically adds project files to your MATLAB path, downloads the required MATLAB File Exchange submissions, and checks your Python setup*)
 ```matlab
 INSTALL_PM_Architectures_Project

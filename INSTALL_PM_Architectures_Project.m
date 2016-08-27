@@ -123,6 +123,7 @@ function PythonSetupCheck
 	    disp('Check "Add Python 3.5 to PATH"')
 	    disp('Check "Precompile standard library"')
 	    disp('Also see http://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html')
+	    disp('Python 2.7 has also worked but 3.5 is the supported version')
 	    disp('Press any key when you are done installing Python')
 	    disp(' ')
 	    pause
@@ -134,8 +135,9 @@ function PythonSetupCheck
 	catch
 	    disp('Download package numpy from http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy')
 	    disp('Recommend numpy-1.11.1+mkl-cp35-cp35m-win_amd64.whl for 64-bit MATLAB configuration and Python 3.5')
-	    disp('Open cmd at C:\Users\$USER$\AppData\Local\Programs\Python\Python35\Scripts')
-	    disp('Run the command (assuming the same version as above): pip install $LOCATION$\numpy-1.11.1+mkl-cp35-cp35m-win_amd64.whl')
+	    disp('Installation of numpy requires pip, try running pip in cmd')
+	    disp('You may need to open cmd at C:\Users\%USERNAME%\AppData\Local\Programs\Python\Python35\Scripts')
+	    disp('Run the command (assuming the same version as above): pip install %LOCATION%\numpy-1.11.1+mkl-cp35-cp35m-win_amd64.whl')
 	    disp('See http://stackoverflow.com/questions/27885397 for more info on installing .whl with pip')
 	    disp('Press any key when you are done installing numpy')
 	    disp(' ')
@@ -150,8 +152,9 @@ function PythonSetupCheck
 	catch
 	    disp('Download package python_igraph from http://www.lfd.uci.edu/~gohlke/pythonlibs/#python-igraph')
 	    disp('Recommend python_igraph-0.7.1.post6-cp35-none-win_amd64.whl for 64-bit MATLAB configuration and Python 3.5')
-	    disp('Open cmd at C:\Users\$USER$\AppData\Local\Programs\Python\Python35\Scripts')
-	    disp('Run the command (assuming the same version as above): pip install python_igraph-0.7.1.post6-cp35-none-win_amd64.whl')
+	    disp('Installation of numpy requires pip, try running pip in cmd')
+	    disp('You may need to open cmd at C:\Users\%USERNAME%\AppData\Local\Programs\Python\Python35\Scripts')
+	    disp('Run the command (assuming the same version as above): pip install %LOCATION%\python_igraph-0.7.1.post6-cp35-none-win_amd64.whl')
 	    disp('See http://stackoverflow.com/questions/27885397 for more info on installing .whl with pip')
 	    disp('Press any key when you are done installing python_igraph')
 	    disp(' ')
@@ -162,7 +165,7 @@ function PythonSetupCheck
 end
 %--------------------------------------------------------------------------
 function OpenExample
-	disp('--- Opening an example')
+	disp('--- Setup complete, opening an example')
 	disp(' ')
 
 	% open case study 1
