@@ -5,9 +5,9 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Author: Daniel R. Herber, Graduate Student, University of Illinois at
-% Urbana-Champaign
-% Date: 08/20/2016
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag)
 
@@ -20,10 +20,10 @@ function [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag)
     W = ConnectivityMatrix(A,N);
     
     % check if the graph is completely connected
-    if (sum(W(:)) == N^2);
+    if (sum(W(:)) == N^2)
         % don't remove any vertices
     else
-        S = find(pp.NCS.necessary);
+        S = find(pp.NSC.necessary);
         for i = S
             R = [R;find(W(:,i) == 0)];
         end
@@ -34,8 +34,8 @@ function [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag)
             A(:,R(j)) = []; % remove columns
             pp.labels.C(R(j)) = []; % remove labels
             pp.labels.N(R(j)) = []; % remove labels
-%             if isfield(pp.NCS,'counts')
-            pp.NCS.Vfull(R(j)) = [];
+%             if isfield(pp.NSC,'counts')
+            pp.NSC.Vfull(R(j)) = [];
 %             end
         end
         

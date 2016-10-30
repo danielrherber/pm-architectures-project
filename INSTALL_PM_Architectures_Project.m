@@ -20,6 +20,9 @@ function INSTALL_PM_Architectures_Project
 	% FX submissions
 	FXSubmissions
 
+    % Check Matlab's isomorphism function
+    % CheckMatlabIsomorphismFunction
+    
 	% Python
 	PythonSetupCheck
 
@@ -110,11 +113,37 @@ function DownloadWebZips(zips,outputdir)
         end
     end
 end
+%-------------------------------------------------------------------------- 
+function CheckMatlabIsomorphismFunction
+    disp('--- Checking Matlab''s isomorphism function')
+        
+    product = ver;
+    % fix the bug in R2016b
+    if strcmp(product(1).Release,'(R2016b)')
+        graph;
+        A = regexp( fileread('isomorphism.m'), '\n', 'split');
+        A{196} = 'binSize = binSize(bins); binSize = binSize(:);';
+        fid = fopen('isomorphism.m', 'w');
+        fprintf(fid, '%s\n', A{:});
+        fclose(fid);
+    end
+    
+    % check if isomorphism is available
+    try 
+        graph;
+        isomorphism(graph(1,1),graph(1,1));
+        disp('opts.isomethod = ''Matlab'' is available')
+    catch
+        disp('opts.isomethod = ''Matlab'' is NOT available')
+    end
+    disp(' ')
+end
 %--------------------------------------------------------------------------
 function PythonSetupCheck
 	disp('--- Checking Python setup')
-	disp(' ')
-
+    
+    CheckFlag = 0;
+    
 	% need Python 3.5
 	[version, ~, ~] = pyversion;
 	if isempty(version)
@@ -127,6 +156,8 @@ function PythonSetupCheck
 	    disp('Press any key when you are done installing Python')
 	    disp(' ')
 	    pause
+    else
+        CheckFlag = CheckFlag + 1;
 	end
 
 	% need numpy
@@ -143,8 +174,14 @@ function PythonSetupCheck
 	    disp(' ')
 	    pause
 	end
-	% try again, errors occurs if numpy is unavailable
-	py.numpy.matrixlib.defmatrix.matrix([]);
+    % try again
+    try
+        py.numpy.matrixlib.defmatrix.matrix([]);
+        CheckFlag = CheckFlag + 1;
+	    disp('numpy is available')
+    catch
+	    disp('numpy is still unavailable')
+    end
 
 	% need python_igraph
 	try
@@ -160,8 +197,23 @@ function PythonSetupCheck
 	    disp(' ')
 	    pause
 	end
-	% try again, errors occurs if python_igraph is unavailable
-	py.igraph.Graph;
+    % try again
+    try
+        py.igraph.Graph;
+        CheckFlag = CheckFlag + 1;
+	    disp('igraph is available')
+    catch
+	    disp('igraph is still unavailable')
+    end
+    
+    % if all required python packages are available
+    if CheckFlag == 3
+        disp('opts.isomethod = ''Python'' is available')
+    else
+        disp('opts.isomethod = ''Python'' is NOT available')
+    end
+    
+	disp(' ')
 end
 %--------------------------------------------------------------------------
 function OpenExample

@@ -5,11 +5,11 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Author: Daniel R. Herber, Graduate Student, University of Illinois at
-% Urbana-Champaign
-% Date: 08/20/2016
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [ports,i] = GenPortsGraph(P,R,C,NCS,i)
+function [ports,i] = GenPortsGraph(P,R,C,NSC,i)
 
 % number of components
 n = sum(R);
@@ -33,8 +33,8 @@ for j = 1:length(R)
             phi = [phi,ind];
         end
         % is this replicate necessary? make the list
-        if isfield(NCS,'necessary')
-            necessary = [necessary,NCS.necessary(j)];
+        if isfield(NSC,'necessary')
+            necessary = [necessary,NSC.necessary(j)];
         end
         % replicate the number of ports for each replicate
         Vfull = [Vfull,P(j)];
@@ -72,28 +72,28 @@ ports.labels.C = labelsC;
 ports.labels.N = labelsCnum;
 
 % network structure constraints
-ports.NCS.Vfull = uint8(Vfull);
+ports.NSC.Vfull = uint8(Vfull);
 
-if isfield(NCS,'necessary')
-    ports.NCS.necessary = uint8(necessary);
+if isfield(NSC,'necessary')
+    ports.NSC.necessary = uint8(necessary);
 else
-	ports.NCS.necessary = zeros(length(P),'uint8'); % no components are necessary
+	ports.NSC.necessary = zeros(length(P),'uint8'); % no components are necessary
 end
 
-if isfield(NCS,'A')
-	ports.NCS.A = uint8(NCS.A);
+if isfield(NSC,'A')
+	ports.NSC.A = uint8(NSC.A);
 else
-    ports.NCS.A = ones(length(P),'uint8'); % all connections are allowed
+    ports.NSC.A = ones(length(P),'uint8'); % all connections are allowed
 end
 
-if isfield(NCS,'self')
-	ports.NCS.self = uint8(NCS.self);
+if isfield(NSC,'self')
+	ports.NSC.self = uint8(NSC.self);
 else
-    ports.NCS.self = uint8(1); % allow self loops
+    ports.NSC.self = uint8(1); % allow self loops
 end
 
-if isfield(NCS,'counts')
-    ports.NCS.counts = uint8(NCS.counts);
+if isfield(NSC,'counts')
+    ports.NSC.counts = uint8(NSC.counts);
 else
-    ports.NCS.counts = uint8(0); % connected need not be unique
+    ports.NSC.counts = uint8(0); % connected need not be unique
 end

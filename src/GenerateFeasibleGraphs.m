@@ -4,21 +4,14 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Author: Daniel R. Herber, Graduate Student, University of Illinois at
-% Urbana-Champaign
-% Date: 08/20/2016
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Graphs = GenerateFeasibleGraphs(C,R,P,NCS,opts,varargin) 
-    
-    tic % start timer for this function
+function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts) 
 
-    % check the variable arguements to the function
-    if isempty(varargin)
-        N = 1000; % 1000 random architectures
-    elseif isempty(varargin{1})
-        N = 1000; % 1000 random architectures
-    else
-        N = varargin{1};
+    if opts.dispflag
+        tic % start timer for this function
     end
     
     % number of ports
@@ -28,14 +21,20 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NCS,opts,varargin)
     Nc = sum(R);
     
     % generate ports graph
-    [ports,~] = GenPortsGraph(P,R,C,NCS,1); 
+    [ports,~] = GenPortsGraph(P,R,C,NSC,1); 
 
     % generate candidate graphs
-    [M,I,N] = GenerateCandidateGraphs(R,P,opts,N,Np,Nc,ports);
+    [M,I,N] = GenerateCandidateGraphs(R,P,opts,Np,Nc,ports);
     
-    % remove basic isomorphism failures   
-    if opts.IntPortTypeIsoFilter
-        [M,I,N] = InitialPortIsoFilter(M,I,ports.phi);
+    % return if no graphs are present
+    if N == 0
+        Graphs = [];
+        return
+    end
+    
+    % remove basic isomorphism failures
+    if opts.portisofilter
+        [M,I,N] = InitialPortIsoFilter(M,I,ports.phi,opts);
     end
     
     % set the custom function if it is present
@@ -73,16 +72,16 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NCS,opts,varargin)
         A = sparse(Icc,Jcc,Vcc,Nc,Nc); 
         A = sign(A + A' + eye(Nc)) - eye(Nc);
         
-        % remove stranded components using NCS.necessary
+        % remove stranded components using NSC.necessary
         if unusefulFlag ~= 1 % only if the graph is currently feasible
             [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag);
         end
 
         % check if the number of connections is correct
         if unusefulFlag ~= 1 % only if the graph is currently feasible
-            if isfield(NCS,'counts') % check if the field exists
-                if NCS.counts == 1 % check if we want this constraint
-                    if ~all(sum(A) == pp.NCS.Vfull)
+            if isfield(NSC,'counts') % check if the field exists
+                if NSC.counts == 1 % check if we want this constraint
+                    if ~all(sum(A) == pp.NSC.Vfull)
                         unusefulFlag = 1; % declare graph infeasible
                     end
                 end
@@ -109,12 +108,18 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NCS,opts,varargin)
     end % end for loop
 
     % remove empty graphs
-    Graphs = Graphs(~cellfun('isempty',Graphs));
+    if exist('Graphs','var')
+        Graphs = Graphs(~cellfun('isempty',Graphs));
+    else
+        Graphs = [];
+        return
+    end
     
-    % stop timer
-    ttime = toc;
+    if opts.dispflag
+        % stop timer
+        ttime = toc;
     
-    % output some stats to the command window
-    disp(['Found ',num2str(length(Graphs)), ' feasible, trimmed graphs in ', num2str(ttime),' s'])
-
+        % output some stats to the command window
+        disp(['Found ',num2str(length(Graphs)), ' feasible, trimmed graphs in ', num2str(ttime),' s'])
+    end
 end % end function

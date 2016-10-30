@@ -15,54 +15,56 @@ switch num
     case 1
         P = [1 1 2 3 4]'; % ports vector
         R = [1 2 2 1 1]'; % replicates vector
-        C = {'P','R', 'G', 'B', 'O'}; % label vector
+        C = {'P','R', 'G', 'B', 'O'}; % label vector     
         % Case Study 2, #1 constraints
-        NCS.necessary = [0 0 0 0 0];
-        NCS.counts = 0;
-        NCS.self = 1; % allow self-loops
-        NCS.A = ones(length(P)); % provide potential adjacency matrix
+        NSC.necessary = [0 0 0 0 0];
+        NSC.counts = 0;
+        NSC.self = 1; % allow self-loops
+        NSC.A = ones(length(P)); % provide potential adjacency matrix
         
     case 2
         P = [1 1 2 3 4]'; % ports vector
         R = [1 2 2 1 1]'; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #2 constraints
-        NCS.necessary = [1 0 0 0 0];
-        NCS.counts = 0;
-        NCS.self = 1; % self-loops
-        NCS.A = ones(length(P)); % provide potential adjacency matrix
+        NSC.necessary = [1 0 0 0 0];
+        NSC.counts = 0;
+        NSC.self = 1; % self-loops
+        NSC.A = ones(length(P)); % provide potential adjacency matrix
         
     case 3
         P = [1 1 2 3 4]'; % ports vector
         R = [1 2 2 1 1]'; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #3 constraints
-        NCS.necessary = [1 1 1 1 1];
-        NCS.counts = 1;
-        NCS.self = 0; % self-loops
-        NCS.A = ones(length(P)); % provide potential adjacency matrix
+        NSC.necessary = [1 1 1 1 1];       
+        NSC.counts = 1;
+        NSC.self = 0; % self-loops
+        NSC.A = ones(length(P)); % provide potential adjacency matrix
         
     case 4
         P = [1 1 2 2 3 4]'; % ports vector
         R = [1 2 1 1 1 1]'; % replicates vector
         C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #4 constraints
-        NCS.necessary = [1 1 1 0 1 1];
-        NCS.counts = 1;
-        NCS.self = 0; % self-loops
-        NCS.A = ones(length(P)); % provide potential adjacency matrix   
+        NSC.necessary = [1 1 1 0 1 1];
+        NSC.counts = 1;
+        NSC.self = 0; % self-loops
+        NSC.A = ones(length(P)); % provide potential adjacency matrix   
 
 end
 
 % options
-opts.algorithm = 'tree_v1'; % 
+opts.algorithm = 'tree_v1'; %
+[P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts);
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
-opts.IntPortTypeIsoFilter = 1; % 1 is on, 0 is off
+opts.portisofilter = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example2_Extra_Constraints(pp,A,infeasibleFlag);
 opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'
 opts.plotmax = 20; % maximum number of graphs to display/save
 opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
+opts.isomethod = 'Python'; % option 'Matlab' is available in 2016b or later versions
 
-UniqueUsefulGraphs;
+FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);

@@ -4,17 +4,17 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Author: Daniel R. Herber, Graduate Student, University of Illinois at
-% Urbana-Champaign
-% Date: 08/20/2016
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [M,I,N] = GenerateCandidateGraphs(R,P,opts,N,Np,Nc,ports)
+function [M,I,N] = GenerateCandidateGraphs(R,P,opts,Np,Nc,ports)
 
     % select the desired algorithm to generate candidate graphs
     switch opts.algorithm
         
         case 'pm_incomplete'
-            I = randi(prod(1:2:Np-1),N,1);
+            I = randi(prod(1:2:Np-1),opts.Nmax,1);
             M = SinglePerfectMatchings(I,Np); % some of the perfect matchings
 
         case 'pm_full'     
@@ -22,23 +22,26 @@ function [M,I,N] = GenerateCandidateGraphs(R,P,opts,N,Np,Nc,ports)
             I = 1:N;
             M = PerfectMatchings(Np); % generate all perfect matchings
 
-        case {'tree','tree_v1','tree_v2','tree_v3','tree_v4'...
-                'tree_v1_analysis','tree_v2_analysis','tree_v3_analysis','tree_v4_analysis'}
+        case {'tree','tree_v1','tree_v2','tree_v3','tree_v4','tree_v5',...
+                'tree_v1_analysis','tree_v2_analysis','tree_v3_analysis',...
+                'tree_v5_analysis'}
             opts.limited = 0;
-            [M,I,N] = TreeEnumerateGather(P,R,ports.NCS,opts);
+            [M,I,N] = TreeEnumerateGather(P,R,ports.NSC,opts);
 
         case 'treelimited'
             opts.limited = 1;
-            [M,I,N] = TreeEnumerateGather(ports.NCS.counts,ports.NCS.A,R,opts);
+            [M,I,N] = TreeEnumerateGather(ports.NSC.counts,ports.NSC.A,R,opts);
 
         case 'treelimitedincomplete'
-            [M,I,N] = TreeExploreGather(ports.NCS.counts,ports.NCS.A,R,opts,N);
+            [M,I,N] = TreeExploreGather(ports.NSC.counts,ports.NSC.A,R,opts,opts.Nmax);
             
     end
 
     % output some stats to the command window
-    disp([num2str(2^(Nc*(Nc-1)/2)),' adjacency matrices, 2^(Nc*(Nc-1)/2) method'])
-    disp([num2str(prod(1:2:Np-1)), ' perfect matchings, (Np-1)!! method'])
-    disp(['Generated ',num2str(N), ' candidate matchings with ',opts.algorithm,' option'])
+    if opts.dispflag
+        disp([num2str(2^(Nc*(Nc-1)/2)),' adjacency matrices, 2^(Nc*(Nc-1)/2) method'])
+        disp([num2str(prod(1:2:Np-1)), ' perfect matchings, (Np-1)!! method'])
+        disp(['Generated ',num2str(N), ' candidate matchings with ',opts.algorithm,' option'])
+    end
 
 end

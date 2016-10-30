@@ -12,23 +12,27 @@ R = [3 2 1]'; % replicates vector
 C = {'R','G','B'}; % label vector
 
 % constraints
-NCS.necessary = [0 0 0];
-NCS.counts = 0;
-NCS.self = 1; % allow self-loops
-NCS.A = ones(length(P)); % provide potential adjacency matrix
+NSC.necessary = [0 0 0];
+NSC.counts = 0;
+NSC.self = 1; % allow self-loops
+NSC.A = ones(length(P)); % provide potential adjacency matrix
+
+% provide potential adjacency matrix
+% NSC.A(1,1) = 0; % non R-R connections
 
 % options
 opts.algorithm = 'tree_v1';
+[P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts);
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
-opts.IntPortTypeIsoFilter = 1; % 1 is on, 0 is off
+opts.portisofilter = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example1_Extra_Constraints(pp,A,infeasibleFlag);
 opts.plotfun = 'circle'; % 'circle' % 'bgl' % 'bio'
 opts.plotmax = Inf; % maximum number of graphs to display/save
 opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
+opts.isomethod = 'Python'; % option 'Matlab' is available in 2016b or later versions
 
-% provide potential adjacency matrix
-% A(1,1) = 0; % non R-R connections
+FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
 
-UniqueUsefulGraphs;
+
