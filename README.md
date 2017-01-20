@@ -1,12 +1,12 @@
 # README #
 
 [![GitHub release](https://img.shields.io/github/release/danielrherber/pm-architectures-project.svg)](https://github.com/danielrherber/pm-architectures-project/releases/latest)
-[![license](https://img.shields.io/github/license/danielrherber/pm-architectures-project.svg)](https://github.com/danielrherber/pm-architectures-project/blob/master/LICENSE)
-[![Github All Releases](https://img.shields.io/github/downloads/danielrherber/pm-architectures-project/total.svg)]()
+[![license](https://img.shields.io/github/license/danielrherber/pm-architectures-project.svg)](https://github.com/danielrherber/pm-architectures-project/blob/master/License)
+[![Github All Releases](https://img.shields.io/github/downloads/danielrherber/pm-architectures-project/total.svg)](https://github.com/danielrherber/pm-architectures-project/archive/master.zip)
 
-[![](https://img.shields.io/badge/language-matlab-EF963C.svg)]()
-[![](https://img.shields.io/github/issues-raw/danielrherber/pm-architectures-project.svg)]()
-[![GitHub contributors](https://img.shields.io/github/contributors/danielrherber/pm-architectures-project.svg)]()
+[![](https://img.shields.io/badge/language-matlab-EF963C.svg)](https://www.mathworks.com/products/matlab.html)
+[![](https://img.shields.io/github/issues-raw/danielrherber/pm-architectures-project.svg)](https://github.com/danielrherber/pm-architectures-project/issues)
+[![GitHub contributors](https://img.shields.io/github/contributors/danielrherber/pm-architectures-project.svg)](https://github.com/danielrherber/pm-architectures-project/graphs/contributors)
 
 Generate the set of unique useful architectures with a perfect matching-based approach.
 
@@ -41,6 +41,7 @@ See [INSTALL_PM_Architectures_Project.m](https://github.com/danielrherber/pm-arc
 ##### MATLAB File Exchange Submission IDs #####
 * 10922
 * 23629
+* 29438
 * 40397
 * 44673
 * 47246

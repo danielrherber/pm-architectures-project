@@ -17,14 +17,20 @@ function [FinalGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
             switch lower(opts.isomethod) % case insensitive
                 %----------------------------------------------------------
                 case 'matlab' % Matlab implementation
-                    if exist('isomorphism','file') % is file correct?  
+                    try
                         [FinalGraphs,typearray] = RemovedColoredIsosMatlab(Graphs,opts);
-                    else
-                        error('Need MATLAB version R2016b or newer for Matlab isomethod')
+                    catch
+                        msg = sprintf(' An error occurred with the matlab option \n Definitely need MATLAB version R2016b or newer');
+                        error(msg)
                     end
                 %----------------------------------------------------------
                 case 'python' % Python implementation
-                    [FinalGraphs,typearray] = RemovedColoredIsosPython(Graphs,opts);
+                    try
+                        [FinalGraphs,typearray] = RemovedColoredIsosPython(Graphs,opts);
+                    catch
+                        msg = sprintf(' An error occurred with the python option \n Definitely need a proper python install with igraph');
+                        error(msg)
+                    end
                 %----------------------------------------------------------
                 case 'none' % don't check for colored isomorphisms
                     if opts.dispflag
