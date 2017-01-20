@@ -1,8 +1,16 @@
 # README #
 
+[![GitHub release](https://img.shields.io/github/release/danielrherber/pm-architectures-project.svg)](https://github.com/danielrherber/pm-architectures-project/releases/latest)
+[![license](https://img.shields.io/github/license/danielrherber/pm-architectures-project.svg)](https://github.com/danielrherber/pm-architectures-project/blob/master/LICENSE)
+[![Github All Releases](https://img.shields.io/github/downloads/danielrherber/pm-architectures-project/total.svg)]()
+
+[![](https://img.shields.io/badge/language-matlab-EF963C.svg)]()
+[![](https://img.shields.io/github/issues-raw/danielrherber/pm-architectures-project.svg)]()
+[![GitHub contributors](https://img.shields.io/github/contributors/danielrherber/pm-architectures-project.svg)]()
+
 Generate the set of unique useful architectures with a perfect matching-based approach.
 
-![readme image](https://github.com/danielrherber/pm-architectures-project/blob/master/readme_image.png "Readme Image")
+![readme image](optional/readme_image.png "Readme Image")
 
 ### Install ###
 * Download the [PM Architectures Project](https://github.com/danielrherber/pm-architectures-project/archive/master.zip)
@@ -41,6 +49,7 @@ See [INSTALL_PM_Architectures_Project.m](https://github.com/danielrherber/pm-arc
 * [Daniel R. Herber](https://github.com/danielrherber) (primary)
 * Tinghao Guo
 * James T. Allison
+* [Shangting Li](https://github.com/shangtingli)
 
 ### Project Links ###
 * [https://github.com/danielrherber/pm-architectures-project](https://github.com/danielrherber/pm-architectures-project)

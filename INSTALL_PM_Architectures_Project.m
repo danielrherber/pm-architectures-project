@@ -196,7 +196,7 @@ function PythonSetupCheck
 	    disp('Press any key when you are done installing python_igraph')
 	    disp(' ')
 	    pause
-	end
+    end
     % try again
     try
         py.igraph.Graph;

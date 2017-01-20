@@ -14,19 +14,19 @@ function [FinalGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
     if ~isempty(Graphs) % if Graphs isn't empty
         if isfield(opts,'isomethod') % if opts.isomethod is present
             % different isomorphism check options
-            switch opts.isomethod
+            switch lower(opts.isomethod) % case insensitive
                 %----------------------------------------------------------
-                case 'Matlab' % Matlab implementation
+                case 'matlab' % Matlab implementation
                     if exist('isomorphism','file') % is file correct?  
                         [FinalGraphs,typearray] = RemovedColoredIsosMatlab(Graphs,opts);
                     else
                         error('Need MATLAB version R2016b or newer for Matlab isomethod')
                     end
                 %----------------------------------------------------------
-                case 'Python' % Python implementation
+                case 'python' % Python implementation
                     [FinalGraphs,typearray] = RemovedColoredIsosPython(Graphs,opts);
                 %----------------------------------------------------------
-                case 'None' % don't check for colored isomorphisms
+                case 'none' % don't check for colored isomorphisms
                     if opts.dispflag
                         disp('Warning: colored isomorphisms may be present');
                         disp('To fix, pick an isomorphism checking method');

@@ -39,7 +39,7 @@ function opts = DefaultOpts(opts)
     % initial port type isomorphism filter
     if ~isfield(opts,'portisofilter')
         opts.portisofilter = 1; % on
-    % 	opts.IntPortTypeIsoFilter = 0; % off
+    % 	opts.portisofilter = 0; % off
     end
 
     % plot function type
@@ -73,7 +73,7 @@ function opts = DefaultOpts(opts)
     if ~isfield(opts,'isomethod')
         opts.isomethod = 'Python';
     %     opts.isomethod = 'Matlab'; % available in 2016b or later versions
-    %     opts.isomethod = 'none';
+    %     opts.isomethod = 'None';
     end
 
     % controls displaying diagnostics to the command window
