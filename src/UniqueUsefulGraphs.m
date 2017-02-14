@@ -12,6 +12,12 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
 
     % set opts with defaults if not specified
     opts = DefaultOpts(opts);
+    
+    % set NSC with defaults if not specified
+    NSC = DefaultNSC(NSC,P);
+    
+    % sort {C, R, P} to be better suited for enumeration
+    [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts);
 
     % generate feasible graphs
     Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts);

@@ -41,7 +41,7 @@ for j = 1:length(R)
         %
         labelsC = [labelsC,C{j}];
         %
-        labelsCnum = [labelsCnum,j];
+%         labelsCnum = [labelsCnum,j];
     end
 end
 
@@ -69,31 +69,39 @@ ports.graph.V = V;
 ports.phi = phi;
 ports.labels.P = labelsP;
 ports.labels.C = labelsC;
-ports.labels.N = labelsCnum;
+%--------------------------------------------------------------------------
+% new method
+ports.labels.N = base2dec(upper(labelsC),36)';
+% old method
+% ports.labels.N = labelsCnum;
+%--------------------------------------------------------------------------
 
 % network structure constraints
+ports.NSC = NSC; % copy current NSC structure
 ports.NSC.Vfull = uint8(Vfull);
+ports.NSC.necessary = uint8(necessary); % expanded necessary vector
 
-if isfield(NSC,'necessary')
-    ports.NSC.necessary = uint8(necessary);
-else
-	ports.NSC.necessary = zeros(length(P),'uint8'); % no components are necessary
-end
-
-if isfield(NSC,'A')
-	ports.NSC.A = uint8(NSC.A);
-else
-    ports.NSC.A = ones(length(P),'uint8'); % all connections are allowed
-end
-
-if isfield(NSC,'self')
-	ports.NSC.self = uint8(NSC.self);
-else
-    ports.NSC.self = uint8(1); % allow self loops
-end
-
-if isfield(NSC,'counts')
-    ports.NSC.counts = uint8(NSC.counts);
-else
-    ports.NSC.counts = uint8(0); % connected need not be unique
-end
+% old stuff
+% if isfield(NSC,'necessary')
+%     ports.NSC.necessary = uint8(necessary);
+% else
+% 	ports.NSC.necessary = zeros(length(P),'uint8'); % no components are necessary
+% end % some moved above
+% 
+% if isfield(NSC,'A')
+% 	ports.NSC.A = uint8(NSC.A);
+% else
+%     ports.NSC.A = ones(length(P),'uint8'); % all connections are allowed
+% end
+% 
+% if isfield(NSC,'self')
+% 	ports.NSC.self = uint8(NSC.self);
+% else
+%     ports.NSC.self = uint8(1); % allow self loops
+% end
+% 
+% if isfield(NSC,'counts')
+%     ports.NSC.counts = uint8(NSC.counts);
+% else
+%     ports.NSC.counts = uint8(0); % connected need not be unique
+% end

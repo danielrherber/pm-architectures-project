@@ -21,7 +21,7 @@ function INSTALL_PM_Architectures_Project
 	FXSubmissions
 
     % Check Matlab's isomorphism function
-    % CheckMatlabIsomorphismFunction
+    CheckMatlabIsomorphismFunction
     
 	% Python
 	PythonSetupCheck
@@ -116,25 +116,16 @@ end
 %-------------------------------------------------------------------------- 
 function CheckMatlabIsomorphismFunction
     disp('--- Checking Matlab''s isomorphism function')
-        
-    product = ver;
-    % fix the bug in R2016b
-    if strcmp(product(1).Release,'(R2016b)')
-        graph;
-        A = regexp( fileread('isomorphism.m'), '\n', 'split');
-        A{196} = 'binSize = binSize(bins); binSize = binSize(:);';
-        fid = fopen('isomorphism.m', 'w');
-        fprintf(fid, '%s\n', A{:});
-        fclose(fid);
-    end
     
-    % check if isomorphism is available
+    % check if isisomorphic is available
     try 
         graph;
-        isomorphism(graph(1,1),graph(1,1));
+        isisomorphic(graph(1,1),graph(1,1));
+        disp('isisomorphic is available')
         disp('opts.isomethod = ''Matlab'' is available')
     catch
-        disp('opts.isomethod = ''Matlab'' is NOT available')
+        disp('opts.isomethod = ''Matlab'' is NOT available X')
+        disp('need MATLAB 2016b or newer')
     end
     disp(' ')
 end
@@ -144,73 +135,39 @@ function PythonSetupCheck
     
     CheckFlag = 0;
     
-	% need Python 3.5
+	% need python
 	[version, ~, ~] = pyversion;
-	if isempty(version)
-	    disp('Download Python 3.5 from https://www.python.org/downloads')
-	    disp('Be sure to download the correct 32-bit or 64-bit executable installer compatible with your MATLAB configuration.')
-	    disp('Check "Add Python 3.5 to PATH"')
-	    disp('Check "Precompile standard library"')
-	    disp('Also see http://www.mathworks.com/help/matlab/matlab_external/system-and-configuration-requirements.html')
-	    disp('Python 2.7 has also worked but 3.5 is the supported version')
-	    disp('Press any key when you are done installing Python')
-	    disp(' ')
-	    pause
+    if isempty(version)
+	    disp('python is NOT available X')
     else
         CheckFlag = CheckFlag + 1;
-	end
-
+	    disp('python is available')
+    end
+    
 	% need numpy
-	try
-	    py.numpy.matrixlib.defmatrix.matrix([]);
-	catch
-	    disp('Download package numpy from http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy')
-	    disp('Recommend numpy-1.11.1+mkl-cp35-cp35m-win_amd64.whl for 64-bit MATLAB configuration and Python 3.5')
-	    disp('Installation of numpy requires pip, try running pip in cmd')
-	    disp('You may need to open cmd at C:\Users\%USERNAME%\AppData\Local\Programs\Python\Python35\Scripts')
-	    disp('Run the command (assuming the same version as above): pip install %LOCATION%\numpy-1.11.1+mkl-cp35-cp35m-win_amd64.whl')
-	    disp('See http://stackoverflow.com/questions/27885397 for more info on installing .whl with pip')
-	    disp('Press any key when you are done installing numpy')
-	    disp(' ')
-	    pause
-	end
-    % try again
     try
         py.numpy.matrixlib.defmatrix.matrix([]);
         CheckFlag = CheckFlag + 1;
-	    disp('numpy is available')
+	    disp('numpy  is available')
     catch
-	    disp('numpy is still unavailable')
+	    disp('numpy  is NOT available X')
     end
 
 	% need python_igraph
-	try
-	    py.igraph.Graph;
-	catch
-	    disp('Download package python_igraph from http://www.lfd.uci.edu/~gohlke/pythonlibs/#python-igraph')
-	    disp('Recommend python_igraph-0.7.1.post6-cp35-none-win_amd64.whl for 64-bit MATLAB configuration and Python 3.5')
-	    disp('Installation of numpy requires pip, try running pip in cmd')
-	    disp('You may need to open cmd at C:\Users\%USERNAME%\AppData\Local\Programs\Python\Python35\Scripts')
-	    disp('Run the command (assuming the same version as above): pip install %LOCATION%\python_igraph-0.7.1.post6-cp35-none-win_amd64.whl')
-	    disp('See http://stackoverflow.com/questions/27885397 for more info on installing .whl with pip')
-	    disp('Press any key when you are done installing python_igraph')
-	    disp(' ')
-	    pause
-    end
-    % try again
     try
         py.igraph.Graph;
         CheckFlag = CheckFlag + 1;
 	    disp('igraph is available')
     catch
-	    disp('igraph is still unavailable')
+	    disp('igraph is NOT available X')
     end
     
     % if all required python packages are available
     if CheckFlag == 3
         disp('opts.isomethod = ''Python'' is available')
     else
-        disp('opts.isomethod = ''Python'' is NOT available')
+        disp('opts.isomethod = ''Python'' is NOT available X')
+        disp('please see https://github.com/danielrherber/pm-architectures-project/blob/master/optional/PythonIsoSetup.md')
     end
     
 	disp(' ')
@@ -220,6 +177,6 @@ function OpenExample
 	disp('--- Setup complete, opening an example')
 	disp(' ')
 
-	% open case study 1
-	open ex_CaseStudy1
+	% open case study 1 for md-16-1635
+	open ex_md161635_CaseStudy1
 end

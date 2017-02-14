@@ -77,7 +77,12 @@ for i = 2:n
         IsoFlag = 0;
         while (j > 0) && (IsoFlag == 0)
             G2 = bin{c}.Graphs{j}.G;
-            IsoFlag = isisomorphic(G1,G2,'NodeVariables','Color');
+            % includes fix for bug 1465853
+            if max(conncomp(G1)) ~= max(conncomp(G2))
+                IsoFlag = false;
+            else
+                IsoFlag = isisomorphic(G1,G2,'NodeVariables','Color');
+            end
             j = j - 1;
         end
         results(c) = IsoFlag;

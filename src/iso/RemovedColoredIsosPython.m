@@ -21,8 +21,6 @@ pydir = mfoldername(mfilename('fullpath'),'python'); % python directory
 cd(pydir) % change directory
 py.importlib.import_module('detectiso_func4'); % import module 
 
-
-
 n = length(Graphs); % number of graphs to check
 if n < 2000 % parallel computing would be slower
    opts.paralleltemp = 0; 
@@ -39,11 +37,11 @@ bin = cell(1,Nbin); % initialize bins
 % compute various metrics once
 pylists = cell(n,1);
 colors = pylists;
-nnodes = zeros(n,1);
+nnodes = zeros(n,1,'uint64');
 sumadj = nnodes;
 parfor (i = 1:n, opts.paralleltemp)
     adj = Graphs{i}.A;
-    nnodes(i) = size(adj,1);
+    nnodes(i) = uint64(size(adj,1));
     colors{i} = uint64(Graphs{i}.Ln);
     sumadj(i) = sum(adj(:));
     pylists{i} = int8(adj(:)');

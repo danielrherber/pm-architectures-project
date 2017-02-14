@@ -29,8 +29,7 @@ NSC.A = A;
 
 % options
 opts.algorithm = 'tree_v1'; % 'tree_v3' % 'pm_full' % 'pm_incomplete'
-[P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts);
-opts.Nmax = 1e8; % maximum number of graphs to preallocate for
+opts.Nmax = 2e8; % maximum number of graphs to preallocate for
 opts.parallel = 1; % 1 to enable parallel computing, 0 to disable it
 opts.portisofilter = 1; % 1 is on, 0 is off
 opts.customfun = @(pp,A,infeasibleFlag) ex_Suspension_Extra_Constraints(pp,A,infeasibleFlag);
