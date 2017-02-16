@@ -51,6 +51,7 @@ end
 % first graph is always unique
 unique_ind = 1; % uniqueness vector, 1 is unique
 bin{1}.Graphs{1}.A = Graphs{1}.A;
+bin{1}.Graphs{1}.Am = Graphs{1}.Am;
 bin{1}.Graphs{1}.L = Graphs{1}.L;
 bin{1}.Graphs{1}.Ln = Graphs{1}.Ln;
 bin{1}.Graphs{1}.N = Graphs{1}.N;
@@ -95,6 +96,7 @@ for i = 2:n
         
         if (ind + 1 <= Nbin)
             bin{J}.Graphs{1}.A = Graphs{i}.A;
+            bin{J}.Graphs{1}.Am = Graphs{i}.Am; 
             bin{J}.Graphs{1}.L = Graphs{i}.L;
             bin{J}.Graphs{1}.Ln = Graphs{i}.Ln;
             bin{J}.Graphs{1}.N = Graphs{i}.N;
@@ -106,6 +108,7 @@ for i = 2:n
             bin{J}.Graphs{1}.G = G1;   
         else
             bin{J}.Graphs{end+1}.A = Graphs{i}.A;
+            bin{J}.Graphs{end}.Am = Graphs{i}.Am;
             bin{J}.Graphs{end}.L = Graphs{i}.L;
             bin{J}.Graphs{end}.Ln = Graphs{i}.Ln;
             bin{J}.Graphs{end}.N = Graphs{i}.N;

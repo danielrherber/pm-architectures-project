@@ -69,8 +69,8 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         Vcc = ones(size(Jcc)); % edges
         
         % connected components graph adjacency matrix
-        A = sparse(Icc,Jcc,Vcc,Nc,Nc); 
-        A = sign(A + A' + eye(Nc)) - eye(Nc);
+        Am = sparse(Icc,Jcc,Vcc,Nc,Nc);
+        A = sign(Am + Am' + eye(Nc)) - eye(Nc);
         
         % remove stranded components using NSC.necessary
         if unusefulFlag ~= 1 % only if the graph is currently feasible
@@ -103,6 +103,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
             Graphs{i}.Ln = pp.labels.N;
             Graphs{i}.removephi = pp.removephi;
             Graphs{i}.N = I(i); % perfect matching number
+            Graphs{i}.Am = Am + Am'; % get multiedge adjacency matrix
         end
         
     end % end for loop
