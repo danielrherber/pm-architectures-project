@@ -13,10 +13,10 @@ function opts = DefaultOpts(opts)
     % algorithm for generate candidate graphs
     if ~isfield(opts,'algorithm')
 %         opts.algorithm = 'tree_v5';
-        opts.algorithm = 'tree_v4';
+%         opts.algorithm = 'tree_v4';
 %         opts.algorithm = 'tree_v3';
 %         opts.algorithm = 'tree_v2';
-%         opts.algorithm = 'tree_v1';
+        opts.algorithm = 'tree_v1';
 %         opts.algorithm = 'tree_v4_analysis';
 %         opts.algorithm = 'tree_v3_analysis';
 %         opts.algorithm = 'tree_v2_analysis';
@@ -58,6 +58,12 @@ function opts = DefaultOpts(opts)
     if ~isfield(opts,'plotmax')
         opts.plotmax = 10;
     end
+    
+    % save the graphs to disk?
+    if ~isfield(opts,'save')
+%         opts.save = 1; % save the graphs
+        opts.save = 0; % don't save the graphs
+    end
 
     % name of the example
     if ~isfield(opts,'name')
@@ -71,8 +77,8 @@ function opts = DefaultOpts(opts)
 
     % isomorphism checking method
     if ~isfield(opts,'isomethod')
-        opts.isomethod = 'Python';
-    %     opts.isomethod = 'Matlab'; % available in 2016b or later versions
+%         opts.isomethod = 'Python';
+        opts.isomethod = 'Matlab'; % available in 2016b or later versions
     %     opts.isomethod = 'None';
     end
 

@@ -27,6 +27,10 @@ function [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts)
     NSC.necessary = NSC.necessary(I);
     NSC.A = NSC.A(I,:);
     NSC.A = NSC.A(:,I);
+    
+    % ensure column vectors
+    P = P(:);
+    R = R(:);
 
 end
 

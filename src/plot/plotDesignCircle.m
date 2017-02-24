@@ -46,15 +46,19 @@ set(gcf,'color','white'); axis off
 text(0,-1.35,['\textsl{PM ',num2str(pm),'}'],'HorizontalAlignment','center',...
         'Interpreter','latex', 'fontsize', 32)
 
-figname = ['graph',num2str(i)]; % name the figure
-% foldername = opts.path; % name the folder the figure will be placed in
-exportfigopts = '-png'; % export_fig options (see documentation)
-% exportfigopts = '-tif -nocrop -append'; % export_fig options (see documentation)
-% mypath2 = mfoldername(mfilename('fullpath'),foldername); % folder string
-filename = [opts.path,figname]; % combine folder string and name string
-str = ['export_fig ''',filename,''' ',exportfigopts]; % total str for export_fig
-eval(str) % evaluate and save the figure
+if opts.save
+    figname = ['graph',num2str(i)]; % name the figure
+    % foldername = opts.path; % name the folder the figure will be placed in
+    exportfigopts = '-png'; % export_fig options (see documentation)
+    % exportfigopts = '-tif -nocrop -append'; % export_fig options (see documentation)
+    % mypath2 = mfoldername(mfilename('fullpath'),foldername); % folder string
+    filename = [opts.path,figname]; % combine folder string and name string
+    str = ['export_fig ''',filename,''' ',exportfigopts]; % total str for export_fig
+    eval(str) % evaluate and save the figure
+    
+    close(h)
+end
 
-close(h)
+
 
 end

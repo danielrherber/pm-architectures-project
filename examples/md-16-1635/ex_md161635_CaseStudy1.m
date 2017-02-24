@@ -12,8 +12,8 @@ num = 1;
 
 switch num
     case 1
-        P = [1 2 3]'; % ports vector 
-        R = [3 2 1]'; % replicates vector
+        P = [1 2 3]; % ports vector 
+        R = [3 2 1]; % replicates vector
         C = {'R','G','B'}; % label vector
         NSC = []; % no constraints
 
@@ -36,6 +36,7 @@ opts.portisofilter = 1; % 1 is on, 0 is off
 opts.plotfun = 'circle'; % 'circle' % 'bgl' % 'bio'
 % opts.plotmax = Inf; % maximum number of graphs to display/save
 opts.plotmax = 100;
+opts.save = 0; % save graphs to disk
 opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
 opts.isomethod = 'Matlab'; % option 'Matlab' is available in 2016b or later versions
