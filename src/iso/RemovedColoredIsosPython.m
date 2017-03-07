@@ -10,9 +10,8 @@
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [FinalGraphs,typearray] = RemovedColoredIsosPython(Graphs,opts)
-if opts.dispflag
+if (opts.displevel > 1) % verbose
     disp('Now checking graphs for uniqueness...')
-    tic % start timer
 end
 
 % import isomorphism checking function
@@ -128,7 +127,7 @@ for i = 2:n
         ind = ind + 1;
     end
     
-    if opts.dispflag
+    if (opts.displevel > 1) % verbose
         if mod(i,Ndispstat) == 0
             dispstat(['Percentage complete: ',int2str(i/n*100),' %'])
         end
@@ -143,7 +142,7 @@ end
 
 cd(origdir); % return to the original directory
 
-if opts.dispflag
+if (opts.displevel > 0) % minimal
     ttime = toc; % stop the timer
     disp(['Found ',num2str(length(FinalGraphs)),' unique graphs in ', num2str(ttime),' s'])
 end

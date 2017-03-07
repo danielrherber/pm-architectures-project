@@ -17,7 +17,7 @@ function plotDesign(UniqueFeasibleGraphs,NSC,opts)
 
         % determine if biograph plots are needed
         if (sum(NSC.necessary) == 0) && strcmp(opts.plotfun,'bgl')
-            if opts.dispflag
+            if (opts.displevel > 1) % verbose
                 warning('switching to bio plot since there may be incomplete graphs')
                 opts.plotfun = 'bio';
             end

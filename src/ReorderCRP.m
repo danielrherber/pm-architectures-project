@@ -10,6 +10,10 @@
 %--------------------------------------------------------------------------
 function [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts)
 
+    % ensure column vectors
+    P = P(:);
+    R = R(:);
+
     switch opts.algorithm
 
         case 'tree_v5' % sort P largest to smallest
@@ -28,9 +32,7 @@ function [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts)
     NSC.A = NSC.A(I,:);
     NSC.A = NSC.A(:,I);
     
-    % ensure column vectors
-    P = P(:);
-    R = R(:);
+
 
 end
 

@@ -23,6 +23,7 @@ function [M,I,N] = GenerateCandidateGraphs(R,P,opts,Np,Nc,ports)
             M = PerfectMatchings(Np); % generate all perfect matchings
 
         case {'tree','tree_v1','tree_v2','tree_v3','tree_v4','tree_v5',...
+                'tree_v6',...
                 'tree_v1_analysis','tree_v2_analysis','tree_v3_analysis',...
                 'tree_v5_analysis'}
             opts.limited = 0;
@@ -38,10 +39,13 @@ function [M,I,N] = GenerateCandidateGraphs(R,P,opts,Np,Nc,ports)
     end
 
     % output some stats to the command window
-    if opts.dispflag
+    if (opts.displevel > 1) % verbose
         disp([num2str(2^(Nc*(Nc-1)/2)),' adjacency matrices, 2^(Nc*(Nc-1)/2) method'])
         disp([num2str(prod(1:2:Np-1)), ' perfect matchings, (Np-1)!! method'])
-        disp(['Generated ',num2str(N), ' candidate matchings with ',opts.algorithm,' option'])
+    end
+    if (opts.displevel > 0) % minimal
+        ttime = toc; % stop timer
+        disp(['Generated ',num2str(N), ' candidate matchings with ',opts.algorithm,' option in ', num2str(ttime),' s'])
     end
 
 end

@@ -31,12 +31,12 @@ end
 opts.algorithm = 'tree_v1';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
-opts.portisofilter = 1; % 1 is on, 0 is off
+opts.filterflag = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example1_Extra_Constraints(pp,A,infeasibleFlag);
 opts.plotfun = 'circle'; % 'circle' % 'bgl' % 'bio'
 % opts.plotmax = Inf; % maximum number of graphs to display/save
 opts.plotmax = 100;
-opts.save = 0; % save graphs to disk
+opts.saveflag = 0; % save graphs to disk
 opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
 opts.isomethod = 'Matlab'; % option 'Matlab' is available in 2016b or later versions

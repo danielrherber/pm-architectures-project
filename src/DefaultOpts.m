@@ -12,6 +12,7 @@ function opts = DefaultOpts(opts)
 
     % algorithm for generate candidate graphs
     if ~isfield(opts,'algorithm')
+%         opts.algorithm = 'tree_v6';
 %         opts.algorithm = 'tree_v5';
 %         opts.algorithm = 'tree_v4';
 %         opts.algorithm = 'tree_v3';
@@ -33,13 +34,15 @@ function opts = DefaultOpts(opts)
     % control parallel computing
     if ~isfield(opts,'parallel')
         opts.parallel = 0; % no parallel computing
-%         opts.parallel = 1; % parallel computing with max number of workers
+%         opts.parallel = 4; % parallel computing with 4 workers
+%         opts.parallel = 8; % parallel computing with 8 workers
+%         opts.parallel = 12; % parallel computing with 12 workers
     end
 
     % initial port type isomorphism filter
-    if ~isfield(opts,'portisofilter')
-        opts.portisofilter = 1; % on
-    % 	opts.portisofilter = 0; % off
+    if ~isfield(opts,'filterflag')
+        opts.filterflag = 1; % on
+    % 	opts.filterflag = 0; % off
     end
 
     % plot function type
@@ -60,9 +63,9 @@ function opts = DefaultOpts(opts)
     end
     
     % save the graphs to disk?
-    if ~isfield(opts,'save')
-%         opts.save = 1; % save the graphs
-        opts.save = 0; % don't save the graphs
+    if ~isfield(opts,'saveflag')
+%         opts.saveflag = 1; % save the graphs
+        opts.saveflag = 0; % don't save the graphs
     end
 
     % name of the example
@@ -77,15 +80,16 @@ function opts = DefaultOpts(opts)
 
     % isomorphism checking method
     if ~isfield(opts,'isomethod')
-%         opts.isomethod = 'Python';
+%         opts.isomethod = 'Python'; % requires setup
         opts.isomethod = 'Matlab'; % available in 2016b or later versions
     %     opts.isomethod = 'None';
     end
 
     % controls displaying diagnostics to the command window
-    if ~isfield(opts,'dispflag')
-        opts.dispflag = 1; % on
-    %     opts.dispflag = 0; % off
-    end
+    if ~isfield(opts,'displevel')
+        opts.displevel = 2; % verbose
+    %     opts.displevel = 1; % minimal
+    %     opts.displevel = 0; % none
+    end   
     
 end

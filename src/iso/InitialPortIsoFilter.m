@@ -44,9 +44,10 @@ I = I(IA);
 % total number of graphs remaining
 N = size(M,1);
 
-% show stats on the command windows
-if opts.dispflag
-    disp(['Only ',num2str(N), ' remaining after initial port-type isomorphism check'])
+% output some stats to the command window
+if (opts.displevel > 1) % verbose
+    ttime = toc; % stop timer
+    disp(['Only ',num2str(N), ' remaining after initial port-type isomorphism check in ', num2str(ttime),' s'])
 end
 
 end

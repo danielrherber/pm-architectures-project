@@ -11,9 +11,8 @@
 %--------------------------------------------------------------------------
 function [FinalGraphs,typearray] = RemovedColoredIsosMatlab(Graphs,opts)
 
-if opts.dispflag
+if (opts.displevel > 1) % verbose
     disp('Now checking graphs for uniqueness...')
-    tic % start timer
 end
 
 n = length(Graphs); % number of graphs to check
@@ -125,7 +124,7 @@ for i = 2:n
         ind = ind + 1;
     end
     
-    if opts.dispflag
+    if (opts.displevel > 1) % verbose
         if mod(i,Ndispstat) == 0
             dispstat(['Percentage complete: ',int2str(i/n*100),' %'])
         end
@@ -135,10 +134,12 @@ end
 
 FinalGraphs = [];
 for c = 1:Nbin
-   FinalGraphs = [FinalGraphs, bin{c}.Graphs];
+    if ~isempty(bin{c}) % only if the bin is not empty
+        FinalGraphs = [FinalGraphs, bin{c}.Graphs];
+    end
 end
 
-if opts.dispflag
+if (opts.displevel > 0) % minimial
     ttime = toc; % stop the timer
     disp(['Found ',num2str(length(FinalGraphs)),' unique graphs in ', num2str(ttime),' s'])
 end

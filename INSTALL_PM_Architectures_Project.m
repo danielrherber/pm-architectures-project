@@ -32,6 +32,9 @@ function INSTALL_PM_Architectures_Project
 	% Open example
 	OpenExample 
 
+    % Close this file
+    CloseThisFile    
+    
 	warning('on','MATLAB:dispatcher:nameConflict');
 
 end
@@ -174,9 +177,22 @@ function PythonSetupCheck
 end
 %--------------------------------------------------------------------------
 function OpenExample
-	disp('--- Setup complete, opening an example')
+	disp('--- Opening an example')
 	disp(' ')
 
 	% open case study 1 for md-16-1635
 	open ex_md161635_CaseStudy1
+end
+%--------------------------------------------------------------------------
+function CloseThisFile
+	disp('--- Setup complete, closing this file')
+	disp(' ')
+    
+    h = matlab.desktop.editor.getAll;
+    for k = 1:numel(h)
+        if ~isempty(strfind(h(k).Filename,'INSTALL_PM_Architectures_Project'))
+            h(k).close % close this file
+        end
+    end
+    
 end

@@ -85,7 +85,7 @@ switch opts.algorithm
         p.Vfull = Vfull;
         p.v3 = ones(size(p.pI),'uint8');
         sortFlag = 1;
-        [M,~] = TreeEnumerateCreatev4(Vfull,E,M,id,p,Ac);
+        [M,~] = TreeEnumerateCreatev4(Vfull,E,M,id,p,Ac,opts.displevel);
     %----------------------------------------------------------------------
     case 'tree_v5'
         p.Vfull = Vfull;
@@ -97,6 +97,13 @@ switch opts.algorithm
         sortFlag = 0;
         [M,~] = TreeEnumerateCreatev5(Vfull,E,M,id,p,Ac,p.NSC.counts,p.NSC.necessary);
     %----------------------------------------------------------------------
+    case 'tree_v6'
+        p.Vfull = Vfull;
+        p.v3 = ones(size(p.pI),'uint8');
+        sortFlag = 1;
+        [M,~] = TreeEnumerateCreatev4(Vfull,E,M,id,p,Ac,opts.displevel);
+    %----------------------------------------------------------------------
+    
     case 'tree_v1_analysis'
         sortFlag = 1;
         [M,~] = TreeEnumerateCreatev1Analysis(Vfull,E,M,id,p,prenode);

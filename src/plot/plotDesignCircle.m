@@ -46,7 +46,7 @@ set(gcf,'color','white'); axis off
 text(0,-1.35,['\textsl{PM ',num2str(pm),'}'],'HorizontalAlignment','center',...
         'Interpreter','latex', 'fontsize', 32)
 
-if opts.save
+if opts.saveflag
     figname = ['graph',num2str(i)]; % name the figure
     % foldername = opts.path; % name the folder the figure will be placed in
     exportfigopts = '-png'; % export_fig options (see documentation)

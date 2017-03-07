@@ -18,7 +18,7 @@ alg2 = 'tree_v1';
 
 testnum = 4;
 
-opts.dispflag = 1; % off
+opts.displevel = 1; % off
 opts.plotmax = 100;
 opts.isomethod = 'Python'; % 'Matlab'
 
@@ -65,7 +65,7 @@ opts.algorithm = alg1;
 FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
 n1 = numel(FinalGraphs);
 
-if opts.dispflag 
+if (opts.displevel > 0) % minimal 
     disp(' ')
 end
 

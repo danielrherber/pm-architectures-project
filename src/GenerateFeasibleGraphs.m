@@ -9,10 +9,6 @@
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts) 
-
-    if opts.dispflag
-        tic % start timer for this function
-    end
     
     % number of ports
     Np = P'*R;
@@ -33,7 +29,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
     end
     
     % remove basic isomorphism failures
-    if opts.portisofilter
+    if opts.filterflag
         [M,I,N] = InitialPortIsoFilter(M,I,ports.phi,opts);
     end
     
@@ -116,11 +112,10 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         return
     end
     
-    if opts.dispflag
-        % stop timer
-        ttime = toc;
-    
-        % output some stats to the command window
+    % output some stats to the command window
+    if (opts.displevel > 0) % minimal
+        ttime = toc; % stop timer
         disp(['Found ',num2str(length(Graphs)), ' feasible, trimmed graphs in ', num2str(ttime),' s'])
     end
+    
 end % end function

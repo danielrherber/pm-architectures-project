@@ -33,20 +33,13 @@ function [FinalGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
                     end
                 %----------------------------------------------------------
                 case 'none' % don't check for colored isomorphisms
-                    if opts.dispflag
+                    if (opts.displevel > 0) % minimal
                         disp('Warning: colored isomorphisms may be present');
                         disp('To fix, pick an isomorphism checking method');
                         FinalGraphs = Graphs;
                         typearray = [];
                     end
                 %----------------------------------------------------------
-            end
-        else % if no opts.isomethod field, will remove when defaults are enabled
-            if opts.dispflag
-                disp('Warning: colored isomorphisms may be present');
-                disp('To fix, pick an isomorphism checking method');
-                FinalGraphs = Graphs;
-                typearray = [];
             end
         end
     else
