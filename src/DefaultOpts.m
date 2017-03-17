@@ -50,6 +50,7 @@ function opts = DefaultOpts(opts)
         opts.plotfun = 'circle';
     %     opts.plotfun = 'bgl';
     %     opts.plotfun = 'bio';
+    %     opts.plotfun = 'matlab';
     end
 
     % custom network structure constraint function

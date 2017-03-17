@@ -94,19 +94,22 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         % if the graph is feasible, save it
         if unusefulFlag ~= 1
             myA = sign(A + A' + eye(length(A))) - eye(length(A)); % remove multiple edges and loops
-            Graphs{i}.A = myA;
-            Graphs{i}.L = pp.labels.C;
-            Graphs{i}.Ln = pp.labels.N;
-            Graphs{i}.removephi = pp.removephi;
-            Graphs{i}.N = I(i); % perfect matching number
-            Graphs{i}.Am = Am + Am'; % get multiedge adjacency matrix
+            
+            Graphs(i).A = myA;
+            Graphs(i).L = pp.labels.C;
+            Graphs(i).Ln = pp.labels.N;
+            Graphs(i).removephi = pp.removephi;
+            Graphs(i).N = I(i); % perfect matching number
+            Graphs(i).Am = full(Am + Am'); % get multiedge adjacency matrix
+            
         end
         
     end % end for loop
 
     % remove empty graphs
     if exist('Graphs','var')
-        Graphs = Graphs(~cellfun('isempty',Graphs));
+        empty_elems = arrayfun(@(s) all(structfun(@isempty,s)), Graphs);
+        Graphs(empty_elems) = [];
     else
         Graphs = [];
         return

@@ -15,11 +15,11 @@ function plotDesign(UniqueFeasibleGraphs,NSC,opts)
         closeallbio
         close all
 
-        % determine if biograph plots are needed
+        % determine if matlab plots are needed
         if (sum(NSC.necessary) == 0) && strcmp(opts.plotfun,'bgl')
             if (opts.displevel > 1) % verbose
-                warning('switching to bio plot since there may be incomplete graphs')
-                opts.plotfun = 'bio';
+                warning('switching to ''matlab'' since there may be incomplete graphs')
+                opts.plotfun = 'matlab';
             end
         end
 
@@ -31,25 +31,31 @@ function plotDesign(UniqueFeasibleGraphs,NSC,opts)
         end
         
         % generate the desired plot type
-        switch opts.plotfun
+        switch lower(opts.plotfun)
             %--------------------------------------------------------------
             case 'bio'
                 for i = 1:Nplot
-                    plotDesignBio(UniqueFeasibleGraphs{i}.A,...
-                        UniqueFeasibleGraphs{i}.L)
+                    plotDesignBio(UniqueFeasibleGraphs(i).A,...
+                        UniqueFeasibleGraphs(i).L)
                 end    
             %--------------------------------------------------------------
             case 'bgl'
                 for i = 1:Nplot
-                    plotDesignBGL(UniqueFeasibleGraphs{i}.A,...
-                        UniqueFeasibleGraphs{i}.L,i,UniqueFeasibleGraphs{i}.N,opts)
+                    plotDesignBGL(UniqueFeasibleGraphs(i).A,...
+                        UniqueFeasibleGraphs(i).L,i,UniqueFeasibleGraphs(i).N,opts)
                 end
             %--------------------------------------------------------------
             case 'circle'
                 for i = 1:Nplot
-                    plotDesignCircle(UniqueFeasibleGraphs{i}.A,...
-                        UniqueFeasibleGraphs{i}.L,i,UniqueFeasibleGraphs{i}.N,opts)
+                    plotDesignCircle(UniqueFeasibleGraphs(i).A,...
+                        UniqueFeasibleGraphs(i).L,i,UniqueFeasibleGraphs(i).N,opts)
                 end
+            %--------------------------------------------------------------
+            case 'matlab'
+                for i = 1:Nplot
+                    plotDesignMatlab(UniqueFeasibleGraphs(i).A,...
+                        UniqueFeasibleGraphs(i).L,i,UniqueFeasibleGraphs(i).N,opts)
+                end    
             %--------------------------------------------------------------
         end
 

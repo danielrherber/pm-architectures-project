@@ -38,13 +38,13 @@ nNonIso = 0; % number of nonisomorphic graphs found
 G = cell(n,1);
 % parfor (i = 1:n, parallelTemp)
 for i = 1:n
-    G{i} = graph(Graphs{i}.A);
-    G{i}.Nodes.Color = (Graphs{i}.Ln)';
-    Graphs{i}.G = G{i};
+    G{i} = graph(Graphs(i).A);
+    G{i}.Nodes.Color = (Graphs(i).Ln)';
+    Graphs(i).G = G{i};
 end
 
 % first graph is always unique so store it
-bin(1).Graphs(1) = Graphs{1};
+bin(1).Graphs(1) = Graphs(1);
 nNonIso = nNonIso + 1;
 % v(1) = 1;
 
@@ -93,9 +93,9 @@ for i = 2:n
         
         % check if this is the first graph in the bin
         if (nNonIso + 1 <= Nbin) % first graph
-            bin(J).Graphs(1) = Graphs{i};
+            bin(J).Graphs(1) = Graphs(i);
         else % not the first graph
-            bin(J).Graphs(end+1) = Graphs{i};
+            bin(J).Graphs(end+1) = Graphs(i);
         end
         
         % increment since a unique graph was found
@@ -124,8 +124,5 @@ if (opts.displevel > 0) % minimal
     ttime = toc; % stop the timer
     disp(['Found ',num2str(length(UniqueGraphs)),' unique graphs in ', num2str(ttime),' s'])
 end
-
-% temporary fix to convert back to cell format
-UniqueGraphs = ConvertGraphs2Cell(UniqueGraphs);
 
 end

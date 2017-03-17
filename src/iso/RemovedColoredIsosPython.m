@@ -47,20 +47,23 @@ nnode = zeros(n,1,'uint64');
 sumadj = nnode;
 parfor (i = 1:n, parallelTemp)
 % for i = 1:n
-    adj = Graphs{i}.A;
+    adj = Graphs(i).A;
     nnode(i) = uint64(size(adj,1));
-    colors{i} = uint64(Graphs{i}.Ln);
+    colors{i} = uint64(Graphs(i).Ln);
     sumadj(i) = sum(adj(:));
     pylist{i} = int8(adj(:)');
-    % attach to the Graphs structure
-    Graphs{i}.nnode = nnode(i);
-    Graphs{i}.colors = colors{i};
-    Graphs{i}.sumadj = sumadj(i);
-    Graphs{i}.pylist = pylist{i};
+end
+
+% attach to the Graphs structure
+for i = 1:n
+    Graphs(i).nnode = nnode(i);
+    Graphs(i).colors = colors{i};
+    Graphs(i).sumadj = sumadj(i);
+    Graphs(i).pylist = pylist{i};
 end
 
 % first graph is always unique so store it
-bin(1).Graphs(1) = Graphs{1};
+bin(1).Graphs(1) = Graphs(1);
 nNonIso = nNonIso + 1;
 % v(1) = 1;
 
@@ -113,9 +116,9 @@ for i = 2:n
         
         % check if this is the first graph in the bin
         if (nNonIso + 1 <= Nbin) % first graph
-            bin(J).Graphs(1) = Graphs{i};
+            bin(J).Graphs(1) = Graphs(i);
         else % not the first graph
-            bin(J).Graphs(end+1) = Graphs{i};
+            bin(J).Graphs(end+1) = Graphs(i);
         end
         
         % increment since a unique graph was found
@@ -147,8 +150,5 @@ if (opts.displevel > 0) % minimal
     ttime = toc; % stop the timer
     disp(['Found ',num2str(length(UniqueGraphs)),' unique graphs in ', num2str(ttime),' s'])
 end
-
-% temporary fix to convert back to cell format
-UniqueGraphs = ConvertGraphs2Cell(UniqueGraphs);
 
 end
