@@ -27,7 +27,7 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
     Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts);
     
     % check for colored graph isomorphisms
-    [FinalGraphs,~] = RemovedColoredIsos(Graphs,opts);
+    FinalGraphs = RemovedColoredIsos(Graphs,opts);
     
     % plot the unique designs
     plotDesign(FinalGraphs,NSC,opts)

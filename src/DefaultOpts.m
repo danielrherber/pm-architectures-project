@@ -75,7 +75,7 @@ function opts = DefaultOpts(opts)
 
     % path for saving figures
     if ~isfield(opts,'path')
-        opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); 
+        opts.path = mfoldername(mfilename('fullpath'),[]); 
     end
 
     % isomorphism checking method

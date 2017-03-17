@@ -1,7 +1,6 @@
 function [M,I,N] = TreeEnumerateGather(P,R,NSC,opts)
 
 Vfull = uint8(NSC.Vfull);
-A = uint8(NSC.A);
 
 % set this number based on user value or predefined large value
 if isfield(opts,'Nmax')
@@ -26,11 +25,28 @@ E = uint8([]);
 % initialize zero matrix where edge sets will be placed
 M = zeros(Nmax,sum(Vfull),'uint8');
 
-% expand A to get the potential connected components adjacency matrix 
-p.A = ExpandPossibleAdj(A,R,NSC);
+% check if A was provided
+if ~isfield(NSC,'A')
+    % expand A to get the potential connected components adjacency matrix 
+    p.A = CreateAMatrix(NSC.Aind,R,NSC);
+else
+    A = uint8(NSC.A);
+    p.A = ExpandPossibleAdj(A,R,NSC);
+end
+Ac = p.A;
 
-% Ac = ones(size(p.A),'uint8'); 
-Ac = p.A; % this can be just Ac
+% check if B was provided
+if NSC.flag.Bflag
+    if ~isfield(NSC,'B')
+        p.B = CreateBMatrix(NSC.Bind,R,NSC);
+        Bc = p.B;
+    else
+        error('please specify NSC.Bind, not NSC.B')
+    end
+else
+    p.B = [];
+    Bc = p.B;
+end
 
 % save ports vector to p structure
 p.P = P;
@@ -102,6 +118,15 @@ switch opts.algorithm
         p.v3 = ones(size(p.pI),'uint8');
         sortFlag = 1;
         [M,~] = TreeEnumerateCreatev4(Vfull,E,M,id,p,Ac,opts.displevel);
+    %----------------------------------------------------------------------
+    case 'tree_v7'
+        p.Vfull = Vfull;
+        V3 = ones(size(p.pI),'uint8');
+        sortFlag = 1;
+        Cflag = NSC.flag.Cflag;
+        Nflag = NSC.flag.Nflag;
+        Bflag = NSC.flag.Bflag; 
+        [M,~] = TreeEnumerateCreatev7(Vfull,E,M,id,Ac,Bc,p.cI,p.pI,p.Vfull,V3,p.NSC.necessary,Cflag,Nflag,Bflag,opts.displevel);
     %----------------------------------------------------------------------
     
     case 'tree_v1_analysis'

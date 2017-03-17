@@ -9,7 +9,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [FinalGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
+function FinalGraphs = RemovedColoredIsos(Graphs,opts)
 
     if ~isempty(Graphs) % if Graphs isn't empty
         if isfield(opts,'isomethod') % if opts.isomethod is present
@@ -18,7 +18,7 @@ function [FinalGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
                 %----------------------------------------------------------
                 case 'matlab' % Matlab implementation
                     try
-                        [FinalGraphs,typearray] = RemovedColoredIsosMatlab(Graphs,opts);
+                        FinalGraphs = RemovedColoredIsosMatlab(Graphs,opts);
                     catch
                         msg = sprintf(' An error occurred with the matlab option \n Definitely need MATLAB version R2016b or newer');
                         error(msg)
@@ -26,7 +26,7 @@ function [FinalGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
                 %----------------------------------------------------------
                 case 'python' % Python implementation
                     try
-                        [FinalGraphs,typearray] = RemovedColoredIsosPython(Graphs,opts);
+                        FinalGraphs = RemovedColoredIsosPython(Graphs,opts);
                     catch
                         msg = sprintf(' An error occurred with the python option \n Definitely need a proper python install with igraph');
                         error(msg)
@@ -37,14 +37,12 @@ function [FinalGraphs,typearray] = RemovedColoredIsos(Graphs,opts)
                         disp('Warning: colored isomorphisms may be present');
                         disp('To fix, pick an isomorphism checking method');
                         FinalGraphs = Graphs;
-                        typearray = [];
                     end
                 %----------------------------------------------------------
             end
         end
     else
         FinalGraphs = []; % report empty if no graphs present
-        typearray = [];
     end
 
 end

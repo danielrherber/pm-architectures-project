@@ -32,8 +32,8 @@ function INSTALL_PM_Architectures_Project
 	% Open example
 	OpenExample 
 
-    % Close this file
-    CloseThisFile    
+	% Close this file
+	CloseThisFile(mfilename)
     
 	warning('on','MATLAB:dispatcher:nameConflict');
 
@@ -184,13 +184,13 @@ function OpenExample
 	open ex_md161635_CaseStudy1
 end
 %--------------------------------------------------------------------------
-function CloseThisFile
-	disp('--- Setup complete, closing this file')
+function CloseThisFile(name)
+	disp(['--- Closing ', name])
 	disp(' ')
     
     h = matlab.desktop.editor.getAll;
     for k = 1:numel(h)
-        if ~isempty(strfind(h(k).Filename,'INSTALL_PM_Architectures_Project'))
+        if ~isempty(strfind(h(k).Filename,name))
             h(k).close % close this file
         end
     end

@@ -17,7 +17,8 @@ function NSC = DefaultNSC(NSC,P)
         NSC.necessary = zeros(1,length(P),'uint8'); % no components are necessary
 %         NSC.necessary = ones(1,length(P),'uint8'); % all components are necessary
     end
-
+    NSC.flag.Nflag = any(NSC.necessary);
+        
     % reduced potential adjacency matrix 
     if isfield(NSC,'A')
         NSC.A = uint8(NSC.A); % change data type
@@ -42,5 +43,12 @@ function NSC = DefaultNSC(NSC,P)
         NSC.counts = uint8(0); % connections need not be unique
 %         NSC.counts = uint8(1); % connections need to be unique
     end
+    NSC.flag.Cflag = NSC.counts;
+    
+    % n x 3 vector of indices for pair constraints
+    if ~isfield(NSC,'Bind')
+        NSC.Bind = []; % no pair constraints
+    end
+    NSC.flag.Bflag = uint8(~isempty(NSC.Bind));
 
 end
