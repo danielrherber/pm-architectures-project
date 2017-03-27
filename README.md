@@ -9,7 +9,7 @@
 
 Generate the set of unique useful architectures with a perfect matching-based approach.
 
-![readme image](http://www.danielherber.com/img/readme_image.svg "Readme Image")
+![readme image](http://www.danielherber.com/img/projects/pm-architectures-project/readme_image.svg "Readme Image")
 
 ### Install ###
 * Download the [PM Architectures Project](https://github.com/danielrherber/pm-architectures-project/archive/master.zip)

@@ -30,7 +30,7 @@ function INSTALL_PM_Architectures_Project
 	AddProjectContents
 
 	% Open example
-	OpenExample 
+	OpenExample('ex_md161635_CaseStudy1')
 
 	% Close this file
 	CloseThisFile(mfilename)
@@ -184,12 +184,12 @@ function PythonSetupCheck
 	disp(' ')
 end
 %--------------------------------------------------------------------------
-function OpenExample
-	disp('--- Opening an example')
+function OpenExample(name)
+	disp(['--- Opening ', name])
 	disp(' ')
 
-	% open case study 1 for md-16-1635
-	open ex_md161635_CaseStudy1
+	% open the file
+	open(name);
 end
 %--------------------------------------------------------------------------
 function CloseThisFile(name)
@@ -202,5 +202,4 @@ function CloseThisFile(name)
             h(k).close % close this file
         end
     end
-    
 end
