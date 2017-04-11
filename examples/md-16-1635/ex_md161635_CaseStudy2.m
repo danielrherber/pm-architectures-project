@@ -1,4 +1,4 @@
-% this case study replicates the results from Case Study 2:
+% this case study replicates the results from Case Study 2 in
 % JMD paper MD-16-1635
 % FIGURE 12: All 12 unique graphs for Case Study 2 requiring all components 
 % to be connected and a specified number of unique edges.
@@ -9,43 +9,59 @@ close all
 closeallbio
 
 % test number
-num = 1; 
+num = 1;
+
+% use the newer algorithm with enhancements? see tech. report on README
+newalgo = 0; % 0:no, 1:yes
 
 switch num
     case 1
-        P = [1 1 2 3 4]'; % ports vector
-        R = [1 2 2 1 1]'; % replicates vector
+        P = [1 1 2 3 4]; % ports vector
+        R = [1 2 2 1 1]; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector     
         % Case Study 2, #1 constraints
         NSC.M = [0 0 0 0 0];
         
     case 2
-        P = [1 1 2 3 4]'; % ports vector
-        R = [1 2 2 1 1]'; % replicates vector
+        P = [1 1 2 3 4]; % ports vector
+        R = [1 2 2 1 1]; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #2 constraints
         NSC.M = [1 0 0 0 0];
         
     case 3
-        P = [1 1 2 3 4]'; % ports vector
-        R = [1 2 2 1 1]'; % replicates vector
+        P = [1 1 2 3 4]; % ports vector
+        R = [1 2 2 1 1]; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #3 constraints
         NSC.M = [1 1 1 1 1];       
         NSC.counts = 1;
         
     case 4
-        P = [1 1 2 2 3 4]'; % ports vector
-        R = [1 2 1 1 1 1]'; % replicates vector
-        C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
-        % Case Study 2, #4 constraints
-        NSC.M = [1 1 1 0 1 1];
+        if newalgo % new
+            P = [1 1 2 3 4]; % ports vector
+            R.min = [1 2 1 1 1]; % replicates vector, min
+            R.max = [1 2 2 1 1]; % replicates vector, max
+            C = {'P','R', 'G', 'B', 'O'}; % label vector            
+            % Case Study 2, #4 constraints
+            NSC.M = [1 1 1 1 1];
+        else % old
+            P = [1 1 2 2 3 4]; % ports vector
+            R = [1 2 1 1 1 1]; % replicates vector
+            C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector            
+            % Case Study 2, #4 constraints
+            NSC.M = [1 1 1 0 1 1];
+        end
         NSC.counts = 1;
 
 end
 
 % options
-opts.algorithm = 'tree_v1'; %
+if newalgo
+    opts.algorithm = 'tree_v8'; % new
+else
+    opts.algorithm = 'tree_v1'; % old
+end
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
 opts.filterflag = 1; % 1 is on, 0 is off

@@ -1,4 +1,4 @@
-% this case study replicates the results from Case Study 1:
+% this case study replicates the results from Case Study 1 in
 % JMD paper MD-16-1635
 % FIGURE 10: All 16 unique graphs with no additional NSCs for Case Study 1.
 
@@ -9,6 +9,9 @@ closeallbio
 
 % test number
 num = 1; 
+
+% use the newer algorithm with enhancements? see tech. report on README
+newalgo = 0; % 0:no, 1:yes
 
 switch num
     case 1
@@ -28,6 +31,11 @@ switch num
 end
 
 % options
+if newalgo
+    opts.algorithm = 'tree_v8'; % new
+else
+    opts.algorithm = 'tree_v1'; % old
+end
 opts.algorithm = 'tree_v1';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers

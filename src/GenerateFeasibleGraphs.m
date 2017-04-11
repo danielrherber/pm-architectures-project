@@ -17,10 +17,10 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
     Nc = sum(R);
     
     % generate ports graph
-    [ports,~] = GenPortsGraph(P,R,C,NSC,1); 
+    [ports,~] = GeneratePortsGraph(P,R,C,NSC,1); 
 
     % generate candidate graphs
-    [M,I,N] = GenerateCandidateGraphs(R,P,opts,Np,Nc,ports);
+    [M,I,N] = GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports);
     
     % return if no graphs are present
     if N == 0
@@ -42,9 +42,9 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         CustomFeasibilityChecks = @(pp,A,unusefulFlag) [pp,A,unusefulFlag];
     end
     
-    % loop through the candidate graphs and check if they are
-    % feasible/useful
+    % loop through the candidate graphs and check if they are feasible
     parfor (i = 1:N, opts.parallel)
+%     for i = 1:N
  
         % graph is initially feasible
         unusefulFlag = 0;
@@ -64,20 +64,23 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         Jcc = pp.phi(Ji); % columns
         Vcc = ones(size(Jcc)); % edges
         
-        % connected components graph adjacency matrix
-        Am = sparse(Icc,Jcc,Vcc,Nc,Nc);
-        A = sign(Am + Am' + eye(Nc)) - eye(Nc);
-        
-        % remove stranded components using NSC.necessary
+        % connected components graph adjacency matrix (multiedge)
+        Am = sparse([Icc,Jcc],[Jcc,Icc],[Vcc,Vcc],Nc,Nc); % symmetric matrix
+        iDiag = 1:Nc+1:Nc^2; % diagonal entry linear indices
+        Am(iDiag) = Am(iDiag)/2; % half 
+
+        % remove stranded components using NSC.M
         if unusefulFlag ~= 1 % only if the graph is currently feasible
-            [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag);
+            [Am,pp,unusefulFlag] = RemovedStranded(pp,Am,unusefulFlag);
         end
 
         % check if the number of connections is correct
         if unusefulFlag ~= 1 % only if the graph is currently feasible
             if isfield(NSC,'counts') % check if the field exists
                 if NSC.counts == 1 % check if we want this constraint
-                    if ~all(sum(A) == pp.NSC.Vfull)
+                    % remove self loops and multi-edges
+                    A = sign(Am + Am' + eye(length(Am))) - eye(length(Am));
+                    if ~all(full(sum(A)) == pp.NSC.Vfull)
                         unusefulFlag = 1; % declare graph infeasible
                     end
                 end
@@ -87,21 +90,18 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         % run custom infeasibility check function
         if unusefulFlag ~= 1 % only if the graph is currently feasible
             if customfunFlag
-                [pp,A,unusefulFlag] = CustomFeasibilityChecks(pp,A,unusefulFlag);
+                [pp,Am,unusefulFlag] = CustomFeasibilityChecks(pp,Am,unusefulFlag);
             end
         end
         
         % if the graph is feasible, save it
         if unusefulFlag ~= 1
-            myA = sign(A + A' + eye(length(A))) - eye(length(A)); % remove multiple edges and loops
-            
-            Graphs(i).A = myA;
+            Graphs(i).A = full(Am);
             Graphs(i).L = pp.labels.C;
             Graphs(i).Ln = pp.labels.N;
             Graphs(i).removephi = pp.removephi;
             Graphs(i).N = I(i); % perfect matching number
-            Graphs(i).Am = full(Am + Am'); % get multiedge adjacency matrix
-            
+            Graphs(i).Am = full(Am); % get multiedge adjacency matrix
         end
         
     end % end for loop
