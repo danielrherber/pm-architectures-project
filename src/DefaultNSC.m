@@ -10,14 +10,14 @@
 %--------------------------------------------------------------------------
 function NSC = DefaultNSC(NSC,P)
 
-    % necessary component boolean vector
-    if isfield(NSC,'necessary')
-        NSC.necessary = uint8(NSC.necessary); % change data type
+    % mandatory component boolean vector
+    if isfield(NSC,'M')
+        NSC.M = uint8(NSC.M); % change data type
     else
-        NSC.necessary = zeros(1,length(P),'uint8'); % no components are necessary
-%         NSC.necessary = ones(1,length(P),'uint8'); % all components are necessary
+        NSC.M = zeros(1,length(P),'uint8'); % no components are mandatory
+%         NSC.M = ones(1,length(P),'uint8'); % all components are mandatory
     end
-    NSC.flag.Nflag = any(NSC.necessary);
+    NSC.flag.Nflag = any(NSC.M);
         
     % reduced potential adjacency matrix 
     if isfield(NSC,'A')
@@ -27,13 +27,13 @@ function NSC = DefaultNSC(NSC,P)
         NSC.A = ones(length(P),'uint8'); % all connections are allowed
     end
 
-    % self loops flag
-    if isfield(NSC,'self')
-        NSC.self = uint8(NSC.self); % change data type
-    else
-%         NSC.self = uint8(0); % don't allow self loops
-        NSC.self = uint8(1); % allow self loops
-    end
+%     % self loops flag
+%     if isfield(NSC,'self')
+%         NSC.self = uint8(NSC.self); % change data type
+%     else
+% %         NSC.self = uint8(0); % don't allow self loops
+%         NSC.self = uint8(1); % allow self loops
+%     end
     
     % flag for ensuring each component has the correct number of unique
     % connections

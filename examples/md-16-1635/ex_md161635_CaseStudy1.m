@@ -22,8 +22,8 @@ switch num
         R = [3 2 1]'; % replicates vector
         C = {'R','G','B'}; % label vector
         % Case Study 1, #2 constraints
-        NSC.necessary = [0 0 1];
-        % NSC.necessary = [1 1 1];
+        NSC.M = [0 0 1];
+        % NSC.M = [1 1 1];
         NSC.counts = 1;
 end
 

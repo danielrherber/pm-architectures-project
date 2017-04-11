@@ -38,7 +38,7 @@ in.nodecolor = 'w'; in.edgecolor = [0 0 0]; in.edgestyle = '-';
 mygplotwl(A,xy,in); hold on
 
 for j = 1:n
-    c = mycolorstr(L{j});
+    c = MyColorValues(L{j});
             
     x = xy(j,1);
     y = xy(j,2);

@@ -16,7 +16,7 @@ function plotDesign(UniqueFeasibleGraphs,NSC,opts)
         close all
 
         % determine if matlab plots are needed
-        if (sum(NSC.necessary) == 0) && strcmp(opts.plotfun,'bgl')
+        if (sum(NSC.M) == 0) && strcmp(opts.plotfun,'bgl')
             if (opts.displevel > 1) % verbose
                 warning('switching to ''matlab'' since there may be incomplete graphs')
                 opts.plotfun = 'matlab';

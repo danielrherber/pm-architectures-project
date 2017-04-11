@@ -16,19 +16,28 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
     % set NSC with defaults if not specified
     NSC = DefaultNSC(NSC,P);
 
+    % potentially start the timer
     if (opts.displevel > 0)
         tic % start timer
     end
     
-    % sort {C, R, P} to be better suited for enumeration
-    [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts);
+    % determine if we should use subcatalogs or a single catalog
+    % subcatalogs if there are any mandatory components or R.min is defined
+%     if NSC.flag.Nflag || isfield(R,'min')
+%         % generate unique, feasible graphs
+%         FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts);
+%         
+%     else % use single catalog
+        % sort {C, R, P} to be better suited for enumeration
+        [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts);
+        
+        % generate feasible graphs
+        Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts);
 
-    % generate feasible graphs
-    Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts);
-    
-    % check for colored graph isomorphisms
-    FinalGraphs = RemovedColoredIsos(Graphs,opts);
-    
+        % check for colored graph isomorphisms
+        FinalGraphs = RemovedColoredIsos(Graphs,opts);
+%     end
+
     % plot the unique designs
     plotDesign(FinalGraphs,NSC,opts)
     

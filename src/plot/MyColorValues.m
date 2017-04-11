@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% mycolorstr.m
-% Given a specific string, output a specfic color
+% MyColorValues.m
+% Given a specific string, output a specific color
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 % Urbana-Champaign
 % Date: 08/20/2016
 %--------------------------------------------------------------------------
-function c = mycolorstr(L)
+function c = MyColorValues(L)
     switch L
         case 'R'
             c = [1,0,0]; % red

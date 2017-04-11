@@ -29,7 +29,7 @@ switch testnum
         R = [n]; % replicates vector
         C = {'R'}; % label vector
         NSC.counts = 1;
-        NSC.necessary = 1;
+        NSC.M = 1;
         
     case 2 % worst case, pure pm (n-1)!!
         n = 8;
@@ -56,7 +56,7 @@ switch testnum
         A = round((A+A')/3);
         NSC.A = A;
         NSC.counts = 1;
-        NSC.necessary = [1 1 1];
+        NSC.M = [1 1 1];
         
 end
 

@@ -28,7 +28,7 @@ function [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts)
     P = P(I);
     R = R(I);
     C = C(I);
-    NSC.necessary = NSC.necessary(I);
+    NSC.M = NSC.M(I);
     NSC.A = NSC.A(I,:);
     NSC.A = NSC.A(:,I);
     
@@ -45,5 +45,5 @@ end
 % P = flipud(P);
 % R = flipud(R);
 % C = fliplr(C);
-% NSC.necessary = fliplr(NSC.necessary);
+% NSC.M = fliplr(NSC.M);
 % NSC.A = rot90(NSC.A,2);

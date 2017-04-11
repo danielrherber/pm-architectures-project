@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % RemovedStranded.m
-% Find stranded components not connected to the necessary components and
+% Find stranded components not connected to the mandatory components and
 % remove
 %--------------------------------------------------------------------------
 %
@@ -23,7 +23,7 @@ function [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag)
     if (sum(W(:)) == N^2)
         % don't remove any vertices
     else
-        S = find(pp.NSC.necessary);
+        S = find(pp.NSC.M);
         for i = S
             R = [R;find(W(:,i) == 0)];
         end
@@ -38,7 +38,6 @@ function [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag)
             pp.NSC.Vfull(R(j)) = [];
 %             end
         end
-        
         O = sort(R,1,'descend');
     end
     

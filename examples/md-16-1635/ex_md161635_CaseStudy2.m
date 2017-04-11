@@ -17,21 +17,21 @@ switch num
         R = [1 2 2 1 1]'; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector     
         % Case Study 2, #1 constraints
-        NSC.necessary = [0 0 0 0 0];
+        NSC.M = [0 0 0 0 0];
         
     case 2
         P = [1 1 2 3 4]'; % ports vector
         R = [1 2 2 1 1]'; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #2 constraints
-        NSC.necessary = [1 0 0 0 0];
+        NSC.M = [1 0 0 0 0];
         
     case 3
         P = [1 1 2 3 4]'; % ports vector
         R = [1 2 2 1 1]'; % replicates vector
         C = {'P','R', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #3 constraints
-        NSC.necessary = [1 1 1 1 1];       
+        NSC.M = [1 1 1 1 1];       
         NSC.counts = 1;
         
     case 4
@@ -39,7 +39,7 @@ switch num
         R = [1 2 1 1 1 1]'; % replicates vector
         C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
         % Case Study 2, #4 constraints
-        NSC.necessary = [1 1 1 0 1 1];
+        NSC.M = [1 1 1 0 1 1];
         NSC.counts = 1;
 
 end

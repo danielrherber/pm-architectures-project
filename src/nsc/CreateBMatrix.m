@@ -18,7 +18,7 @@ function Bout = CreateBMatrix(Bind,R,NSC)
     
     % for each triplet of indices, 0 the correct entry
     for k = 1:size(Bind,1)
-        Bin(Bind(k,1),Bind(k,2),Bind(k,3)) = 0;
+        Bin(Bind(k,3),Bind(k,2),Bind(k,1)) = 0;
     end
 
     % total number of components

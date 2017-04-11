@@ -25,7 +25,7 @@ function plotDesignMatlab(A,L,i,pm,opts)
     
     % get color spec
     for k = 1:numel(L)
-        c(k,:) = mycolorstr(L{k});
+        c(k,:) = MyColorValues(L{k});
     end
     
     % get unique data for the labels

@@ -1,39 +1,44 @@
-
+%--------------------------------------------------------------------------
+% TreeEnumerateCreatev1
 % this is the algorithm in the DETC paper
-function [M,id] = TreeEnumerateCreatev1(V,E,M,id,p)
+%--------------------------------------------------------------------------
+% 
+%--------------------------------------------------------------------------
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
+%--------------------------------------------------------------------------
+function [SavedGraphs,id] = TreeEnumerateCreatev1(V,E,SavedGraphs,id,A,cVf,dispflag)
 
     % remove the first remaining port
-    I = find(V,1); % find nonzero entries
-    L = p.pI(I)-V(I); % left port 
-    V(I) = V(I)-1; % remove port
+    iL = find(V,1); % find nonzero entries (ports remaining)
+    L = cVf(iL)-V(iL); % left port 
+    V(iL) = V(iL)-1; % remove left port
     
     % potential remaining ports
-    AV = p.A(I,:).*V;
+    Vallow = V.*A(iL,:);
     
     % find remaining nonzero entries
-    I = find(AV);
+    I = find(Vallow);  
 
-    for i = I % loop through all nonzero entries
+	% loop through all nonzero entries
+    for iR = I
         
         % local for loop variables
-        Vo = V;
+        V2 = V;
         
         % remove another port creating an edge
-        R = p.pI(i)-Vo(i); % right port
-        Eo = [E,L,R]; % combine left and right ports for an edge
-        Vo(i) = Vo(i)-1; % remove port (local copy)
+        R = cVf(iR)-V2(iR); % right port
+        E2 = [E,L,R]; % combine left, right ports for an edge
+        V2(iR) = V2(iR)-1; % remove port (local copy)
         
-        if any(Vo)
-                [M,id] = TreeEnumerateCreatev1(Vo,Eo,M,id,p);
+        if any(V2)
+                [SavedGraphs,id] = TreeEnumerateCreatev1(V2,E2,SavedGraphs,id,A,cVf,dispflag);
         else
-            if (length(Eo) == p.pI(end)-1)
-                id = id+1; % increment index of total graphs
-                M(id,:) = Eo; % append current graph (a matching)
-                if mod(id,10000) == 0
-                      moneyString = sprintf(',%c%c%c',fliplr(num2str(id)));
-                    moneyString = fliplr(moneyString(2:end));
-                   dispstat(['Graphs generated: ',moneyString])
-                end; return
-            end; return
+            if (length(E2) == cVf(end)-1)
+                [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag); continue
+            end; continue
         end
-    end
+        
+    end % for iR = I
+end

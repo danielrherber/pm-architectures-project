@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% GenPortsGraph.m
+% GeneratePortsGraph.m
 % Given an architecture problem, generate the ports graph and additional
 % items
 %--------------------------------------------------------------------------
@@ -9,14 +9,14 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [ports,i] = GenPortsGraph(P,R,C,NSC,i)
+function [ports,i] = GeneratePortsGraph(P,R,C,NSC,i)
 
 % number of components
 n = sum(R);
 
 % initialize
 I = []; J = []; V = [];
-phi = []; ind = 0; necessary = []; Vfull = [];
+phi = []; ind = 0; mandatory = []; Vfull = [];
 labelsC = {}; labelsP = {}; labelsCnum = [];
 
 % loop through each component type
@@ -32,9 +32,9 @@ for j = 1:length(R)
             % component index
             phi = [phi,ind];
         end
-        % is this replicate necessary? make the list
-        if isfield(NSC,'necessary')
-            necessary = [necessary,NSC.necessary(j)];
+        % is this replicate mandatory? make the list
+        if isfield(NSC,'M')
+            mandatory = [mandatory,NSC.M(j)];
         end
         % replicate the number of ports for each replicate
         Vfull = [Vfull,P(j)];
@@ -79,13 +79,13 @@ ports.labels.N = base2dec(upper(labelsC),36)';
 % network structure constraints
 ports.NSC = NSC; % copy current NSC structure
 ports.NSC.Vfull = uint8(Vfull);
-ports.NSC.necessary = uint8(necessary); % expanded necessary vector
+ports.NSC.M = uint8(mandatory); % expanded mandatory vector
 
 % old stuff
-% if isfield(NSC,'necessary')
-%     ports.NSC.necessary = uint8(necessary);
+% if isfield(NSC,'mandatory')
+%     ports.NSC.M = uint8(mandatory);
 % else
-% 	ports.NSC.necessary = zeros(length(P),'uint8'); % no components are necessary
+% 	ports.NSC.M = zeros(length(P),'uint8'); % no components are mandatory
 % end % some moved above
 % 
 % if isfield(NSC,'A')

@@ -11,7 +11,7 @@ R = [1 1 2 2 2 1 2 2]'; % replicate vector
 C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector 
 
 % constraints
-NSC.necessary = [1 1 0 0 0 0 0 0];
+NSC.M = [1 1 0 0 0 0 0 0];
 NSC.counts = 1;
 NSC.self = 1; % allow self-loops
 % provide potential adjacency matrix
