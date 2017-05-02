@@ -1,12 +1,12 @@
 %--------------------------------------------------------------------------
 % mygplotwl.m
-% 
+% Custom gplot function with overlaid labels
 %--------------------------------------------------------------------------
-%
+% based on https://www.mathworks.com/matlabcentral/fileexchange/1044
 %--------------------------------------------------------------------------
-% Author: Daniel R. Herber, Graduate Student, University of Illinois at
-% Urbana-Champaign
-% Date: 08/20/2016
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [Xout,Yout] = mygplotwl(A,xy,in)
 

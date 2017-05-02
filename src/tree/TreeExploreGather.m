@@ -1,3 +1,14 @@
+%--------------------------------------------------------------------------
+% TreeExploreGather.m
+% Complete problem set up and use a particular generation method to 
+% generate a fixed number of graphs
+%--------------------------------------------------------------------------
+%
+%--------------------------------------------------------------------------
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
+%--------------------------------------------------------------------------
 function [M,I,N] = TreeExploreGather(counts,A,R,opts,N)
 
 M = zeros(N,sum(counts),'uint8'); % initialize matchings matrix

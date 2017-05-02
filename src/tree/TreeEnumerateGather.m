@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
-% TreeEnumerateGather
-% 
+% TreeEnumerateGather.m
+% Complete problem set up and use a particular enumeration method to 
+% generate all the graphs
 %--------------------------------------------------------------------------
 % 
 %--------------------------------------------------------------------------

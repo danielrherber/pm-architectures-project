@@ -10,6 +10,9 @@
 %--------------------------------------------------------------------------
 function A = ExpandPossibleAdj(A,R,NSC)
 
+    % ensure data type
+    A = uint8(A);
+
     % ensure that A is symmetric
     A = A + A' - ones(size(A),'uint8');
 

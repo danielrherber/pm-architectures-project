@@ -4,11 +4,10 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Author: Daniel R. Herber, Graduate Student, University of Illinois at
-% Urbana-Champaign
-% Date: 08/20/2016
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-
 function plotDesignBGL(A,L,i,pm,opts)
 
 A = sparse(A);

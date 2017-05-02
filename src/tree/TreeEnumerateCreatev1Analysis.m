@@ -1,5 +1,13 @@
-% this is the algorithm in the DETC paper
-% analysis version
+%--------------------------------------------------------------------------
+% TreeEnumerateCreatev1Analysis.m
+% This is the algorithm in the DETC paper (analysis version)
+%--------------------------------------------------------------------------
+%
+%--------------------------------------------------------------------------
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
+%--------------------------------------------------------------------------
 function [M,id] = TreeEnumerateCreatev1Analysis(V,E,M,id,p,prenode)
 
     global node nodelist

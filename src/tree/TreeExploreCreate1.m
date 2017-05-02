@@ -1,3 +1,14 @@
+%--------------------------------------------------------------------------
+% TreeExploreCreate1.m
+% Using the tree_v1 algorithm, generate a single graph using randomly
+% selected feasible edges
+%--------------------------------------------------------------------------
+% 
+%--------------------------------------------------------------------------
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
+%--------------------------------------------------------------------------
 function [M,id] = TreeExploreCreate1(V,E,M,cp,id,A)
     N = sum(V ~= 0);
     if N > 1 % if multiple nonzero elements

@@ -31,6 +31,6 @@ function c = MyColorValues(L)
         case 'C'
             c = [230,219,116]/255; % 
         otherwise
-            c = [0,0,0];
+            c = [1,1,1];
     end
 end
