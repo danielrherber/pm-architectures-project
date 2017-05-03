@@ -17,7 +17,7 @@ function NSC = DefaultNSC(NSC,P)
         NSC.M = zeros(1,length(P),'uint8'); % no components are mandatory
 %         NSC.M = ones(1,length(P),'uint8'); % all components are mandatory
     end
-    NSC.flag.Nflag = any(NSC.M);
+    NSC.flag.Mflag = any(NSC.M);
         
     % reduced potential adjacency matrix 
     if isfield(NSC,'A')
@@ -35,15 +35,19 @@ function NSC = DefaultNSC(NSC,P)
 %         NSC.self = uint8(1); % allow self loops
 %     end
     
-    % flag for ensuring each component has the correct number of unique
+    % vector for ensuring each component has the correct number of unique
     % connections
     if isfield(NSC,'counts')
-        NSC.counts = uint8(NSC.counts); % change data type
+        if length(NSC.counts) == 1
+            NSC.counts = uint8(NSC.counts*ones(length(P),1)); % change data type
+        else
+            NSC.counts = uint8(NSC.counts); % change data type
+        end
     else
-        NSC.counts = uint8(0); % connections need not be unique
-%         NSC.counts = uint8(1); % connections need to be unique
+        NSC.counts = uint8(0*ones(length(P),1)); % no connections need to be unique
+%         NSC.counts = uint8(1*ones(length(P),1)); % all connections need to be unique
     end
-    NSC.flag.Cflag = NSC.counts;
+    NSC.flag.Cflag = any(NSC.counts);
     
     % n x 3 vector of indices for pair constraints
     if ~isfield(NSC,'Bind')

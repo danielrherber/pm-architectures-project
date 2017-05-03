@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,Cflag,Nflag,Bflag,dispflag)
+function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,Mflag,Bflag,dispflag)
     
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -38,7 +38,7 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
         V2(iR) = V2(iR)-1; % remove port (local copy)
 
         % START ENHANCEMENT: saturated subgraphs
-        if Nflag
+        if Mflag
             iNonSat = find(V2); % find the nonsaturated components 
             if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
                 nUncon = sum(SavedGraphs(iNonSat));
@@ -61,7 +61,7 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
         % END ENHANCEMENT: saturated subgraphs
                
         % START ENHANCEMENT: multi-edges
-        if Cflag
+        if counts(iR) || counts(iL) % if either component needs unique connections
             if (iR ~= iL) % don't do for self loops
                 A2(iR,iL) = uint8(0); % limit this connection
                 A2(iL,iR) = uint8(0); % limit this connection
@@ -78,7 +78,7 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
         % END ENHANCEMENT: line-connectivity constraints
         
         if any(V2)
-            [SavedGraphs,id] = TreeEnumerateCreatev8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,Cflag,Nflag,Bflag,dispflag);
+            [SavedGraphs,id] = TreeEnumerateCreatev8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,Mflag,Bflag,dispflag);
         else
             if (length(E2) == cVf(end)-1)
                 [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag); continue

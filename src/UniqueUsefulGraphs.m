@@ -23,7 +23,7 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
     
     % determine if we should use subcatalogs or a single catalog
     % subcatalogs if there are any mandatory components or R.min is defined
-    if NSC.flag.Nflag || isfield(R,'min')
+    if NSC.flag.Mflag || isfield(R,'min')
         % generate unique, feasible graphs
         FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts);
         

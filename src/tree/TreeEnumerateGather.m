@@ -79,16 +79,16 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
             V3 = ones(size(p.cVf),'uint8');
             sortFlag = 1;
             Cflag = NSC.flag.Cflag;
-            Nflag = NSC.flag.Nflag;
+            Mflag = NSC.flag.Mflag;
             Bflag = NSC.flag.Bflag; 
-            [M,~] = TreeEnumerateCreatev7(Vfull,E,M,id,A,B,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Nflag,Bflag,opts.displevel);
-    %         [M,~] = TreeEnumerateCreateIter(Vfull,E,M,id,Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Nflag,Bflag,opts.displevel);
-    %         M = TreeEnumerateCreateIterBFS(Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Nflag,Bflag,opts.displevel,Ln);
+            [M,~] = TreeEnumerateCreatev7(Vfull,E,M,id,A,B,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
+    %         [M,~] = TreeEnumerateCreateIter(Vfull,E,M,id,Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
+    %         M = TreeEnumerateCreateIterBFS(Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel,Ln);
         %----------------------------------------------------------------------
         case 'tree_v8'
             sortFlag = 1;
             [M,~] = TreeEnumerateCreatev8(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,...
-                NSC.flag.Cflag,NSC.flag.Nflag,NSC.flag.Bflag,opts.displevel);
+                NSC.counts,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel);
         %----------------------------------------------------------------------
         case 'tree_v1_analysis'
             sortFlag = 1;

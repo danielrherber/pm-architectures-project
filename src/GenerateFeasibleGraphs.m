@@ -76,13 +76,15 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
 
         % check if the number of connections is correct
         if unusefulFlag ~= 1 % only if the graph is currently feasible
-            if isfield(NSC,'counts') % check if the field exists
-                if NSC.counts == 1 % check if we want this constraint
-                    % remove self loops and multi-edges
-                    A = sign(Am + Am' + eye(length(Am))) - eye(length(Am));
-                    if ~all(full(sum(A)) == pp.NSC.Vfull)
-                        unusefulFlag = 1; % declare graph infeasible
-                    end
+            if NSC.flag.Cflag % check if this nsc is present
+                % remove self loops and multi-edges
+                A = sign(Am + Am' + eye(length(Am))) - eye(length(Am));
+                % compare number of connections to port counts
+                check = full(sum(A)) == pp.NSC.Vfull;
+                % declare infeasible if any components with required
+                % unique connections does not have this property
+                if ~all(check(ports.NSC.counts==1))
+                    unusefulFlag = 1; % declare graph infeasible
                 end
             end
         end

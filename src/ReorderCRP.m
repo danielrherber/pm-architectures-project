@@ -29,10 +29,12 @@ function [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts)
     R = R(I);
     C = C(I);
     NSC.M = NSC.M(I);
+    NSC.counts = NSC.counts(I);
     NSC.A = NSC.A(I,:);
     NSC.A = NSC.A(:,I);
-    
-
+    for k = 1:size(NSC.Bind,1)
+        NSC.Bind(k,:) = changem(NSC.Bind(k,:),I,1:length(P));
+    end
 
 end
 

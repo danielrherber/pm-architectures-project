@@ -36,7 +36,6 @@ if newalgo
 else
     opts.algorithm = 'tree_v1'; % old
 end
-opts.algorithm = 'tree_v1';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
 opts.filterflag = 1; % 1 is on, 0 is off

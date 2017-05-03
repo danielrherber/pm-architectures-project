@@ -33,10 +33,10 @@ function A = ExpandPossibleAdj(A,R,NSC)
     end
     
     % START ENHANCEMENT: loops
-    if NSC.counts
+    if NSC.flag.Cflag % if there are any required unique connections
         N = length(NSC.M); % total number of component replicates
         iDiag = 1:N+1:N^2; % indices for the diagonal elements
-        A(iDiag) = ~NSC.M; % assign negated mandatory vector to the diagonal
+        A(iDiag) = ~NSC.M & ~NSC.counts; % assign negated mandatory vector to the diagonal
     end
     % END ENHANCEMENT: loops
         
