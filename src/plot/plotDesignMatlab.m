@@ -19,9 +19,14 @@ function plotDesignMatlab(A,L,i,pm,opts)
 
     % create graph object   
     G = graph(A);
-    
-    % graph plot    
-    h = plot(G,'k','NodeLabel',L,'MarkerSize',26); 
+
+    % graph plot
+    if any(A(:) > 1)
+        [~,~,V] = find(tril(A));
+        h = plot(G,'k','NodeLabel',L,'MarkerSize',26,'EdgeLabel',V); 
+    else
+        h = plot(G,'k','NodeLabel',L,'MarkerSize',26); 
+    end
     
     % get color spec
     for k = 1:numel(L)

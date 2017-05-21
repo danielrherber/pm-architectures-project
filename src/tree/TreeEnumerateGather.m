@@ -88,7 +88,7 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
         case 'tree_v8'
             sortFlag = 1;
             [M,~] = TreeEnumerateCreatev8(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,...
-                NSC.counts,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel);
+                NSC.counts,NSC.M,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel);
         %----------------------------------------------------------------------
         case 'tree_v1_analysis'
             sortFlag = 1;

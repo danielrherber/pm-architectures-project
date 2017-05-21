@@ -24,7 +24,7 @@ open ex_md161635_CaseStudy1
 ```
 
 ### Citation ###
-Many elements of this project are discussed in the following papers. Please cite them if you use project.
+Many elements of this project are discussed in the following papers. Please cite them if you use the project.
 
 * DR Herber, T Guo, JT Allison. **Enumeration of Architectures with Perfect Matchings**. Journal of Mechanical Design, 139(5), p. 051403, May 2017. [[PDF]](http://systemdesign.illinois.edu/publications/Her16b.pdf)
 	- *Abstract: In this article, a class of architecture design problems is explored with perfect matchings (PMs). A perfect matching in a graph is a set of edges such that every vertex is present in exactly one edge. The perfect matching approach has many desirable properties such as complete design space coverage. Improving on the pure perfect matching approach, a tree search algorithm is developed that more efficiently covers the same design space. The effect of specific network structure constraints (NSCs) and colored graph isomorphisms on the desired design space is demonstrated. This is accomplished by determining all unique feasible graphs for a select number of architecture problems, explicitly demonstrating the specific challenges of architecture design. With this methodology, it is possible to enumerate all possible architectures for moderate scale-systems, providing both a viable solution technique for certain problems and a rich data set for the development of more capable generative methods and other design studies.*

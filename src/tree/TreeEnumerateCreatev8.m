@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,Mflag,Bflag,dispflag)
+function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag)
     
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -41,7 +41,7 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
         if Mflag
             iNonSat = find(V2); % find the nonsaturated components 
             if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
-                nUncon = sum(SavedGraphs(iNonSat));
+                nUncon = sum(M(iNonSat));
                 if (nUncon == 0) % define a one set of edges and stop
                     for j = 1:sum(V2) % add remaining edges in default order
                         k = find(V2,1); % find first nonzero entry
@@ -51,7 +51,7 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
                     end
                     [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
                     continue
-                elseif (nUncon == sum(SavedGraphs))
+                elseif (nUncon == sum(M))
                     % continue iterating
                 else
                     continue % stop, this graph is infeasible
@@ -78,7 +78,7 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
         % END ENHANCEMENT: line-connectivity constraints
         
         if any(V2)
-            [SavedGraphs,id] = TreeEnumerateCreatev8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,Mflag,Bflag,dispflag);
+            [SavedGraphs,id] = TreeEnumerateCreatev8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
         else
             if (length(E2) == cVf(end)-1)
                 [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag); continue

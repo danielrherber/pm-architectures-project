@@ -128,7 +128,7 @@ for i = 2:n
     % output some stats to the command window    
     if (opts.displevel > 1) % verbose
         if mod(i,Ndispstat) == 0
-            dispstat(['Percentage complete: ',int2str(i/n*100),' %'])
+            dispstat(['Percentage complete: ',int2str(round(i/n*100)),' %'])
         end
     end
     
