@@ -11,15 +11,12 @@
 %--------------------------------------------------------------------------
 function M = SortAsPerfectMatching(M)
 
-M = fliplr(M);
-
-N = size(M,2);
-Mtemp = ones(1,N);
-% sort to make a perfect matching
-for i = 1:size(M,1)
-    odd = M(i,1:2:N-1);
-    [oddsort,Iodd] = sort(odd,'descend');
-    Mtemp(1,1:2:N-1) = oddsort;
-    Mtemp(1,2:2:N) = M(i,Iodd*2);
-    M(i,:) = Mtemp;
-end
+    M = fliplr(M);
+    N = size(M,2);
+    odd = M(:,1:2:N-1);
+    % sort to make a perfect matching
+    for k = 1:size(M,1)
+        [oddsort,Iodd] = sort(odd(k,:),'descend');
+        M(k,1:2:N-1) = oddsort;
+        M(k,2:2:N) = M(k,Iodd*2);
+    end

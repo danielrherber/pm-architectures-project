@@ -18,15 +18,32 @@
 % Date: 07/27/2015
 % http://www.mathworks.com/matlabcentral/fileexchange/52301
 %--------------------------------------------------------------------------
-function I = InversePerfectMatchings(V)
-    N = length(V); % total number of vertices
-    Ifixed = 1:N; % initialize list of available vertices
-    I = 1; % initialize PM index
-    B = cumprod(N-3:-2:1,'reverse');
-    for i = 1:N/2-1
-        Ifixed(V((i-1)*2+1)) = 0; % zero entry of left vertex
-        A = find(nonzeros(Ifixed)==V(2*i)); % return first (and only) entry
-        Ifixed(V(2*i)) = 0; % zero entry
-        I = I + (A-1)*B(i); % sum
+function Iout = InversePerfectMatchings(M,varargin)
+
+    % parse inputs
+    if ~isempty(varargin)
+        parallelnum = varargin{1}; % parallel computing
+    else
+        parallelnum = 0; % no parallel computing
+    end
+    
+    M = uint8(M); % ensure data type
+    Nm = size(M,1); % find the number of graphs in M
+    N = size(M,2); % total number of vertices
+    Iout = ones(Nm,1); % initialize output
+    Itemp = uint8(1:N); % initialize list of available vertices
+    B = cumprod(N-3:-2:1,'reverse'); % cumulative double factorial
+
+    parfor (k = 1:Nm, parallelnum)
+        V = M(k,:); % current vertex set
+        Ifixed = Itemp; % local copy
+        I = 1; % initialize PM index
+        for i = 1:N/2-1
+            Ifixed(V((i-1)*2+1)) = 0; % zero entry of left vertex
+            A = find(nonzeros(Ifixed)==V(2*i)); % return first (and only) entry
+            Ifixed(V(2*i)) = 0; % zero entry of right vertex
+            I = I + (A-1)*B(i); % sum
+        end
+        Iout(k) = I; % save to output
     end
 end

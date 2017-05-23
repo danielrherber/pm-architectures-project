@@ -18,7 +18,7 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
     if isfield(opts,'Nmax')
         Nmemory = opts.Nmax;
     else
-        Nmemory = 1e8;
+        Nmemory = 1e7;
     end
 
     % number of perfect matchings
@@ -29,7 +29,7 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
     Nmax = min(Npm,Nmemory);
 
     % id is used to keep track of the number of graphs found
-    id = 0;
+    id = uint64(0);
 
     % initialize empty edge set
     E = uint8([]);
@@ -48,7 +48,7 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
             error('please specify NSC.Bind, not NSC.B')
         end
     else
-        B = [];
+        B = uint8([]);
     end
 
     % vertex number + 1 in the connected ports graph of the first element of 
@@ -58,6 +58,9 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
     % vertex number in the connected component graph of the first components of
     % a particular component type
     iInitRep = uint8(cumsum(R)-R+1);
+    
+    % update data type
+    opts.displevel = uint8(opts.displevel);
 
     % initialize dispstat for overwritable messages to the command line
     dispstat('','init');
@@ -74,20 +77,18 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
             sortFlag = 1;
             [M,~] = TreeEnumerateCreatev1(Vfull,E,M,id,A,cVf,opts.displevel);
         %----------------------------------------------------------------------
-        case 'tree_v7'
-            p.Vfull = Vfull;
-            V3 = ones(size(p.cVf),'uint8');
+        case 'tree_v1_mex'
             sortFlag = 1;
-            Cflag = NSC.flag.Cflag;
-            Mflag = NSC.flag.Mflag;
-            Bflag = NSC.flag.Bflag; 
-            [M,~] = TreeEnumerateCreatev7(Vfull,E,M,id,A,B,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
-    %         [M,~] = TreeEnumerateCreateIter(Vfull,E,M,id,Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
-    %         M = TreeEnumerateCreateIterBFS(Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel,Ln);
+            [M,~] = TreeEnumerateCreatev1_mex(Vfull,E,M,id,A,cVf,opts.displevel);
         %----------------------------------------------------------------------
         case 'tree_v8'
             sortFlag = 1;
             [M,~] = TreeEnumerateCreatev8(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,...
+                NSC.counts,NSC.M,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel);
+        %----------------------------------------------------------------------
+        case 'tree_v8_mex'
+            sortFlag = 1;
+            [M,~] = TreeEnumerateCreatev8_mex(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,...
                 NSC.counts,NSC.M,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel);
         %----------------------------------------------------------------------
         case 'tree_v1_analysis'
@@ -97,8 +98,16 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
             nodelist = [0,nodelist];
             plotTreeEnumerate
         %----------------------------------------------------------------------
-        case 'tree_v8_analysis'
-
+        case 'tree_test'
+            p.Vfull = Vfull;
+            V3 = ones(size(p.cVf),'uint8');
+            sortFlag = 1;
+            Cflag = NSC.flag.Cflag;
+            Mflag = NSC.flag.Mflag;
+            Bflag = NSC.flag.Bflag; 
+            [M,~] = TreeEnumerateCreatev7(Vfull,E,M,id,A,B,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
+    %         [M,~] = TreeEnumerateCreateIter(Vfull,E,M,id,Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
+    %         M = TreeEnumerateCreateIterBFS(Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel,Ln);
         %----------------------------------------------------------------------
         otherwise
             error('algorithm not found')
@@ -118,14 +127,12 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
     % find the number of graphs in M
     N = size(M,1);
 
-    I = ones(N,1);
-    parfor (i = 1:N, opts.parallel)
-        O = M(i,:);
-        if sortFlag
-            O = SortAsPerfectMatching(O); % sort M to make them perfect matchings
-        end
-        I(i) = InversePerfectMatchings(O);
-        M(i,:) = O;
+    % sort as perfect matching
+    if sortFlag
+        M = SortAsPerfectMatching(M);
     end
+    
+    % obtain perfect matching numbers
+    I = InversePerfectMatchings(M,opts.parallel );
 
 end

@@ -53,6 +53,11 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
     % find and remove zero port subcatalogs
     Subcatalogs( (Subcatalogs*P == 0), :) = [];
     
+    % custom subcatalog filter function
+    if isfield(opts,'subcatalogfun')
+        Subcatalogs = opts.subcatalogfun(Subcatalogs,C,R,P,NSC,opts);
+    end
+    
     % number of subcatalogs
     Nsubcatalogs = size(Subcatalogs,1);
 
@@ -93,6 +98,9 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
 
         % find nonzero component types
         I = r~=0;
+
+        % ensure that it is a row vector
+        r = r(:)';
 
         % extract colored labels, replicates vector, and ports vector
         c = C(I);

@@ -12,15 +12,10 @@ function opts = DefaultOpts(opts)
 
     % algorithm for generate candidate graphs
     if ~isfield(opts,'algorithm')
-%         opts.algorithm = 'tree_v6';
-%         opts.algorithm = 'tree_v5';
-%         opts.algorithm = 'tree_v4';
-%         opts.algorithm = 'tree_v3';
-%         opts.algorithm = 'tree_v2';
-        opts.algorithm = 'tree_v1';
-%         opts.algorithm = 'tree_v4_analysis';
-%         opts.algorithm = 'tree_v3_analysis';
-%         opts.algorithm = 'tree_v2_analysis';
+        opts.algorithm = 'tree_v8';
+%         opts.algorithm = 'tree_v8_mex';
+%         opts.algorithm = 'tree_v1';
+%         opts.algorithm = 'tree_v1_mex';
 %         opts.algorithm = 'tree_v1_analysis';
 %         opts.algorithm = 'pm_full'; % generate all perfect matchings
 %         opts.algorithm = 'pm_incomplete'; % some of the perfect matchings        
@@ -58,6 +53,11 @@ function opts = DefaultOpts(opts)
         % none by default
     end
 
+    % custom subcatalog filter function
+    if ~isfield(opts,'subcatalogfun')
+        % none by default
+    end
+    
     % maximum number of graphs to display/save
     if ~isfield(opts,'plotmax')
         opts.plotmax = 10;
@@ -91,6 +91,7 @@ function opts = DefaultOpts(opts)
         opts.displevel = 2; % verbose
     %     opts.displevel = 1; % minimal
     %     opts.displevel = 0; % none
-    end   
+    end
+    opts.displevel = uint8(opts.displevel); % update data type
     
 end
