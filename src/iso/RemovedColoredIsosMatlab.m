@@ -60,7 +60,7 @@ for i = 2:n
     % initialize
     results = ones(min(Nbin,nNonIso),1);
     
-% 	parfor (c = 1:min(Nbin,ind), Nbin) % this works now but is slow        
+% 	parfor (c = 1:min(Nbin,nNonIso), parallelTemp) % this works now but is slow
 	for c = 1:min(Nbin,nNonIso)
         
         j = length(bin(c).Graphs); % number of graphs in the current bin

@@ -133,6 +133,6 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
     end
     
     % obtain perfect matching numbers
-    I = InversePerfectMatchings(M,opts.parallel );
+    I = InversePerfectMatchings(M,opts.parallel);
 
 end

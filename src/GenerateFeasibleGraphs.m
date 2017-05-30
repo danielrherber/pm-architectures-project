@@ -42,6 +42,13 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         CustomFeasibilityChecks = @(pp,A,unusefulFlag) [pp,A,unusefulFlag];
     end
     
+    % create B matrix, if necessary
+    if NSC.flag.Bflag
+        Bm = CreateBMatrix(NSC.Bind,R,NSC);
+    else
+        Bm = [];
+    end
+
     % loop through the candidate graphs and check if they are feasible
     parfor (i = 1:N, opts.parallel)
 %     for i = 1:N
@@ -83,9 +90,16 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
                 check = full(sum(A)) == pp.NSC.Vfull;
                 % declare infeasible if any components with required
                 % unique connections does not have this property
-                if ~all(check(ports.NSC.counts==1))
+                if ~all(check(pp.NSC.counts==1))
                     unusefulFlag = 1; % declare graph infeasible
                 end
+            end
+        end
+
+        % check line-connectivity constraints
+        if unusefulFlag ~= 1 % only if the graph is currently feasible
+            if NSC.flag.Bflag % check if this nsc is present
+                unusefulFlag = CheckLineConstraints(Am,Bm,unusefulFlag);
             end
         end
         

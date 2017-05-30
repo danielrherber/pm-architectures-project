@@ -78,22 +78,26 @@ for i = 2:n
     pyadj1 = pylist{i};
     sumadj1 = sumadj(i);
     
-%   parfor (c = 1:min(Nbin,ind), Nbin) % does not work       
-    for c = 1:min(Nbin,nNonIso)
+% 	parfor (c = 1:min(Nbin,nNonIso), parallelTemp) % this works now but is slow
+	for c = 1:min(Nbin,nNonIso)
         
         j = length(bin(c).Graphs); % number of graphs in the current bin
         IsoFlag = 0; % initialize isoFlag
         
         while (j > 0) && (IsoFlag == 0)
-            if nnode1 == bin(c).Graphs(j).nnode % check if the number of nodes is the same
+            nnode2 = bin(c).Graphs(j).nnode;
+            if isequal(nnode1,nnode2) % check if the number of nodes is the same
                 color2 = bin(c).Graphs(j).colors;
                 % check if colors are exactly the same
-                cdisFlag = all(color1 == color2);
-                if cdisFlag
-                    if ( bin(c).Graphs(j).sumadj == sumadj1 )
+                if isequal(color1,color2)
+                    if (sumadj1 == bin(c).Graphs(j).sumadj)
                         pyadj2 = bin(c).Graphs(j).pylist;
-                        IsoFlag = py.detectiso_func4.detectiso(pyadj1,pyadj2,...
-                            color1,color2,nnode1,bin(c).Graphs(j).nnode);
+                        if isequal(pyadj1,pyadj2)
+                            IsoFlag = 1;
+                        else
+                            IsoFlag = py.detectiso_func4.detectiso(pyadj1,pyadj2,...
+                                color1,color2,nnode1,nnode2);
+                        end
                     end
                 end
             end
@@ -103,7 +107,7 @@ for i = 2:n
             j = j - 1;
         end
         results(c) = IsoFlag;
-    end
+	end
     
     % check if the candidate graph is unique
     if any(results) % not unique

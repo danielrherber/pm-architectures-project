@@ -13,7 +13,7 @@ C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector
 % constraints
 NSC.M = [1 1 0 0 0 0 0 0];
 NSC.counts = 1;
-NSC.self = 1; % allow self-loops
+% NSC.self = 1; % allow self-loops
 % provide potential adjacency matrix
 A = ones(length(P));
 A(2,1) = 0;
@@ -28,9 +28,9 @@ A = round((A+A')/3);
 NSC.A = A;
 
 % options
-opts.algorithm = 'tree_v1'; % 'tree_v3' % 'pm_full' % 'pm_incomplete'
+opts.algorithm = 'tree_v1';
 opts.Nmax = 2e8; % maximum number of graphs to preallocate for
-opts.parallel = 1; % 1 to enable parallel computing, 0 to disable it
+opts.parallel = 12; % 1 to enable parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 opts.customfun = @(pp,A,infeasibleFlag) ex_md161635_Suspension_Extra_Constraints(pp,A,infeasibleFlag);
 opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'

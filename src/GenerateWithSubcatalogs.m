@@ -127,6 +127,11 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
 
         % all component types are mandatory
         nsc.M = ones(size(I));
+        
+        % update flags
+        nsc.flag.Cflag = uint8(any(nsc.counts));
+        nsc.flag.Mflag = true;
+        nsc.flag.Bflag = uint8(~isempty(nsc.Bind));
 
         % sort {C, R, P} to be better suited for enumeration
         [p,r,c,nsc] = ReorderCRP(p,r,c,nsc,opts);
@@ -134,7 +139,7 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
         % check for parallel computing
         if parallelflag > 0
             % generate feasible graphs for this catalog
-            f(k) = parfeval(@GenerateFeasibleGraphs,1,c,r,p,nsc,opts);
+            F(k) = parfeval(@GenerateFeasibleGraphs,1,c,r,p,nsc,opts);
         else
             % generate feasible graphs for this catalog
             Graphs{k} = GenerateFeasibleGraphs(c,r,p,nsc,opts);
@@ -150,7 +155,7 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
         % fetchNext blocks until next results are available
         for k = 1:Nsubcatalogs
             % fetchNext blocks until next results are available.
-            [completedIdx,value] = fetchNext(f);
+            [completedIdx,value] = fetchNext(F);
             
             % store results
             Graphs{completedIdx} = value;
@@ -166,24 +171,53 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
         ttime = toc; % stop the timer
         disp(['Found ',num2str(sum(G)),' feasible graphs in ',num2str(ttime),' s'])
     end    
+        
+    % remove subcatalogs with no feasible graphs
+    Graphs(cellfun('isempty',Graphs)) = [];
+    
+    %----------------------------------------------------------------------
+    % START TASK: remove colored graph isomorphisms
+    %----------------------------------------------------------------------
+    % number of subcatalogs with at least one feasible graph
+    Nfeasible = length(Graphs);
     
     % initialize
-    g = zeros(Nsubcatalogs,1);
-    
+    graphs = cell(Nfeasible,1);
+    g = zeros(Nfeasible,1);
+
     % check for colored graph isomorphisms
-    if strcmpi(opts.isomethod,'python')
-        for k = 1:Nsubcatalogs
-            Graphs{k} = RemovedColoredIsos(Graphs{k},opts);
-            % store the number of unique graphs found
-            g(k) = length(Graphs{k});
-        end
-    elseif strcmpi(opts.isomethod,'matlab')
-        parfor (k = 1:Nsubcatalogs, parallelflag)
-            Graphs{k} = RemovedColoredIsos(Graphs{k},opts);
-            % store the number of unique graphs found
-            g(k) = length(Graphs{k});
+    for k = 1:Nfeasible
+        if parallelflag > 0 % check for parallel computing
+            % remove colored graph isomorphisms for this subcatalog
+            f(k) = parfeval(@RemovedColoredIsos,1,Graphs{k},opts);
+        else
+            % remove colored graph isomorphisms for this subcatalog
+            graphs{k} = RemovedColoredIsos(Graphs{k},opts);
+            
+            % local display function
+            g = IsoDispFunc(k,g,length(graphs{k}),length(Graphs{k}),displevel);
+      
         end
     end
+
+    if parallelflag > 0 % check for parallel computing
+        % fetchNext blocks until next results are available
+        for k = 1:Nfeasible
+            % fetchNext blocks until next results are available.
+            [completedIdx,value] = fetchNext(f);
+            
+            % store results
+            graphs{completedIdx} = value;
+
+            % local display function
+            g = IsoDispFunc(completedIdx,g,length(value),length(Graphs{completedIdx}),displevel);
+
+        end
+    end
+
+    %----------------------------------------------------------------------
+    % END TASK: remove colored graph isomorphisms
+    %----------------------------------------------------------------------
 
     % reset opts
     opts.displevel = displevel;
@@ -193,11 +227,11 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
     ind = 0; 
     
     % append unique, feasible graphs
-    for k = 1:Nsubcatalogs % loop through each of catalog tests
+    for k = 1:Nfeasible % loop through each of catalog tests
         % loop through each unique graph in 
-        for i = 1:length(Graphs{k})
+        for i = 1:length(graphs{k})
             ind = ind + 1;
-            FinalGraphs(ind) = Graphs{k}(i);
+            FinalGraphs(ind) = graphs{k}(i);
         end
     end
     
@@ -208,7 +242,7 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
     end
 
 end
-% local display function
+% local display functions
 function G = SubcatalogsDispFunc(idx,G,Graphs,Subcatalogs,displevel)
 
     % store the number of feasible graphs found
@@ -217,7 +251,19 @@ function G = SubcatalogsDispFunc(idx,G,Graphs,Subcatalogs,displevel)
     % display some diagnostics
     if (displevel > 1) % verbose
         disp(['Found ',num2str(G(idx)),' feasible graphs with R = ',...
-            mat2str(Subcatalogs(idx,:))]);
+            mat2str(Subcatalogs(idx,:)), ', index ', num2str(idx)]);
+    end
+
+end
+function g = IsoDispFunc(idx,g,Ngraphs,NGraphs,displevel)
+
+    % store the number of unique graphs found
+    g(idx) = Ngraphs;
+
+    % display some diagnostics
+    if (displevel > 1) % verbose
+        disp([num2str(Ngraphs),'/',num2str(NGraphs),...
+            ' graphs unique for index ',num2str(idx)]);
     end
 
 end

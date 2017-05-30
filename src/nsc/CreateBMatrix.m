@@ -29,6 +29,9 @@ function Bout = CreateBMatrix(Bind,R,NSC)
 
     % temporary replicates vector
     Rt = R;
+    
+    % don't do loops enhancement
+    NSC.flag.Cflag = 0;
 
     % go through each component and expand the correct matrix
     for k = 1:N
@@ -36,8 +39,8 @@ function Bout = CreateBMatrix(Bind,R,NSC)
         I = find(Rt,1);
         % remove the specified component
         Rt(I) = Rt(I) - 1;
-        % expand the component's possible adjecency matrix and store        
-        Bout(:,:,k) = ExpandPossibleAdj(Bin(:,:,I),R,NSC);
+        % expand the component's possible adjecency matrix and store    
+        Bout(:,:,k) = ExpandPossibleAdj(Bin(:,:,I),R,NSC,0);
     end
 
 end

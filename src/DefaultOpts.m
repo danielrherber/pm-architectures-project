@@ -12,11 +12,11 @@ function opts = DefaultOpts(opts)
 
     % algorithm for generate candidate graphs
     if ~isfield(opts,'algorithm')
-        opts.algorithm = 'tree_v8';
-%         opts.algorithm = 'tree_v8_mex';
 %         opts.algorithm = 'tree_v1';
 %         opts.algorithm = 'tree_v1_mex';
 %         opts.algorithm = 'tree_v1_analysis';
+        opts.algorithm = 'tree_v8';
+%         opts.algorithm = 'tree_v8_mex';
 %         opts.algorithm = 'pm_full'; % generate all perfect matchings
 %         opts.algorithm = 'pm_incomplete'; % some of the perfect matchings        
     end
@@ -93,5 +93,12 @@ function opts = DefaultOpts(opts)
     %     opts.displevel = 0; % none
     end
     opts.displevel = uint8(opts.displevel); % update data type
+    
+    % start the parallel pool
+    if strcmpi(opts.isomethod,'python')
+        ParallelToggle(opts,'start-py')
+    else
+        ParallelToggle(opts,'start')
+    end
     
 end

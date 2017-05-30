@@ -9,29 +9,29 @@
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag)
-    
+
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
     L = cVf(iL)-V(iL); % left port 
     V(iL) = V(iL)-1; % remove left port
-    
+
     % START ENHANCEMENT: replicate ordering
     Vordering = uint8(circshift(V,1) ~= Vf); % check if left neighbor has been connected to something
     Vordering(iInitRep) = 1; % initial replicates are always 1
     % END ENHANCEMENT: replicate ordering
-    
+
     % potential remaining ports
     Vallow = V.*Vordering.*A(iL,:);
-    
+
     % find remaining nonzero entries
     I = find(Vallow);  
-    
+
 	% loop through all nonzero entries
     for iR = I
-                
+
         % local for loop variables
         V2 = V; A2 = A;
-        
+
         % remove another port creating an edge
         R = cVf(iR)-V2(iR); % right port
         E2 = [E,L,R]; % combine left, right ports for an edge
@@ -59,16 +59,16 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
             end
         end
         % END ENHANCEMENT: saturated subgraphs
-               
+
         % START ENHANCEMENT: multi-edges
-        if counts(iR) || counts(iL) % if either component needs unique connections
+        if counts(iL) || counts(iR) % if either component needs unique connections
             if (iR ~= iL) % don't do for self loops
                 A2(iR,iL) = uint8(0); % limit this connection
                 A2(iL,iR) = uint8(0); % limit this connection
             end
         end
         % END ENHANCEMENT: multi-edges
-        
+
         % START ENHANCEMENT: line-connectivity constraints
         if Bflag
             A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections 
@@ -76,14 +76,13 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
             A2([iR,iL],:) = A2(:,[iR,iL])'; % make symmetric
         end
         % END ENHANCEMENT: line-connectivity constraints
-        
-        if any(V2)
+
+        if any(V2) % recursive call if any remaining vertices
             [SavedGraphs,id] = TreeEnumerateCreatev8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
-        else
-            if (length(E2) == cVf(end)-1)
-                [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag); continue
-            end; continue
+        else % save the complete perfect matching graph
+            [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
         end
-        
+
     end % for iR = I
-end
+
+end % function TreeEnumerateCreatev8

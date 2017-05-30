@@ -19,8 +19,8 @@ function plotDesign(UniqueFeasibleGraphs,NSC,opts)
         if (sum(NSC.M) == 0) && strcmp(opts.plotfun,'bgl')
             if (opts.displevel > 1) % verbose
                 warning('switching to ''matlab'' since there may be incomplete graphs')
-                opts.plotfun = 'matlab';
             end
+            opts.plotfun = 'matlab';
         end
 
         % determine how many graphs to plot

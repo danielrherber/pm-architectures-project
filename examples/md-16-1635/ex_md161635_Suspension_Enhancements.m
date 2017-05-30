@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
-% Test_Treev8mex.m
-% test for tree_v8_mex option
+% ex_md161635_Suspension_Enhancements.m
+% Replicates the results from Case Study 3 in JMD paper MD-16-1635
+% Uses the enhancements in the technical report
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,13 +9,14 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-close all
 clear
 clc
+close all
+closeallbio
 
 P = [1 1 1 2 2 2 3 4]; % ports vector 
-R.min = [1 1 2 2 2 1 2 1]; % replicate vector 
-R.max = [1 1 2 2 2 1 2 1]; % replicate vector 
+R.min = [1 1 0 0 0 0 0 0]; % replicate vector 
+R.max = [1 1 2 2 2 1 2 2]; % replicate vector 
 C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector 
 
 % constraints
@@ -40,13 +42,15 @@ NSC.Bind(3,:) = [1,8,2]; % s-p-u
 NSC.Bind(4,:) = [2,8,1]; % u-p-s
 
 % options
-% opts.algorithm = 'tree_v8';
 opts.algorithm = 'tree_v8_mex';
-
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
+opts.parallel = 12; % 1 to enable parallel computing, 0 to disable it
+opts.filterflag = 1; % 1 is on, 0 is off
 opts.customfun = @(pp,A,infeasibleFlag) ex_md161635_Suspension_Extra_Constraints(pp,A,infeasibleFlag);
+opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'
 opts.plotmax = 0; % maximum number of graphs to display/save
-opts.isomethod = 'None';
-opts.parallel = 0;
+opts.name = mfilename; % name of the example
+opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
+opts.isomethod = 'Python'; % option 'Matlab' is available in 2016b or later versions
 
 FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);

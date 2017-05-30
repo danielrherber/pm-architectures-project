@@ -34,9 +34,9 @@ function [A,pp,unusefulFlag] = RemovedStranded(pp,A,unusefulFlag)
             A(:,R(j)) = []; % remove columns
             pp.labels.C(R(j)) = []; % remove labels
             pp.labels.N(R(j)) = []; % remove labels
-%             if isfield(pp.NSC,'counts')
             pp.NSC.Vfull(R(j)) = [];
-%             end
+            pp.NSC.M(R(j)) = [];
+            pp.NSC.counts(R(j)) = [];
         end
         O = sort(R,1,'descend');
     end
