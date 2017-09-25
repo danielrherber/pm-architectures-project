@@ -134,15 +134,15 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
         nsc.flag.Bflag = uint8(~isempty(nsc.Bind));
 
         % sort {C, R, P} to be better suited for enumeration
-        [p,r,c,nsc] = ReorderCRP(p,r,c,nsc,opts);
+        [p,r,c,nsc,sorts] = ReorderCRP(p,r,c,nsc,opts);
 
         % check for parallel computing
         if parallelflag > 0
             % generate feasible graphs for this catalog
-            F(k) = parfeval(@GenerateFeasibleGraphs,1,c,r,p,nsc,opts);
+            F(k) = parfeval(@GenerateFeasibleGraphs,1,c,r,p,nsc,opts,sorts);
         else
             % generate feasible graphs for this catalog
-            Graphs{k} = GenerateFeasibleGraphs(c,r,p,nsc,opts);
+            Graphs{k} = GenerateFeasibleGraphs(c,r,p,nsc,opts,sorts);
             
             % local display function
             G = SubcatalogsDispFunc(k,G,Graphs,Subcatalogs,displevel);
@@ -233,6 +233,11 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
             ind = ind + 1;
             FinalGraphs(ind) = graphs{k}(i);
         end
+    end
+    
+    % return empty structure with no feasible graphs
+    if Nfeasible == 0
+        FinalGraphs = [];
     end
     
     % output some stats to the command window

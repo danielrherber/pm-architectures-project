@@ -47,9 +47,12 @@ nnode = zeros(n,1,'uint64');
 sumadj = nnode;
 parfor (i = 1:n, parallelTemp)
 % for i = 1:n
+    [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
     adj = Graphs(i).A;
+    adj = adj(Isort,:);
+    adj = adj(:,Isort);
     nnode(i) = uint64(size(adj,1));
-    colors{i} = uint64(Graphs(i).Ln);
+    colors{i} = uint64(Graphs(i).Ln(Isort));
     sumadj(i) = sum(adj(:));
     pylist{i} = int8(adj(:)');
 end
@@ -148,6 +151,12 @@ for c = 1:Nbin % go through each bin
         UniqueGraphs = [UniqueGraphs, bin(c).Graphs];
     end
 end
+
+% remove some fields
+UniqueGraphs = rmfield(UniqueGraphs,'colors');
+UniqueGraphs = rmfield(UniqueGraphs,'pylist');
+UniqueGraphs = rmfield(UniqueGraphs,'nnode');
+UniqueGraphs = rmfield(UniqueGraphs,'sumadj');
 
 % output some stats to the command window
 if (opts.displevel > 0) % minimal

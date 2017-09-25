@@ -119,6 +119,9 @@ for c = 1:Nbin % go through each bin
     end
 end
 
+% remove some fields
+UniqueGraphs = rmfield(UniqueGraphs,'G');
+
 % output some stats to the command window
 if (opts.displevel > 0) % minimal
     ttime = toc; % stop the timer

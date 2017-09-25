@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts)
+function [P,R,C,NSC,Sorts] = ReorderCRP(P,R,C,NSC,opts)
 
     % ensure column vectors
     P = P(:);
@@ -23,6 +23,23 @@ function [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts)
              [~,I] = sort(R + P*1000,'ascend');
 
     end
+
+    % save sort order for future unsorting of the adjacency matrix
+    SortCell = cell(1,length(R));
+    idx = 0;
+    for k = 1:length(R)
+        SortCell{k} = idx+1:idx+R(k);
+        idx = max(SortCell{k});
+    end
+    SortArray = cell2mat(SortCell(I));
+    [~,ISorts] = sort(SortArray);
+    
+    % original ordering
+    Sorts.P = P;
+    Sorts.R = R; 
+    Sorts.C = C;
+    Sorts.NSC = NSC;
+    Sorts.I = ISorts;
 
     % order the other items
     P = P(I);

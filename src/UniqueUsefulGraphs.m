@@ -29,10 +29,10 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
         
     else % use single catalog
         % sort {C, R, P} to be better suited for enumeration
-        [P,R,C,NSC] = ReorderCRP(P,R,C,NSC,opts);
+        [P,R,C,NSC,Sorts] = ReorderCRP(P,R,C,NSC,opts);
         
         % generate feasible graphs
-        Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts);
+        Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts);
 
         % check for colored graph isomorphisms
         FinalGraphs = RemovedColoredIsos(Graphs,opts);

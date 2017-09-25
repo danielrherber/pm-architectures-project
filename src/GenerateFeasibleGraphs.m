@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts) 
+function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts) 
     
     % number of ports
     Np = P'*R;
@@ -48,7 +48,16 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
     else
         Bm = [];
     end
-
+    
+    % needed to construct correct adjacency matrix
+    phiSorted = ports.phi; 
+    
+    % generated ports graph with original ordering
+    [ports,~] = GeneratePortsGraph(Sorts.P,Sorts.R,Sorts.C,Sorts.NSC,1);
+    
+    % indices to unsort adjacency matrix
+    Iunsort = Sorts.I; 
+    
     % loop through the candidate graphs and check if they are feasible
     parfor (i = 1:N, opts.parallel)
 %     for i = 1:N
@@ -67,8 +76,8 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         Ji = PM(2:2:end); % even values
         
         % map edges from CP graph to CC graph with phi
-        Icc = pp.phi(Ii); % rows
-        Jcc = pp.phi(Ji); % columns
+        Icc = phiSorted(Ii); % rows
+        Jcc = phiSorted(Ji); % columns
         Vcc = ones(size(Jcc)); % edges
         
         % connected components graph adjacency matrix (multiedge)
@@ -76,6 +85,10 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts)
         iDiag = 1:Nc+1:Nc^2; % diagonal entry linear indices
         Am(iDiag) = Am(iDiag)/2; % half 
 
+        % unsort
+        Am = Am(Iunsort,:);
+        Am = Am(:,Iunsort);
+        
         % remove stranded components using NSC.M
         if unusefulFlag ~= 1 % only if the graph is currently feasible
             [Am,pp,unusefulFlag] = RemovedStranded(pp,Am,unusefulFlag);
