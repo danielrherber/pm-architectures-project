@@ -16,7 +16,7 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
     V(iL) = V(iL)-1; % remove left port
 
     % START ENHANCEMENT: replicate ordering
-    Vordering = uint8(circshift(V,1) ~= Vf); % check if left neighbor has been connected to something
+    Vordering = uint8(circshift(V,[0,1]) ~= Vf); % check if left neighbor has been connected to something
     Vordering(iInitRep) = 1; % initial replicates are always 1
     % END ENHANCEMENT: replicate ordering
 
