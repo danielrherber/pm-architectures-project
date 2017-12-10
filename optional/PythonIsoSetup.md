@@ -71,7 +71,7 @@ opts.isomethod = 'Python';
 	- `MATLAB` supports `Python` versions 2.7, 3.4, 3.5, and 3.6 (see [MATLAB engine API for python](https://www.mathworks.com/help/matlab/matlab-engine-for-python.html))
 	- You can check if a version of Python 3 is already installed using the command: `python3 --version`
 	- To install Python 3.5, run the following command: `brew install python3`
-	- If `python3 --version` produces an error after installation, run `brew link —overwrite python3`. This changes the default PATH 
+	- If `python3 --version` produces an error after installation, run `brew link --overwrite python3`. This changes the default PATH 
 	to `/usr/local/Cellar/python3/`
 	- `pip` should be installed as well
 		- What is `pip`? [Wikipedia page](https://en.wikipedia.org/wiki/Pip_(package_manager))

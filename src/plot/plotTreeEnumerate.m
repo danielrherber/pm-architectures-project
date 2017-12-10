@@ -9,6 +9,10 @@
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 
+set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
+set(0,'DefaultLegendInterpreter','latex'); % change the legend interpreter
+set(0,'DefaultAxesTickLabelInterpreter','latex'); % change the tick interpreter
+
 % get all first column elements of M
 A = M(:,1);
 
@@ -51,13 +55,13 @@ end
 
 myfont2 = 12;
 
-[hx,hy] = format_ticks_v2(gca,[],yticks,...
-    [],0:1:Np/2,[],[],[],0.006);
-set(hy,'fontsize',myfont2)
-ylabh = get(gca,'YLabel');
-set(ylabh,'Position',get(ylabh,'Position') - [20 0 0])
-% set(ylabh,'Position',get(ylabh,'Position') - [1.5 0 0])
-delete(hx)
+% [hx,hy] = format_ticks_v2(gca,[],yticks,...
+%     [],0:1:Np/2,[],[],[],0.006);
+% set(hy,'fontsize',myfont2)
+% ylabh = get(gca,'YLabel');
+% set(ylabh,'Position',get(ylabh,'Position') - [20 0 0])
+% % set(ylabh,'Position',get(ylabh,'Position') - [1.5 0 0])
+% delete(hx)
 
 for i = 1:Np/2+1
     xticks{i} = ['$',num2str(i-1),'$'];

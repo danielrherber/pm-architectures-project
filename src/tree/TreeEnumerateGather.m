@@ -93,7 +93,14 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
         %----------------------------------------------------------------------
         case 'tree_v1_analysis'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev1Analysis(Vfull,E,M,id,p,prenode);
+            [M,~] = TreeEnumerateCreatev1Analysis(Vfull,E,M,id,A,cVf,opts.displevel,prenode);
+            nodelist(nodelist == 0) = 1;
+            nodelist = [0,nodelist];
+            plotTreeEnumerate
+        %----------------------------------------------------------------------
+        case 'tree_v8_analysis'
+            sortFlag = 1;
+            [M,~] = TreeEnumerateCreatev8Analysis(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,NSC.counts,NSC.M,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel,prenode);
             nodelist(nodelist == 0) = 1;
             nodelist = [0,nodelist];
             plotTreeEnumerate
