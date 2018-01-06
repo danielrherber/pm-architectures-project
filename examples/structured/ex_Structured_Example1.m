@@ -31,7 +31,7 @@ switch num
     case 4
         NSC.M = [0,0,1]; % mandatory components
         NSC.counts = 1; % all connections must be unique
-%         NSC.S = [0,0,1]; % structured components
+        NSC.S = [0,0,1]; % structured components
 end
 % structured-specific options
 opts.structured.isotree = 'AIO'; % AIO (all-in-one) or LOE (level-order)
@@ -41,7 +41,7 @@ opts.structured.ordering = 'none'; % RA
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
 opts.plotfun = 'circle'; % 'circle' % 'bgl' % 'matlab'
 opts.plotmax = 100;
-opts.saveflag = 1; % save graphs to disk
+opts.saveflag = 0; % save graphs to disk
 opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
 opts.isomethod = 'Matlab'; % option 'Matlab' is available in 2016b or later versions
