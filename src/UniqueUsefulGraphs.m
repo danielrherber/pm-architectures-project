@@ -38,6 +38,11 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
         FinalGraphs = RemovedColoredIsos(Graphs,opts);
     end
 
+    % structured graphs
+    if isfield(NSC,'S')
+        FinalGraphs = Structured_UniqueUsefulGraphs(C,R,P,NSC,opts,FinalGraphs);
+    end    
+    
     % plot the unique designs
     plotDesign(FinalGraphs,NSC,opts)
     

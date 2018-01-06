@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DefaultNSC.m
-% 
+% Default network structure constraints for PM Architectures Project
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -15,7 +15,7 @@ function NSC = DefaultNSC(NSC,P)
         NSC.M = uint8(NSC.M); % change data type
     else
         NSC.M = zeros(1,length(P),'uint8'); % no components are mandatory
-%         NSC.M = ones(1,length(P),'uint8'); % all components are mandatory
+        % NSC.M = ones(1,length(P),'uint8'); % all components are mandatory
     end
     NSC.flag.Mflag = any(NSC.M);
         
@@ -23,17 +23,17 @@ function NSC = DefaultNSC(NSC,P)
     if isfield(NSC,'A')
         NSC.A = uint8(NSC.A); % change data type
     else
-%         NSC.A = zero(length(P),'uint8'); % no connections are allowed
+        % NSC.A = zero(length(P),'uint8'); % no connections are allowed
         NSC.A = ones(length(P),'uint8'); % all connections are allowed
     end
 
-%     % self loops flag
-%     if isfield(NSC,'self')
-%         NSC.self = uint8(NSC.self); % change data type
-%     else
-% %         NSC.self = uint8(0); % don't allow self loops
-%         NSC.self = uint8(1); % allow self loops
-%     end
+    %     % self loops flag
+    %     if isfield(NSC,'self')
+    %         NSC.self = uint8(NSC.self); % change data type
+    %     else
+    %         % NSC.self = uint8(0); % don't allow self loops
+    %         NSC.self = uint8(1); % allow self loops
+    %     end
     
     % vector for ensuring each component has the correct number of unique
     % connections
@@ -45,7 +45,7 @@ function NSC = DefaultNSC(NSC,P)
         end
     else
         NSC.counts = uint8(0*ones(length(P),1)); % no connections need to be unique
-%         NSC.counts = uint8(1*ones(length(P),1)); % all connections need to be unique
+        % NSC.counts = uint8(1*ones(length(P),1)); % all connections need to be unique
     end
     NSC.flag.Cflag = any(NSC.counts);
     
@@ -55,4 +55,6 @@ function NSC = DefaultNSC(NSC,P)
     end
     NSC.flag.Bflag = uint8(~isempty(NSC.Bind));
 
+    % structured components boolean vector
+    % NSC.S = [];
 end

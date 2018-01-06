@@ -21,10 +21,10 @@ n = length(Graphs);
 
 % determine if parallel computing should be used
 if n < 2000 % parallel computing would be slower
-%     parallelTemp = 0; % no parallel computing
+    parallelTemp = 0; % no parallel computing
     Nbin = 1; % number of bins
 else
-%     parallelTemp = opts.parallel; 
+    parallelTemp = opts.parallel; 
 %     Nbin = opts.Nbin; % need to add
     Nbin = 1; % number of bins
 end
@@ -36,10 +36,36 @@ nNonIso = 0; % number of nonisomorphic graphs found
 
 % compute various metrics once
 G = cell(n,1);
-% parfor (i = 1:n, parallelTemp)
-for i = 1:n
+pylist = cell(n,1);
+colors = pylist;
+diags = pylist;
+edges = pylist;
+nnode = zeros(n,1,'uint64');
+sumadj = nnode;
+parfor (i = 1:n, parallelTemp)
+% for i = 1:n
+    [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
+    adj = Graphs(i).A;
+    adj = adj(Isort,:);
+    adj = adj(:,Isort);
+    nnode(i) = uint64(size(adj,1));
+    colors{i} = uint64(Graphs(i).Ln(Isort));
+    sumadj(i) = sum(adj(:));
+    pylist{i} = int8(adj(:)');
+    diags{i} = sort(diag(adj));
+    edges{i} = sort(nonzeros(adj(:)));
     G{i} = graph(Graphs(i).A);
     G{i}.Nodes.Color = (Graphs(i).Ln)';
+end
+
+% attach to the Graphs structure
+for i = 1:n
+    Graphs(i).nnode = nnode(i);
+    Graphs(i).colors = colors{i};
+    Graphs(i).sumadj = sumadj(i);
+	Graphs(i).pylist = pylist{i};
+    Graphs(i).diags = diags{i};
+    Graphs(i).edges = edges{i};
     Graphs(i).G = G{i};
 end
 
@@ -55,8 +81,13 @@ Ndispstat = floor((n-1)/100);
 % check remaining graphs for uniqueness
 for i = 2:n
     % get candidate graph information
+    nnode1 = nnode(i);
+    color1 = colors{i};
+    sumadj1 = sumadj(i);
+    diag1 = diags{i};
+    edge1 = edges{i};
     G1 = G{i};
-    
+
     % initialize
     results = ones(min(Nbin,nNonIso),1);
     
@@ -67,12 +98,24 @@ for i = 2:n
         IsoFlag = 0; % initialize isoFlag
         
         while (j > 0) && (IsoFlag == 0)
-            G2 = bin(c).Graphs(j).G;
-            % includes fix for bug 1465853
-            if max(conncomp(G1)) ~= max(conncomp(G2))
-                IsoFlag = false;
-            else
-                IsoFlag = isisomorphic(G1,G2,'NodeVariables','Color');
+            nnode2 = bin(c).Graphs(j).nnode;
+            if isequal(nnode1,nnode2) % compare # of nodes
+                color2 = bin(c).Graphs(j).colors;
+                if isequal(color1,color2) % compare colors
+                    if isequal(sumadj1,bin(c).Graphs(j).sumadj) % compare # of edges
+                        if isequal(edge1,bin(c).Graphs(j).edges) % compare edges
+                            if isequal(diag1,bin(c).Graphs(j).diags) % compare loops
+                                G2 = bin(c).Graphs(j).G;
+                                % includes fix for bug 1465853
+                                if isequal(max(conncomp(G1)),max(conncomp(G2)))
+                                    IsoFlag = isisomorphic(G1,G2,'NodeVariables','Color');
+                                else
+                                    IsoFlag = false;
+                                end
+                            end
+                        end
+                    end
+                end
             end
             % if IsoFlag
             %     typearray(i) = bin(c).Graphs(j).N;
@@ -120,6 +163,12 @@ for c = 1:Nbin % go through each bin
 end
 
 % remove some fields
+UniqueGraphs = rmfield(UniqueGraphs,'colors');
+UniqueGraphs = rmfield(UniqueGraphs,'pylist');
+UniqueGraphs = rmfield(UniqueGraphs,'nnode');
+UniqueGraphs = rmfield(UniqueGraphs,'sumadj');
+UniqueGraphs = rmfield(UniqueGraphs,'diags');
+UniqueGraphs = rmfield(UniqueGraphs,'edges');
 UniqueGraphs = rmfield(UniqueGraphs,'G');
 
 % output some stats to the command window

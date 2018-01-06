@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % Structured_GeneratePermutations.m
-% 
+% Generate the permutations for a single structured component
 %--------------------------------------------------------------------------
 % outputs
 % oPermLoops(k,:) are sequential pairs that indicate what indices of
@@ -12,7 +12,7 @@
 %--------------------------------------------------------------------------
 % Primary Contributor: Daniel R. Herber, Graduate Student, University of 
 % Illinois at Urbana-Champaign
-% Additional Contributor: Shangtingli,Undergraduate Student,University of 
+% Additional Contributor: Shangtingli, Undergraduate Student, University of 
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------

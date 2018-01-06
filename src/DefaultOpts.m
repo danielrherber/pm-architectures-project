@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % DefaultOpts.m
-% 
+% Default options for PM Architectures Project
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,17 +8,24 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function opts = DefaultOpts(opts)
+function opts = DefaultOpts(varargin)
+
+    % check if any options are provided
+    if isempty(varargin)
+        opts = [];
+    else
+        opts = varargin{1};
+    end
 
     % algorithm for generate candidate graphs
     if ~isfield(opts,'algorithm')
-%         opts.algorithm = 'tree_v1';
-%         opts.algorithm = 'tree_v1_mex';
-%         opts.algorithm = 'tree_v1_analysis';
+        % opts.algorithm = 'tree_v1';
+        % opts.algorithm = 'tree_v1_mex';
+        % opts.algorithm = 'tree_v1_analysis';
         opts.algorithm = 'tree_v8';
-%         opts.algorithm = 'tree_v8_mex';
-%         opts.algorithm = 'pm_full'; % generate all perfect matchings
-%         opts.algorithm = 'pm_incomplete'; % some of the perfect matchings        
+        % opts.algorithm = 'tree_v8_mex';
+        % opts.algorithm = 'pm_full'; % generate all perfect matchings
+        % opts.algorithm = 'pm_incomplete'; % some of the perfect matchings        
     end
 
     % maximum number of graphs to preallocate for
@@ -29,23 +36,23 @@ function opts = DefaultOpts(opts)
     % control parallel computing
     if ~isfield(opts,'parallel')
         opts.parallel = 0; % no parallel computing
-%         opts.parallel = 4; % parallel computing with 4 workers
-%         opts.parallel = 8; % parallel computing with 8 workers
-%         opts.parallel = 12; % parallel computing with 12 workers
+        % opts.parallel = 4; % parallel computing with 4 workers
+        % opts.parallel = 8; % parallel computing with 8 workers
+        % opts.parallel = 12; % parallel computing with 12 workers
     end
 
     % initial port type isomorphism filter
     if ~isfield(opts,'filterflag')
         opts.filterflag = 1; % on
-    % 	opts.filterflag = 0; % off
+        % opts.filterflag = 0; % off
     end
 
     % plot function type
     if ~isfield(opts,'plotfun')
         opts.plotfun = 'circle';
-    %     opts.plotfun = 'bgl';
-    %     opts.plotfun = 'bio';
-    %     opts.plotfun = 'matlab';
+        % opts.plotfun = 'bgl';
+        % opts.plotfun = 'bio';
+        % opts.plotfun = 'matlab';
     end
 
     % custom network structure constraint function
@@ -65,7 +72,7 @@ function opts = DefaultOpts(opts)
     
     % save the graphs to disk?
     if ~isfield(opts,'saveflag')
-%         opts.saveflag = 1; % save the graphs
+        % opts.saveflag = 1; % save the graphs
         opts.saveflag = 0; % don't save the graphs
     end
 
@@ -81,16 +88,16 @@ function opts = DefaultOpts(opts)
 
     % isomorphism checking method
     if ~isfield(opts,'isomethod')
-%         opts.isomethod = 'Python'; % requires setup
+        % opts.isomethod = 'Python'; % requires setup
         opts.isomethod = 'Matlab'; % available in 2016b or later versions
-    %     opts.isomethod = 'None';
+        % opts.isomethod = 'None';
     end
 
     % controls displaying diagnostics to the command window
     if ~isfield(opts,'displevel')
         opts.displevel = 2; % verbose
-    %     opts.displevel = 1; % minimal
-    %     opts.displevel = 0; % none
+        % opts.displevel = 1; % minimal
+        % opts.displevel = 0; % none
     end
     opts.displevel = uint8(opts.displevel); % update data type
     
@@ -100,5 +107,8 @@ function opts = DefaultOpts(opts)
     else
         ParallelToggle(opts,'start')
     end
+    
+    % structured components default options
+    opts = Structured_DefaultOpts(opts);
     
 end
