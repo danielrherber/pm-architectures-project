@@ -1,11 +1,16 @@
-% this case study replicates the results from Case Study 3:
+%--------------------------------------------------------------------------
+% ex_idetc201660212_Suspension.m
+% This example replicates the results from Case Study 3 in the paper below
+%--------------------------------------------------------------------------
 % http://systemdesign.illinois.edu/publications/Her16b.pdf
+%--------------------------------------------------------------------------
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
+%--------------------------------------------------------------------------
+clear; clc; close all; closeallbio;
 
-clear
-clc
-close all
-closeallbio
-
+% problem specification
 P = [1 1 1 2 2 2 3 4]'; % ports vector 
 R = [1 1 2 2 2 1 2 2]'; % replicate vector 
 C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector 
@@ -39,4 +44,5 @@ opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
 opts.isomethod = 'Python'; % option 'Matlab' is available in 2016b or later versions
 
+% generate graphs
 FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);

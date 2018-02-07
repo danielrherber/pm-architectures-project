@@ -1,6 +1,19 @@
+%--------------------------------------------------------------------------
+% ex_idetc201660212_Suspension_Extra_Constraints.m
+% Additional network structure constraints for Case Study 3 in the paper
+% below
+%--------------------------------------------------------------------------
+% Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
+% Matchings. ASME. J. Mech. Des. 2017;139(5):051403. doi:10.1115/1.4036132
+%--------------------------------------------------------------------------
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
+%--------------------------------------------------------------------------
 function [pp,A,unusefulFlag] = ex_idetc201660212_Suspension_Extra_Constraints(pp,A,unusefulFlag)
-    %% parallel connection check
-
+    %----------------------------------------------------------------------
+    % parallel connection check
+    %----------------------------------------------------------------------
     if unusefulFlag ~= 1 % only if the graph is currently feasible
         MyKeep = [];
         temp = strcmpi(pp.labels.C,'s');
@@ -16,7 +29,9 @@ function [pp,A,unusefulFlag] = ex_idetc201660212_Suspension_Extra_Constraints(pp
         end
     end
 
-    %% check for parallel cycles
+    %----------------------------------------------------------------------
+    % check for parallel cycles
+    %----------------------------------------------------------------------
 %     if unusefulFlag ~= 1 % only if the graph is currently feasible
 %         pIndex = find(strcmpi(pp.labels.C,'P'));
 %         for k = pIndex % for each parallel connection
@@ -32,7 +47,9 @@ function [pp,A,unusefulFlag] = ex_idetc201660212_Suspension_Extra_Constraints(pp
 %         end    
 %     end
 
-    %% modify graphs for interchangeable series components
+    %----------------------------------------------------------------------
+    % modify graphs for interchangeable series components
+    %----------------------------------------------------------------------
 %     if unusefulFlag ~= 1 % only if the graph is currently feasible
 %         while 1
 %             I = find(pp.NSC.Vfull==2); % find 2-port components

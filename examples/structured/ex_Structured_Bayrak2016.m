@@ -32,7 +32,7 @@ NSC.A(7,6) = 0; % no B-A
 NSC.S = [0 0 0 0 1 0 0]; % structured components
 
 % test number
-num = 1;
+num = 2;
 
 % different modifications to original problem specification
 switch num
@@ -48,6 +48,7 @@ end
 
 % initialize options
 opts = [];
+% opts.parallel = 12;
 
 % generate graphs
 FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);

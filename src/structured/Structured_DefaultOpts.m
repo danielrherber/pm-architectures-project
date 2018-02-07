@@ -28,20 +28,23 @@ function opts = Structured_DefaultOpts(opts)
         end
     end
 
-    % perform simple checks on structured graphs during isomorphism tests
-    if ~isfield(opts.structured,'simplecheck')
-        % opts.structured.simplecheck = 1; % use the simple checks
-        opts.structured.simplecheck = 0; % don't use the simple checks
-    elseif opts.structured.simplecheck
-        error('*** this method is broken, please do not use ***')
-    end
-
     % check for isomorphisms during the enumeration procedure
     if ~isfield(opts.structured,'isotree')
-        opts.structured.isotree = 'AIO'; % all-in-one method
-        % opts.structured.isotree = 'LOE'; % level-order method
+        % opts.structured.isotree = 'AIO'; % all-in-one method
+        opts.structured.isotree = 'LOE'; % level-order method
     end
    
+    % perform simple checks on structured graphs during isomorphism tests
+    if ~isfield(opts.structured,'simplecheck')
+        if strcmp(opts.structured.isotree,'LOE')
+            opts.structured.simplecheck = 1; % use the simple checks
+        elseif strcmp(opts.structured.isotree,'AIO')
+            opts.structured.simplecheck = 0; % don't use the simple checks
+        else
+            opts.structured.simplecheck = 1; % use the simple checks
+        end
+    end
+
     % reordering of the labels before enumeration
     if ~isfield(opts.structured,'ordering')
         opts.structured.ordering = 'None'; % no ordering

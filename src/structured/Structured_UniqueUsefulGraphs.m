@@ -22,7 +22,7 @@ function FinalGraphs = Structured_UniqueUsefulGraphs(C,R,P,NSC,opts,InputGraphs)
     parfor(idx = 1:length(InputGraphs), opts.structured.parallel)
 
         % get unique structured graphs for the current simple graph
-        Graphs = Structured_PreSort(C,P,S,opts,InputGraphs(idx));
+        Graphs = Structured_Sort(C,P,S,opts,InputGraphs(idx));
 
         % combine
         FinalGraphs = [FinalGraphs,Graphs];

@@ -5,6 +5,8 @@ This code was developed by [Shangting Li](https://github.com/shangtingli) and [D
 
 ---
 ### Definitions and Usage
+See the technical report at the following [link](https://ise.illinois.edu/undergraduate/research-experience/reu-projects/enumeration-of-design-architecture.pdf) for more information.
+
 **Structured Component**: Every component has a specified number of ports indicating how many connections to the component are allowed. A simple component is defined as a component where the labeling of the individual connections is not important, while the distinction between connections is essential for structured components. An example of a structured component would be a planetary gear. This type of gear can be represented as a 3-port component but these ports represent the sun, ring, and planet gears, respectively.
 
 **Structured Graph**: In a structured graph, every structured component is represented by a complete graph with the number of vertices equal to the number of ports. Each vertex is uniquely labeled so that the connections are unique and discernible.

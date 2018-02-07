@@ -10,44 +10,37 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Output = Structured_ExpandGraphs(R,P,S,opts,Graph)
-    % double the value of the loops since there are two ports connected
-    Graph.A = Graph.A + diag(diag(Graph.A));
-        
-    % expand B and P
+function Output = Structured_ExpandGraphs(R,P,S,opts,Graph)        
+    % expand S and P
     S = repelem(S,R);
     P = repelem(P,R);
+    
+    % double the value of the loops since there are two ports connected
+    Graph.A = Graph.A + diag(diag(Graph.A));
 
     % expand the structured components with the recursive function below
     Output = Structured_Modify(Graph,P,S,Graph.L,opts);
 end
 % function that expands one structured component at a time
-function Output = Structured_Modify(Input,P,B,L,opts)
+function Output = Structured_Modify(Input,P,S,L,opts)
     % check if any structured components remain
-    if (sum(B) == 0)
+    if (sum(S) == 0)
         Output = Input;
         % if we are using the AIO method, perform isomorphism checking
-        if (~strcmpi(opts.structured.isomethod,'none')) && (strcmpi(opts.structured.isotree,'AIO'))
-            displevel = opts.displevel; % store display level
-            opts.displevel = 0; % suppress displaying
-            if opts.structured.simplecheck == 0
-                Output = RemovedColoredIsos(Output,opts);
-            else
-                Output = Structured_RemovedColoredIsos(Output,opts);
-            end
-            opts.displevel = displevel; % restore the original display level
+        if strcmpi(opts.structured.isotree,'AIO')
+            Output = Structured_RemovedColoredIsos(Output,opts);
         end
         return; % no more modifications needed
     end
 
     % find the location of the next structured component
-    iStruct = find(B,1,'first');
+    iStruct = find(S,1,'first');
 
     % number of ports for the current structured component
     np = P(iStruct); 
     
     % expand the vectors
-    [L,B,P] = Structured_ExpandPorts(L,B,P);
+    [L,S,P] = Structured_ExpandPorts(L,S,P);
 
     % initialize intermediate graphs
     Inter = [];
@@ -98,9 +91,9 @@ function Output = Structured_Modify(Input,P,B,L,opts)
 
         % add default internal connections (complete graph between ports)
         U = ones(np)-eye(np); % complete graph without loops
-        S = iStruct-1; % shift amount
+        shift = iStruct-1; % shift amount
         [Icomplete,Jcomplete,~] = find(U);
-        A = A + sparse(Icomplete+S,Jcomplete+S,1,length(A),length(A));
+        A = A + sparse(Icomplete+shift,Jcomplete+shift,1,length(A),length(A));
 
         % replicate A matrix for each permutation
         Acell = repmat({A},NPerms,1);
@@ -145,7 +138,7 @@ function Output = Structured_Modify(Input,P,B,L,opts)
         Graph.Ln = base2dec(L,36)';
         
         % replicate graph structure
-        Graph = repmat(Graph,NPerms,1);
+        Graph = repmat(Graph,1,NPerms);
         
         % assign new A matrices
         for k = 1:NPerms
@@ -153,23 +146,14 @@ function Output = Structured_Modify(Input,P,B,L,opts)
         end
         
         % combine structures
-        Inter = [Inter; Graph];
+        Inter = [Inter, Graph];
     end
 
     % if we are using the LOE method, perform isomorphism checking
-    % NOTE: should we have the simple checks?
-    if (~strcmpi(opts.structured.isomethod,'none')) && (strcmpi(opts.structured.isotree,'LOE'))
-        displevel = opts.displevel; % store display level
-        opts.displevel = 0; % suppress displaying
-        % check for isomorphisms
-        if opts.structured.simplecheck == 0
-            Inter = RemovedColoredIsos(Inter,opts);
-        else
-            Inter = Structured_RemovedColoredIsos(Inter,opts);
-        end
-        opts.displevel = displevel; % restore the original display level
+    if strcmpi(opts.structured.isotree,'LOE')
+        Inter = Structured_RemovedColoredIsos(Inter,opts,iStruct,np);
     end
     
     % recursively call to continue expanding
-    Output = Structured_Modify(Inter,P,B,L,opts);
+    Output = Structured_Modify(Inter,P,S,L,opts);
 end

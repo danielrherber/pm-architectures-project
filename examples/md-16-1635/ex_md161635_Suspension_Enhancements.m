@@ -1,19 +1,18 @@
 %--------------------------------------------------------------------------
 % ex_md161635_Suspension_Enhancements.m
-% Replicates the results from Case Study 3 in JMD paper MD-16-1635
+% Replicates the results from Case Study 3 in the paper below
 % Uses the enhancements in the technical report
 %--------------------------------------------------------------------------
-%
+% Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
+% Matchings. ASME. J. Mech. Des. 2017;139(5):051403. doi:10.1115/1.4036132
 %--------------------------------------------------------------------------
 % Primary Contributor: Daniel R. Herber, Graduate Student, University of 
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clear
-clc
-close all
-closeallbio
+clear; clc; close all; closeallbio;
 
+% problem specification
 P = [1 1 1 2 2 2 3 4]; % ports vector 
 R.min = [1 1 0 0 0 0 0 0]; % replicate vector 
 R.max = [1 1 2 2 2 1 2 2]; % replicate vector 
@@ -53,4 +52,5 @@ opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
 opts.isomethod = 'Python'; % option 'Matlab' is available in 2016b or later versions
 
+% generate graphs
 FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);

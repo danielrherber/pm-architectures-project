@@ -36,8 +36,8 @@ function FinalGraphs = RemovedColoredIsos(Graphs,opts)
                     if (opts.displevel > 0) % minimal
                         disp('Warning: colored isomorphisms may be present');
                         disp('To fix, pick an isomorphism checking method');
-                        FinalGraphs = Graphs;
                     end
+                    FinalGraphs = Graphs;
                 %----------------------------------------------------------
             end
         end

@@ -40,7 +40,7 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
 
     % structured graphs
     if isfield(NSC,'S')
-        FinalGraphs = Structured_UniqueUsefulGraphs(C,R,P,NSC,opts,FinalGraphs);
+        FinalGraphs = Structured_UniqueUsefulGraphs(C,R,P,NSC,opts,FinalGraphs);    
     end    
     
     % plot the unique designs

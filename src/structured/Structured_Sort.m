@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% Structured_PreSort.m
+% Structured_Sort.m
 % Optionally sort the labels before expanding the structured components
 %--------------------------------------------------------------------------
 %
@@ -10,7 +10,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Output = Structured_PreSort(C,P,S,opts,Graph)
+function Output = Structured_Sort(C,P,S,opts,Graph)
     
     %----------------------------------------------------------------------
     % Task 1: Sort the graph elements according to some specified ordering
@@ -94,7 +94,7 @@ function [uniqueL,R,P,S,opts,Graph,B2,P2,iC] = SortFunction(uniqueL,R,P,S,opts,G
     order = [find(S==0),order];
 
     % rearrange according to the ordering
-    uniqueL = uniqueL(order); R = R(order); P = P(order);
+    uniqueL = uniqueL(order); R = R(order); P = P(order); S = S(order);
 
     % relabel Graph.L and Graph.Ln according to rearranged C and R
     Graph.L = repelem(uniqueL,R);
