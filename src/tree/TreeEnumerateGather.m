@@ -9,7 +9,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
+function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts,phi)
 
     % vector when all ports are unconnected
     Vfull = uint8(NSC.Vfull);
@@ -22,7 +22,7 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
     end
 
     % number of perfect matchings
-    Npm = prod(1:2:(P'*R-1));
+    Npm = 2*prod(1:2:(P'*R-1)); % factor of 2 needed for tree_v10
 
     % maximum number of graphs to preallocate for
     % code greatly slows if this number is succeeded
@@ -61,7 +61,15 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
     
     % update data type
     opts.displevel = uint8(opts.displevel);
-
+    phi = uint16(phi);
+    
+    % extract
+    Bflag = NSC.flag.Bflag;
+    Mflag = NSC.flag.Mflag;
+    counts = NSC.counts;
+    mandatory = NSC.M;
+    displevel = opts.displevel;
+    
     % initialize dispstat for overwritable messages to the command line
     dispstat('','init');
 
@@ -75,46 +83,43 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts)
         %----------------------------------------------------------------------
         case 'tree_v1'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev1(Vfull,E,M,id,A,cVf,opts.displevel);
+            [M,~] = TreeEnumerateCreatev1(Vfull,E,M,id,A,cVf,displevel);
         %----------------------------------------------------------------------
         case 'tree_v1_mex'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev1_mex(Vfull,E,M,id,A,cVf,opts.displevel);
+            [M,~] = TreeEnumerateCreatev1_mex(Vfull,E,M,id,A,cVf,displevel);
         %----------------------------------------------------------------------
         case 'tree_v8'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev8(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,...
-                NSC.counts,NSC.M,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel);
+            [M,~] = TreeEnumerateCreatev8(Vfull,E,M,id,A,B,iInitRep,cVf,...
+                Vfull,counts,mandatory,Mflag,Bflag,displevel);
         %----------------------------------------------------------------------
         case 'tree_v8_mex'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev8_mex(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,...
-                NSC.counts,NSC.M,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel);
+            [M,~] = TreeEnumerateCreatev8_mex(Vfull,E,M,id,A,B,iInitRep,cVf,...
+                Vfull,counts,mandatory,Mflag,Bflag,displevel);
         %----------------------------------------------------------------------
         case 'tree_v1_analysis'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev1Analysis(Vfull,E,M,id,A,cVf,opts.displevel,prenode);
+            [M,~] = TreeEnumerateCreatev1Analysis(Vfull,E,M,id,A,cVf,displevel,prenode);
             nodelist(nodelist == 0) = 1;
             nodelist = [0,nodelist];
             plotTreeEnumerate
         %----------------------------------------------------------------------
         case 'tree_v8_analysis'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev8Analysis(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,NSC.counts,NSC.M,NSC.flag.Mflag,NSC.flag.Bflag,opts.displevel,prenode);
+            [M,~] = TreeEnumerateCreatev8Analysis(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,counts,mandatory,Mflag,Bflag,opts.displevel,prenode);
             nodelist(nodelist == 0) = 1;
             nodelist = [0,nodelist];
             plotTreeEnumerate
         %----------------------------------------------------------------------
-        case 'tree_test'
-            p.Vfull = Vfull;
-            V3 = ones(size(p.cVf),'uint8');
+        case 'tree_v10'
             sortFlag = 1;
-            Cflag = NSC.flag.Cflag;
-            Mflag = NSC.flag.Mflag;
-            Bflag = NSC.flag.Bflag; 
-            [M,~] = TreeEnumerateCreatev7(Vfull,E,M,id,A,B,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
-    %         [M,~] = TreeEnumerateCreateIter(Vfull,E,M,id,Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel);
-    %         M = TreeEnumerateCreateIterBFS(Ac,Bc,p.iInitRep,p.cVf,p.Vfull,V3,p.NSC.M,Cflag,Mflag,Bflag,opts.displevel,Ln);
+            M = TreeEnumerateCreatev10(cVf,Vfull,iInitRep,counts,...
+                phi,Ln,A,B,mandatory,Nmax,Mflag,Bflag,displevel);
+        %----------------------------------------------------------------------
+        case 'tree_test'
+
         %----------------------------------------------------------------------
         otherwise
             error('algorithm not found')

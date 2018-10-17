@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function plotDesign(UniqueFeasibleGraphs,NSC,opts)
+function plotDesign(G,NSC,opts)
 
     if isfield(opts,'plotfun')
         % close all open figures
@@ -25,36 +25,40 @@ function plotDesign(UniqueFeasibleGraphs,NSC,opts)
 
         % determine how many graphs to plot
         if isfield(opts,'plotmax')
-            Nplot = min(opts.plotmax,length(UniqueFeasibleGraphs));
+            Nplot = min(opts.plotmax,length(G));
         else
-            Nplot = length(UniqueFeasibleGraphs);
+            Nplot = length(G);
         end
         
         % generate the desired plot type
         switch lower(opts.plotfun)
             %--------------------------------------------------------------
+            case 'matlab2018b'
+                for idx = 1:Nplot
+                    PMA_PlotMatlab2018b(G(idx).A,G(idx).L,G(idx).N,idx,opts)
+                end   
+            %--------------------------------------------------------------
             case 'bio'
-                for i = 1:Nplot
-                    plotDesignBio(UniqueFeasibleGraphs(i).A,...
-                        UniqueFeasibleGraphs(i).L)
+                for idx = 1:Nplot
+                    plotDesignBio(G(idx).A,...
+                        G(idx).L)
                 end    
             %--------------------------------------------------------------
             case 'bgl'
-                for i = 1:Nplot
-                    plotDesignBGL(UniqueFeasibleGraphs(i).A,...
-                        UniqueFeasibleGraphs(i).L,i,UniqueFeasibleGraphs(i).N,opts)
+                for idx = 1:Nplot
+                    plotDesignBGL(G(idx).A,...
+                        G(idx).L,idx,G(idx).N,opts)
                 end
             %--------------------------------------------------------------
             case 'circle'
-                for i = 1:Nplot
-                    plotDesignCircle(UniqueFeasibleGraphs(i).A,...
-                        UniqueFeasibleGraphs(i).L,i,UniqueFeasibleGraphs(i).N,opts)
+                for idx = 1:Nplot
+                    plotDesignCircle(G(idx).A,...
+                        G(idx).L,idx,G(idx).N,opts)
                 end
             %--------------------------------------------------------------
             case 'matlab'
-                for i = 1:Nplot
-                    plotDesignMatlab(UniqueFeasibleGraphs(i).A,...
-                        UniqueFeasibleGraphs(i).L,i,UniqueFeasibleGraphs(i).N,opts)
+                for idx = 1:Nplot
+                    plotDesignMatlab(G(idx).A,G(idx).L,G(idx).N,idx,opts)
                 end    
             %--------------------------------------------------------------
         end

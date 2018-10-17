@@ -195,7 +195,7 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
             graphs{k} = RemovedColoredIsos(Graphs{k},opts);
             
             % local display function
-            g = IsoDispFunc(k,g,length(graphs{k}),length(Graphs{k}),displevel);
+            g = IsoDispFunc(k,g,length(graphs{k}),length(Graphs{k}),displevel,Nfeasible);
       
         end
     end
@@ -210,7 +210,7 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
             graphs{completedIdx} = value;
 
             % local display function
-            g = IsoDispFunc(completedIdx,g,length(value),length(Graphs{completedIdx}),displevel);
+            g = IsoDispFunc(completedIdx,g,length(value),length(Graphs{completedIdx}),displevel,Nfeasible);
 
         end
     end
@@ -255,20 +255,40 @@ function G = SubcatalogsDispFunc(idx,G,Graphs,Subcatalogs,displevel)
 
     % display some diagnostics
     if (displevel > 1) % verbose
-        disp(['Found ',num2str(G(idx)),' feasible graphs with R = ',...
-            mat2str(Subcatalogs(idx,:)), ', index ', num2str(idx)]);
+        % stop the timer
+        ttime = toc; 
+
+        % number of subcatalogs
+        NSubcatalogs = size(Subcatalogs,1);
+
+        % pad with correct number of zeros
+        idxFormat = ['%0',num2str(max(1,ceil(log10(NSubcatalogs)))),'i'];
+
+        % print
+        disp(['I: ', num2str(idx, idxFormat),'/',num2str(NSubcatalogs),...
+            ' | T: ',num2str(ttime, '%10.3e'),'s',...
+            ' | R: ',mat2str(Subcatalogs(idx,:)),...
+            ' | Graphs (feasible): ', num2str(G(idx)),]);
     end
 
 end
-function g = IsoDispFunc(idx,g,Ngraphs,NGraphs,displevel)
+function g = IsoDispFunc(idx,g,Ngraphs,NGraphs,displevel,Nfeasible)
 
     % store the number of unique graphs found
     g(idx) = Ngraphs;
 
     % display some diagnostics
     if (displevel > 1) % verbose
-        disp([num2str(Ngraphs),'/',num2str(NGraphs),...
-            ' graphs unique for index ',num2str(idx)]);
+        % stop the timer
+        ttime = toc;
+
+        % pad with correct number of zeros
+        idxFormat = ['%0',num2str(max(1,ceil(log10(Nfeasible)))),'i'];
+
+        % print
+        disp(['I: ', num2str(idx, idxFormat),'/',num2str(Nfeasible),...
+            ' | T: ',num2str(ttime, '%10.3e'),'s',...
+            ' | Graphs (unique/total): ',num2str(Ngraphs),'/',num2str(NGraphs)]);
     end
 
 end

@@ -16,7 +16,8 @@ clear; clc; close all; closeallbio;
 P = [1 1 1 2 2 2 3 4]; % ports vector 
 R.min = [1 1 0 0 0 0 0 0]; % replicate vector 
 R.max = [1 1 2 2 2 1 2 2]; % replicate vector 
-C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector 
+C = {'s','u','m', 'k', 'b', 'f', 'p3', 'p4'}; % label vector 
+% C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector 
 
 % constraints
 NSC.M = [1 1 0 0 0 0 0 0]; % mandatory components

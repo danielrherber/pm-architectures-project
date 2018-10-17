@@ -25,14 +25,26 @@ switch options
         % note, this is really a fix for the port-type iso filter
         % based on connected components graph being exactly the same
         n = length(phi)/2;
+        
+        % fixed size of the connected components adjacency matrix
+        N = max(phi);
+        
+        % convert multiple subscripts to linear index
+        P = zeros(size(Msum,1),n,'uint8'); % initialize
         for k = 1:n
-            P(:,k) = n*(Msum(:,2*k)-1) + Msum(:,2*k-1);
+            P(:,k) = N*(Msum(:,2*k)-1) + Msum(:,2*k-1); % similar to sub2ind
         end
-        P = sort(P,2);
+        
+        % sort the elements in each row
+        P = sort(P,2,'descend'); % descending is a bit faster
+
+        % obtain the unique connected component adjacency matrices
         [~,IA] = unique(P,'rows');
-    case 2
+
+    case 2 % see the note above
         % extract on the unique rows
         [~,IA] = unique(Msum,'rows');
+
 end
 
 % get new set of graphs

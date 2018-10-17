@@ -1,7 +1,8 @@
 %--------------------------------------------------------------------------
-% plotDesignMatlab.m
+% PMA_PlotMatlab2018b.m
 % Custom plotting function using built-in Matlab functions
 % Particularly useful for unconnected graphs
+% Syntax used is only available in r2018b
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,7 +10,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function plotDesignMatlab(A,L,PM,I,opts)
+function PMA_PlotMatlab2018b(A,L,PM,I,opts)
 
     % plotting parameters
     markersize = 24;
@@ -25,14 +26,11 @@ function plotDesignMatlab(A,L,PM,I,opts)
         c(k,:) = MyColorValues(L{k});
     end
 
-    % get unique data for the labels
-    [~,ia1,ic1] = unique(base2dec(L,36));
-
 	% create a new figure and save handle
     hf = figure;
     hf.Color = [1 1 1]; % change the figure background
 
-    % create graph object   
+    % create undirected graph object   
     G = graph(A);
 
     % graph plot
@@ -43,16 +41,13 @@ function plotDesignMatlab(A,L,PM,I,opts)
         hg = plot(G,'k','NodeLabel',{}); 
     end
 
-    % set colormap
-    colormap(c(ia1,:));
-    
     % set plot properties
     hg.Interpreter = 'latex'; % set interpreter
     hg.EdgeFontAngle = 'normal'; % set edge font angle
     hg.EdgeFontSize = edgesize; % set edge font size
     hg.MarkerSize = markersize; % set marker size
+    hg.NodeColor = c; % set node colors
     hg.LineWidth = linewidth; % set connection width
-    hg.NodeCData = ic1; % add node colors
 
     % add node labels
     X = hg.XData; Y = hg.YData;
@@ -87,5 +82,5 @@ function plotDesignMatlab(A,L,PM,I,opts)
         eval(str) % evaluate and save the figure
         close(hf) % close the figure
     end
-    
+
 end

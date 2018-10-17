@@ -20,7 +20,8 @@ function [pp,A,unusefulFlag] = ex_md161635_Suspension_Extra_Constraints(pp,A,unu
         MyKeep = [MyKeep,find(temp)] ;
         temp = strcmpi(pp.labels.C,'u');
         MyKeep = [MyKeep,find(temp)] ;
-        temp = strcmpi(pp.labels.C,'p');
+        temp = contains(pp.labels.C,'p','IgnoreCase',true);
+        
         MyKeep = [MyKeep,find(temp)] ;
         MyA = A(MyKeep,MyKeep);
         W = ConnectivityMatrix(MyA,20);
@@ -33,7 +34,7 @@ function [pp,A,unusefulFlag] = ex_md161635_Suspension_Extra_Constraints(pp,A,unu
     % check for parallel cycles
     %----------------------------------------------------------------------
     if unusefulFlag ~= 1 % only if the graph is currently feasible
-        pIndex = find(strcmpi(pp.labels.C,'P'));
+        pIndex = find(contains(pp.labels.C,'p','IgnoreCase',true));
         for k = pIndex % for each parallel connection
             otherIndex = setdiff(pIndex,k);
             

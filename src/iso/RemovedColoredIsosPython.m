@@ -11,8 +11,11 @@
 %--------------------------------------------------------------------------
 function UniqueGraphs = RemovedColoredIsosPython(Graphs,opts)
 
+% extract
+displevel = opts.displevel;
+
 % output to the command window
-if (opts.displevel > 1) % verbose
+if (displevel > 1) % verbose
     disp('Now checking graphs for uniqueness...')
 end
 
@@ -36,107 +39,123 @@ else
 end
 
 % initialize
+IndList = 1:n; % index list
 nNonIso = 0; % number of nonisomorphic graphs found
 % typearray = zeros(n,1);
-% v = zeros(1,n); % keeps track of isomorphism status of the graphs
 
 % compute various metrics once
-pylist = cell(n,1);
-colors = pylist;
-diags = pylist;
-edges = pylist;
-nnode = zeros(n,1,'uint64');
-sumadj = nnode;
-parfor (i = 1:n, parallelTemp)
-% for i = 1:n
-    [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
-    adj = Graphs(i).A;
-    adj = adj(Isort,:);
-    adj = adj(:,Isort);
-    nnode(i) = uint64(size(adj,1));
-    colors{i} = uint64(Graphs(i).Ln(Isort));
-    sumadj(i) = sum(adj(:));
-    pylist{i} = int8(adj(:)');
-    diags{i} = sort(diag(adj));
-    edges{i} = sort(nonzeros(adj(:)));
-end
-
-% attach to the Graphs structure
-for i = 1:n
-    Graphs(i).nnode = nnode(i);
-    Graphs(i).colors = colors{i};
-    Graphs(i).sumadj = sumadj(i);
-	Graphs(i).pylist = pylist{i};
-    Graphs(i).diags = diags{i};
-    Graphs(i).edges = edges{i};
+[pylist,colors,diags,edges,triangles,nnode,sumadj,degrees] = deal(cell(n,1));
+if parallelTemp > 0
+    parfor (i = 1:n, parallelTemp)
+        [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
+        adj = Graphs(i).A;
+        adj = adj(Isort,:);
+        adj = adj(:,Isort);
+        nnode{i} = uint64(size(adj,1));
+        colors{i} = uint64(Graphs(i).Ln(Isort));
+        sumadj{i} = sum(adj(:));
+        pylist{i} = int8(adj(:)');
+        diags{i} = sort(diag(adj));
+        edges{i} = sort(nonzeros(adj(:)));
+        triangles{i} = sort(diag(adj^3));
+        degrees{i} = sort(sum(adj,1));
+    end
+else
+    for i = 1:n
+        [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
+        adj = Graphs(i).A;        
+        adj = adj(Isort,:);
+        adj = adj(:,Isort);
+        nnode{i} = uint64(size(adj,1));
+        colors{i} = uint64(Graphs(i).Ln(Isort));
+        sumadj{i} = sum(adj(:));
+        pylist{i} = int8(adj(:)');
+        diags{i} = sort(diag(adj));
+        edges{i} = sort(nonzeros(adj(:)));
+        triangles{i} = sort(diag((adj-diag(diag(adj)))^3));
+        degrees{i} = sort(sum(adj,1));
+    end
 end
 
 % first graph is always unique so store it
-bin(1).Graphs(1) = Graphs(1);
+bin{1} = IndList(1);
 nNonIso = nNonIso + 1;
-% v(1) = 1;
 
 % initialize dispstat
-dispstat('','init') % does not print anything
-Ndispstat = floor((n-1)/100);
+if (displevel > 0) % minimal
+    dispstat('','init') % does not print anything
+    Ndispstat = floor((n-1)/100);
+end
 
 % check remaining graphs for uniqueness
 for i = 2:n
     % get candidate graph information
-    nnode1 = nnode(i);
-    color1 = colors{i};
-    pyadj1 = pylist{i};
-    sumadj1 = sumadj(i);
-    diag1 = diags{i};
-    edge1 = edges{i};
+    C_nnode = nnode{i};
+    C_colors = colors{i};
+    C_pyadj = pylist{i};
+    C_sumadj = sumadj{i};
+    C_diag = diags{i};
+    C_edge = edges{i};
+    C_triangles = triangles{i};
+    C_degrees = degrees{i};
 
     % initialize
     results = ones(min(Nbin,nNonIso),1);
 
-	% parfor (c = 1:min(Nbin,nNonIso), parallelTemp) % this works now but is slow
+% 	parfor (c = 1:min(Nbin,nNonIso), parallelTemp) % this works now but is slow
 	for c = 1:min(Nbin,nNonIso)
         
-        j = length(bin(c).Graphs); % number of graphs in the current bin
+        j = length(bin{c}); % number of graphs in the current bin
         IsoFlag = 0; % initialize isoFlag
         
-        while (j > 0) && (IsoFlag == 0)
-            nnode2 = bin(c).Graphs(j).nnode;
-            if isequal(nnode1,nnode2) % compare # of nodes
-                color2 = bin(c).Graphs(j).colors;
-                if isequal(color1,color2) % compare colors
-                    if isequal(sumadj1,bin(c).Graphs(j).sumadj) % compare # of edges
-                        if isequal(edge1,bin(c).Graphs(j).edges) % compare edges
-                            if isequal(diag1,bin(c).Graphs(j).diags) % compare loops
-                                pyadj2 = bin(c).Graphs(j).pylist;
-                                IsoFlag = py.detectiso_func4.detectiso(pyadj1,pyadj2,...
-                                        color1,color2,nnode1,nnode2);
-                            end
-                        end
+        % go through each graph in the bin
+        while (j > 0) && (IsoFlag == 0)            
+          nnode2 = nnode{bin{c}(j)};
+          % compare # of nodes
+          if isequal(C_nnode,nnode2) 
+            color2 = colors{bin{c}(j)};
+            % compare color distributions
+            if isequal(C_colors,color2) 
+              % compare # of edges
+              if isequal(C_sumadj,sumadj{bin{c}(j)}) 
+                % compare edges
+                if isequal(C_edge,edges{bin{c}(j)}) 
+                  % compare loops
+                  if isequal(C_diag,diags{bin{c}(j)}) 
+                    % compare degree distributions
+                    if isequal(C_degrees,degrees{bin{c}(j)}) 
+                      % compare triangle distributions
+                      if isequal(C_triangles,triangles{bin{c}(j)}) 
+                        pyadj2 = pylist{bin{c}(j)};
+                        IsoFlag = py.detectiso_func4.detectiso(C_pyadj,pyadj2,...
+                          C_colors,color2,C_nnode,nnode2);
+                      end
                     end
+                  end
                 end
+              end
             end
-            % if IsoFlag
-            %     typearray(i) = bin(c).Graphs(j).N;
-            % end
-            j = j - 1;
+          end
+          % if IsoFlag
+          %     typearray(i) = bin(c).Graphs(j).N;
+          % end
+
+          % go to the next graph
+          j = j - 1;
         end
         results(c) = IsoFlag;
 	end
     
     % check if the candidate graph is unique
-    if any(results) % not unique
-        % v(i) = 0;
-    else % unique
-        % v(i) = 1;
-
+    if ~any(results) % unique
         % get bin index
         J = mod(nNonIso, Nbin) + 1;
         
         % check if this is the first graph in the bin
         if (nNonIso + 1 <= Nbin) % first graph
-            bin(J).Graphs(1) = Graphs(i);
+            bin{J}(1) = IndList(i);
         else % not the first graph
-            bin(J).Graphs(end+1) = Graphs(i);
+            bin{J}(end+1) = IndList(i);
         end
         
         % increment since a unique graph was found
@@ -144,35 +163,27 @@ for i = 2:n
     end
     
     % output some stats to the command window    
-    if (opts.displevel > 1) % verbose
+    if (displevel > 1) % verbose
         if mod(i,Ndispstat) == 0
             dispstat(['Percentage complete: ',int2str(round(i/n*100)),' %'])
         end
     end
-    
 end
 
 % return to the original directory
 cd(origdir);
 
 % combine all the bins
-UniqueGraphs = []; % initialize
+UniqueGraphs = cell(1,Nbin); % initialize
 for c = 1:Nbin % go through each bin
-    if ~isempty(bin(c)) % only if the bin is not empty
-        UniqueGraphs = [UniqueGraphs, bin(c).Graphs];
+    if ~isempty(bin{c}) % only if the bin is not empty
+        UniqueGraphs{c} = Graphs(bin{c});
     end
 end
-
-% remove some fields
-UniqueGraphs = rmfield(UniqueGraphs,'colors');
-UniqueGraphs = rmfield(UniqueGraphs,'pylist');
-UniqueGraphs = rmfield(UniqueGraphs,'nnode');
-UniqueGraphs = rmfield(UniqueGraphs,'sumadj');
-UniqueGraphs = rmfield(UniqueGraphs,'diags');
-UniqueGraphs = rmfield(UniqueGraphs,'edges');
+UniqueGraphs = horzcat(UniqueGraphs{:});
 
 % output some stats to the command window
-if (opts.displevel > 0) % minimal
+if (displevel > 0) % minimal
     ttime = toc; % stop the timer
     disp(['Found ',num2str(length(UniqueGraphs)),' unique graphs in ', num2str(ttime),' s'])
 end

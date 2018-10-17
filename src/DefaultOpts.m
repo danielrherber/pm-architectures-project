@@ -53,6 +53,7 @@ function opts = DefaultOpts(varargin)
         % opts.plotfun = 'bgl';
         % opts.plotfun = 'bio';
         % opts.plotfun = 'matlab';
+        % opts.plotfun = 'matlab2018b';
     end
 
     % custom network structure constraint function
