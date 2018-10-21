@@ -43,12 +43,13 @@ opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
 opts.filterflag = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example2_Extra_Constraints(pp,A,infeasibleFlag);
-opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'
-% opts.plotmax = 20; % maximum number of graphs to display/save
-opts.plotmax = 0;
-opts.name = mfilename; % name of the example
-opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
-opts.isomethod = 'Matlab'; % option 'Matlab' is available in 2016b or later versions
+opts.isomethod = 'matlab'; % option 'Matlab' is available in 2016b or later versions
+
+opts.plots.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio' % 'matlab'
+opts.plots.plotmax = 20; % maximum number of graphs to display/save
+opts.plots.name = mfilename; % name of the example
+opts.plots.path = mfoldername(mfilename('fullpath'),[opts.plots.name,'_figs']); % path to save figures to
+opts.plots.labelnumflag = 0; % add replicate numbers when plotting
 
 % generate graphs
 FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);

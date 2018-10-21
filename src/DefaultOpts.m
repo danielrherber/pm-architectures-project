@@ -24,6 +24,7 @@ function opts = DefaultOpts(varargin)
         % opts.algorithm = 'tree_v1_analysis';
         opts.algorithm = 'tree_v8';
         % opts.algorithm = 'tree_v8_mex';
+        % opts.algorithm = 'tree_v10';
         % opts.algorithm = 'pm_full'; % generate all perfect matchings
         % opts.algorithm = 'pm_incomplete'; % some of the perfect matchings        
     end
@@ -47,15 +48,6 @@ function opts = DefaultOpts(varargin)
         % opts.filterflag = 0; % off
     end
 
-    % plot function type
-    if ~isfield(opts,'plotfun')
-        opts.plotfun = 'circle';
-        % opts.plotfun = 'bgl';
-        % opts.plotfun = 'bio';
-        % opts.plotfun = 'matlab';
-        % opts.plotfun = 'matlab2018b';
-    end
-
     % custom network structure constraint function
     if ~isfield(opts,'customfun')
         % none by default
@@ -66,33 +58,65 @@ function opts = DefaultOpts(varargin)
         % none by default
     end
     
-    % maximum number of graphs to display/save
-    if ~isfield(opts,'plotmax')
-        opts.plotmax = 10;
-    end
-    
-    % save the graphs to disk?
-    if ~isfield(opts,'saveflag')
-        % opts.saveflag = 1; % save the graphs
-        opts.saveflag = 0; % don't save the graphs
-    end
-
-    % name of the example
-    if ~isfield(opts,'name')
-        opts.name = mfilename; 
-    end
-
-    % path for saving figures
-    if ~isfield(opts,'path')
-        opts.path = mfoldername(mfilename('fullpath'),[]); 
-    end
-
     % isomorphism checking method
     if ~isfield(opts,'isomethod')
         % opts.isomethod = 'Python'; % requires setup
         opts.isomethod = 'Matlab'; % available in 2016b or later versions
         % opts.isomethod = 'None';
     end
+    
+    %----------------------------------------------------------------------
+    % START: plot options
+    %----------------------------------------------------------------------
+    % plot option structure
+    if ~isfield(opts,'plots')
+        opts.plots = [];
+    end
+    
+    % plot function type
+    if ~isfield(opts.plots,'plotfun')
+        % opts.plots.plotfun = 'circle';
+        % opts.plots.plotfun = 'bgl';
+        % opts.plots.plotfun = 'bio';
+        opts.plots.plotfun = 'matlab';
+        % opts.plots.plotfun = 'matlab2018b';
+    end
+    
+    % maximum number of graphs to display/save
+    if ~isfield(opts.plots,'plotmax')
+        opts.plots.plotmax = 10;
+    end
+    
+    % save the graphs to disk?
+    if ~isfield(opts.plots,'saveflag')
+        % opts.plots.saveflag = 1; % save the graphs
+        opts.plots.saveflag = 0; % don't save the graphs
+    end
+
+    % name of the example
+    if ~isfield(opts.plots,'name')
+        opts.plots.name = mfilename; 
+    end
+
+    % path for saving figures
+    if ~isfield(opts.plots,'path')
+        opts.plots.path = mfoldername(mfilename('fullpath'),[]); 
+    end
+    
+    % file type for exported figures
+    if ~isfield(opts.plots,'outputtype')
+        % opts.plots.outputtype = 'pdf'; 
+        opts.plots.outputtype = 'png'; 
+    end
+
+    % add replicate numbers when plotting
+    if ~isfield(opts.plots,'labelnumflag')
+        opts.plots.labelnumflag = 0; % no
+        % opts.plots.labelnumflag = 1; % yes
+    end
+    %----------------------------------------------------------------------
+    % END: plot options
+    %----------------------------------------------------------------------
 
     % controls displaying diagnostics to the command window
     if ~isfield(opts,'displevel')

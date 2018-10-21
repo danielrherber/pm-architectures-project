@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% TreeEnumerateCreatev10.m
+% PMA_EnumerateAlg10.m
 % Breadth-first search implementation of v8
 % This new method should be considered under development
 % At each level, you can optionally perform for port-type and/or full 
@@ -14,7 +14,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function SavedGraphs = TreeEnumerateCreatev10(cVf,Vf,iInitRep,counts,phi,Ln,A,B,M,Nmax,Mflag,Bflag,dispflag)
+function SavedGraphs = PMA_EnumerateAlg10(cVf,Vf,iInitRep,counts,phi,Ln,A,B,M,Nmax,Mflag,Bflag,dispflag)
 
 % determine some problem properties
 Np = sum(Vf); % number of ports

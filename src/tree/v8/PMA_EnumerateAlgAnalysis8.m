@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
-% TreeEnumerateCreatev8.m
-% This includes all the relevant enhancements in the technical report
+% PMA_EnumerateAlgAnalysis8.m
+% This includes all the relevant enhancements in the technical report 
+% (analysis version)
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,7 +9,9 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag)
+function [SavedGraphs,id] = PMA_EnumerateAlgAnalysis8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag,prenode)
+
+    global node nodelist
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -29,6 +32,9 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
 	% loop through all nonzero entries
     for iR = I
 
+        nodelist = [nodelist,prenode];
+        node = node + 1;
+        
         % local for loop variables
         V2 = V; A2 = A;
 
@@ -78,11 +84,11 @@ function [SavedGraphs,id] = TreeEnumerateCreatev8(V,E,SavedGraphs,id,A,B,iInitRe
         % END ENHANCEMENT: line-connectivity constraints
 
         if any(V2) % recursive call if any remaining vertices
-            [SavedGraphs,id] = TreeEnumerateCreatev8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
+            [SavedGraphs,id] = PMA_EnumerateAlgAnalysis8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag,node);
         else % save the complete perfect matching graph
             [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
         end
 
     end % for iR = I
 
-end % function TreeEnumerateCreatev8
+end % function PMA_EnumerateAlgAnalysis8

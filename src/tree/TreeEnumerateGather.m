@@ -83,43 +83,44 @@ function [M,I,N] = TreeEnumerateGather(C,P,R,Ln,NSC,opts,phi)
         %----------------------------------------------------------------------
         case 'tree_v1'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev1(Vfull,E,M,id,A,cVf,displevel);
-        %----------------------------------------------------------------------
-        case 'tree_v1_mex'
-            sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev1_mex(Vfull,E,M,id,A,cVf,displevel);
+            [M,~] = PMA_EnumerateAlg1(Vfull,E,M,id,A,cVf,displevel);
         %----------------------------------------------------------------------
         case 'tree_v8'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev8(Vfull,E,M,id,A,B,iInitRep,cVf,...
+            [M,~] = PMA_EnumerateAlg8(Vfull,E,M,id,A,B,iInitRep,cVf,...
                 Vfull,counts,mandatory,Mflag,Bflag,displevel);
+        %----------------------------------------------------------------------
+        case 'tree_v10'
+            sortFlag = 1;
+            M = PMA_EnumerateAlg10(cVf,Vfull,iInitRep,counts,...
+                phi,Ln,A,B,mandatory,Nmax,Mflag,Bflag,displevel);
+        %----------------------------------------------------------------------
+        case 'tree_v1_mex'
+            sortFlag = 1;
+            [M,~] = PMA_EnumerateAlg1_mex(Vfull,E,M,id,A,cVf,displevel);
         %----------------------------------------------------------------------
         case 'tree_v8_mex'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev8_mex(Vfull,E,M,id,A,B,iInitRep,cVf,...
+            [M,~] = PMA_EnumerateAlg8_mex(Vfull,E,M,id,A,B,iInitRep,cVf,...
                 Vfull,counts,mandatory,Mflag,Bflag,displevel);
         %----------------------------------------------------------------------
         case 'tree_v1_analysis'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev1Analysis(Vfull,E,M,id,A,cVf,displevel,prenode);
+            [M,~] = PMA_EnumerateAlgAnalysis1(Vfull,E,M,id,A,cVf,displevel,prenode);
             nodelist(nodelist == 0) = 1;
             nodelist = [0,nodelist];
-            plotTreeEnumerate
+            PMA_PlotTreeEnumerate
         %----------------------------------------------------------------------
         case 'tree_v8_analysis'
             sortFlag = 1;
-            [M,~] = TreeEnumerateCreatev8Analysis(Vfull,E,M,id,A,B,iInitRep,cVf,Vfull,counts,mandatory,Mflag,Bflag,opts.displevel,prenode);
+            [M,~] = PMA_EnumerateAlgAnalysis8(Vfull,E,M,id,A,B,iInitRep,cVf,...
+                Vfull,counts,mandatory,Mflag,Bflag,opts.displevel,prenode);
             nodelist(nodelist == 0) = 1;
             nodelist = [0,nodelist];
-            plotTreeEnumerate
-        %----------------------------------------------------------------------
-        case 'tree_v10'
-            sortFlag = 1;
-            M = TreeEnumerateCreatev10(cVf,Vfull,iInitRep,counts,...
-                phi,Ln,A,B,mandatory,Nmax,Mflag,Bflag,displevel);
+            PMA_PlotTreeEnumerate
         %----------------------------------------------------------------------
         case 'tree_test'
-
+            % for testing new algorithms
         %----------------------------------------------------------------------
         otherwise
             error('algorithm not found')

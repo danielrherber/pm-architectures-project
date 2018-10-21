@@ -189,10 +189,10 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
     for k = 1:Nfeasible
         if parallelflag > 0 % check for parallel computing
             % remove colored graph isomorphisms for this subcatalog
-            f(k) = parfeval(@RemovedColoredIsos,1,Graphs{k},opts);
+            f(k) = parfeval(@PMA_RemoveIsoColoredGraphs,1,Graphs{k},opts);
         else
             % remove colored graph isomorphisms for this subcatalog
-            graphs{k} = RemovedColoredIsos(Graphs{k},opts);
+            graphs{k} = PMA_RemoveIsoColoredGraphs(Graphs{k},opts);
             
             % local display function
             g = IsoDispFunc(k,g,length(graphs{k}),length(Graphs{k}),displevel,Nfeasible);

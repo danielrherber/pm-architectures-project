@@ -1,7 +1,8 @@
 %--------------------------------------------------------------------------
-% RemovedColoredIsosPython.m
+% PMA_RemoveIsoColoredGraphsMatlab.m
 % Given a set of colored graphs, determine the set of nonisomorphic colored
-% graphs, Python implementation
+% graphs
+% MATLAB only implementation
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,7 +10,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function UniqueGraphs = RemovedColoredIsosPython(Graphs,opts)
+function UniqueGraphs = PMA_RemoveIsoColoredGraphsMatlab(Graphs,opts)
 
 % extract
 displevel = opts.displevel;
@@ -18,12 +19,6 @@ displevel = opts.displevel;
 if (displevel > 1) % verbose
     disp('Now checking graphs for uniqueness...')
 end
-
-% import isomorphism checking function
-origdir = pwd; % original directory
-pydir = mfoldername('RemovedColoredIsos','python'); % python directory
-cd(pydir) % change directory
-py.importlib.import_module('detectiso_func4'); % import module 
 
 % number of graphs to check
 n = length(Graphs);
@@ -44,36 +39,63 @@ nNonIso = 0; % number of nonisomorphic graphs found
 % typearray = zeros(n,1);
 
 % compute various metrics once
-[pylist,colors,diags,edges,triangles,nnode,sumadj,degrees] = deal(cell(n,1));
+[colors,diags,edges,triangles,nnode,sumadj,degrees,G,histconncomps] = deal(cell(n,1));
+G0 = graph(); % empty graph
 if parallelTemp > 0
     parfor (i = 1:n, parallelTemp)
-        [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
-        adj = Graphs(i).A;
+        % extract
+        Ln = Graphs(i).Ln;
+        adj = Graphs(i).A; 
+        
+        % sort for unique representation
+        [~,Isort] = sort(Ln); 
+        Ln = Ln(Isort);
         adj = adj(Isort,:);
         adj = adj(:,Isort);
+        
+        % matlab graph object
+        Gt = G0;
+        [I,J] = find(adj);
+        Gt = addedge(Gt,I,J);
+        Gt.Nodes.Color = (Ln)';
+        
         nnode{i} = uint64(size(adj,1));
-        colors{i} = uint64(Graphs(i).Ln(Isort));
+        colors{i} = uint64(Ln);
         sumadj{i} = sum(adj(:));
-        pylist{i} = int8(adj(:)');
-        diags{i} = sort(diag(adj));
-        edges{i} = sort(nonzeros(adj(:)));
-        triangles{i} = sort(diag(adj^3));
-        degrees{i} = sort(sum(adj,1));
-    end
-else
-    for i = 1:n
-        [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
-        adj = Graphs(i).A;        
-        adj = adj(Isort,:);
-        adj = adj(:,Isort);
-        nnode{i} = uint64(size(adj,1));
-        colors{i} = uint64(Graphs(i).Ln(Isort));
-        sumadj{i} = sum(adj(:));
-        pylist{i} = int8(adj(:)');
         diags{i} = sort(diag(adj));
         edges{i} = sort(nonzeros(adj(:)));
         triangles{i} = sort(diag((adj-diag(diag(adj)))^3));
         degrees{i} = sort(sum(adj,1));
+        histconncomps{i} = sort(histcounts(conncomp(Gt)));
+        G{i} = Gt;
+    end
+else
+    for i = 1:n
+        % extract
+        Ln = Graphs(i).Ln;
+        adj = Graphs(i).A; 
+        
+        % sort for unique representation
+        [~,Isort] = sort(Ln); 
+        Ln = Ln(Isort);
+        adj = adj(Isort,:);
+        adj = adj(:,Isort);
+        
+        % matlab graph object
+        Gt = G0;
+        [I,J] = find(adj);
+        Gt = addedge(Gt,I,J);
+        Gt.Nodes.Color = (Ln)';
+        
+        nnode{i} = uint64(size(adj,1));
+        colors{i} = uint64(Ln);
+        sumadj{i} = sum(adj(:));
+        diags{i} = sort(diag(adj));
+        edges{i} = sort(nonzeros(adj(:)));
+        triangles{i} = sort(diag((adj-diag(diag(adj)))^3));
+        degrees{i} = sort(sum(adj,1));
+        histconncomps{i} = sort(histcounts(conncomp(Gt)));
+        G{i} = Gt;
     end
 end
 
@@ -92,21 +114,22 @@ for i = 2:n
     % get candidate graph information
     C_nnode = nnode{i};
     C_colors = colors{i};
-    C_pyadj = pylist{i};
     C_sumadj = sumadj{i};
     C_diag = diags{i};
     C_edge = edges{i};
     C_triangles = triangles{i};
     C_degrees = degrees{i};
+    C_histconncomps = histconncomps{i};
+    G1 = G{i};
 
     % initialize
     results = ones(min(Nbin,nNonIso),1);
-
+    
 % 	parfor (c = 1:min(Nbin,nNonIso), parallelTemp) % this works now but is slow
 	for c = 1:min(Nbin,nNonIso)
         
         j = length(bin{c}); % number of graphs in the current bin
-        IsoFlag = 0; % initialize isoFlag
+        IsoFlag = false; % initialize isoFlag
         
         % go through each graph in the bin
         while (j > 0) && (IsoFlag == 0)            
@@ -126,9 +149,11 @@ for i = 2:n
                     if isequal(C_degrees,degrees{bin{c}(j)}) 
                       % compare triangle distributions
                       if isequal(C_triangles,triangles{bin{c}(j)}) 
-                        pyadj2 = pylist{bin{c}(j)};
-                        IsoFlag = py.detectiso_func4.detectiso(C_pyadj,pyadj2,...
-                          C_colors,color2,C_nnode,nnode2);
+                        % compare connected component distributions
+                        if isequal(C_histconncomps,histconncomps{bin{c}(j)})
+                          G2 = G{bin{c}(j)};
+                          IsoFlag = isisomorphic(G1,G2,'NodeVariables','Color');
+                        end
                       end
                     end
                   end
@@ -145,7 +170,7 @@ for i = 2:n
         end
         results(c) = IsoFlag;
 	end
-    
+
     % check if the candidate graph is unique
     if ~any(results) % unique
         % get bin index
@@ -165,13 +190,10 @@ for i = 2:n
     % output some stats to the command window    
     if (displevel > 1) % verbose
         if mod(i,Ndispstat) == 0
-            dispstat(['Percentage complete: ',int2str(round(i/n*100)),' %'])
+            dispstat(['Percentage complete: ',int2str(ceil(i/n*100)),' %'])
         end
     end
 end
-
-% return to the original directory
-cd(origdir);
 
 % combine all the bins
 UniqueGraphs = cell(1,Nbin); % initialize
@@ -185,7 +207,8 @@ UniqueGraphs = horzcat(UniqueGraphs{:});
 % output some stats to the command window
 if (displevel > 0) % minimal
     ttime = toc; % stop the timer
-    disp(['Found ',num2str(length(UniqueGraphs)),' unique graphs in ', num2str(ttime),' s'])
+    disp(['Found ',num2str(length(UniqueGraphs)),' unique graphs in ',...
+        num2str(ttime),' s'])
 end
 
 end

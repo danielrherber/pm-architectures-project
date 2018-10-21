@@ -1,14 +1,14 @@
 %--------------------------------------------------------------------------
-% MyColorValues.m
+% PMA_LabelColors.m
 % Given a specific string, output a specific color
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Author: Daniel R. Herber, Graduate Student, University of Illinois at
-% Urbana-Champaign
-% Date: 08/20/2016
+% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
+% Illinois at Urbana-Champaign
+% Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function c = MyColorValues(L)
+function c = PMA_LabelColors(L)
     switch upper(L)
         case 'A'
             c = [255,193,7]/255; % amber material

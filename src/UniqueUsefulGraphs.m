@@ -9,13 +9,16 @@
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
-    
+
     % set opts with defaults if not specified
     opts = DefaultOpts(opts);
 
     % set NSC with defaults if not specified
     NSC = DefaultNSC(NSC,P);
 
+    % change current folder
+    origdir = PMA_ChangeFolder(opts,true,[]);
+    
     % potentially start the timer
     if (opts.displevel > 0)
         tic % start timer
@@ -35,7 +38,7 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
         Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts);
 
         % check for colored graph isomorphisms
-        FinalGraphs = RemovedColoredIsos(Graphs,opts);
+        FinalGraphs = PMA_RemoveIsoColoredGraphs(Graphs,opts);
     end
 
     % structured graphs
@@ -44,6 +47,9 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
     end    
     
     % plot the unique designs
-    plotDesign(FinalGraphs,NSC,opts)
+    PMA_PlotGraphs(FinalGraphs,NSC,opts)
     
+    % change to original directory
+    PMA_ChangeFolder(opts,false,origdir);
+
 end

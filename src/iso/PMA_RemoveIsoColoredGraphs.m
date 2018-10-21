@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% RemovedColoredIsos.m
+% PMA_RemoveIsoColoredGraphs.m
 % Given a set of colored graphs, determine the set of nonisomorphic colored
 % graphs
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function FinalGraphs = RemovedColoredIsos(Graphs,opts)
+function FinalGraphs = PMA_RemoveIsoColoredGraphs(Graphs,opts)
 
     if ~isempty(Graphs) % if Graphs isn't empty
         if isfield(opts,'isomethod') % if opts.isomethod is present
@@ -18,18 +18,20 @@ function FinalGraphs = RemovedColoredIsos(Graphs,opts)
                 %----------------------------------------------------------
                 case 'matlab' % Matlab implementation
                     try
-                        FinalGraphs = RemovedColoredIsosMatlab(Graphs,opts);
+                        FinalGraphs = PMA_RemoveIsoColoredGraphsMatlab(Graphs,opts);
                     catch
-                        msg = sprintf(' An error occurred with the matlab option \n Definitely need MATLAB version R2016b or newer');
-                        error(msg)
+                        error('PMA:PMA_RemIsoColoredGraphs:matlabError',...
+                            [' An error occurred with the matlab option \n',...
+                            ' Definitely need MATLAB version R2016b or newer']);
                     end
                 %----------------------------------------------------------
                 case 'python' % Python implementation
                     try
-                        FinalGraphs = RemovedColoredIsosPython(Graphs,opts);
+                        FinalGraphs = PMA_RemoveIsoColoredGraphsPython(Graphs,opts);
                     catch
-                        msg = sprintf(' An error occurred with the python option \n Definitely need a proper python install with igraph');
-                        error(msg)
+                        error('PMA:PMA_RemIsoColoredGraphs:pythonError',...
+                            [' An error occurred with the python option\n',...
+                            ' Definitely need a proper python install with igraph']);
                     end
                 %----------------------------------------------------------
                 case 'none' % don't check for colored isomorphisms
