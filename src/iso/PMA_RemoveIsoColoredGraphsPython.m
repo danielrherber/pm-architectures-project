@@ -46,32 +46,35 @@ nNonIso = 0; % number of nonisomorphic graphs found
 if parallelTemp > 0
     parfor (i = 1:n, parallelTemp)
         [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
-        adj = Graphs(i).A;
-        adj = adj(Isort,:);
-        adj = adj(:,Isort);
-        nnode{i} = uint64(size(adj,1));
+        At = Graphs(i).A;
+        At = At(Isort,:);
+        At = At(:,Isort);
+        nnode{i} = uint64(size(At,1));
         colors{i} = uint64(Graphs(i).Ln(Isort));
-        sumadj{i} = sum(adj(:));
-        pylist{i} = int8(adj(:)');
-        diags{i} = sort(diag(adj));
-        edges{i} = sort(nonzeros(adj(:)));
-        triangles{i} = sort(diag(adj^3));
-        degrees{i} = sort(sum(adj,1));
+        sumadj{i} = sum(At(:));
+        pylist{i} = int8(At(:)');
+        diags{i} = sort(diag(At));
+        edges{i} = sort(nonzeros(At(:)));
+        triangles{i} = sort(diag(At^3));
+        degrees{i} = sort(sum(At,1));
     end
 else
     for i = 1:n
         [~,Isort] = sort(Graphs(i).Ln); % sort for unique representation
-        adj = Graphs(i).A;        
-        adj = adj(Isort,:);
-        adj = adj(:,Isort);
-        nnode{i} = uint64(size(adj,1));
+        At = Graphs(i).A;        
+        At = At(Isort,:);
+        At = At(:,Isort);
+        nnode{i} = uint64(size(At,1));
         colors{i} = uint64(Graphs(i).Ln(Isort));
-        sumadj{i} = sum(adj(:));
-        pylist{i} = int8(adj(:)');
-        diags{i} = sort(diag(adj));
-        edges{i} = sort(nonzeros(adj(:)));
-        triangles{i} = sort(diag((adj-diag(diag(adj)))^3));
-        degrees{i} = sort(sum(adj,1));
+        sumadj{i} = sum(At(:));
+        pylist{i} = int8(At(:)');
+        diags{i} = sort(diag(At));
+        edges{i} = sort(nonzeros(At(:)));
+        triangles{i} = sort(diag((At-diag(diag(At)))^3));
+        degrees{i} = sort(sum(At,1));
+        
+        Ct = PMA_ConnCompBins(At);
+        
     end
 end
 
@@ -135,7 +138,8 @@ for i = 2:n
             end
           end
           % if IsoFlag
-          %     typearray(i) = bin(c).Graphs(j).N;
+          %     typearray(i) = 1;
+
           % end
 
           % go to the next graph

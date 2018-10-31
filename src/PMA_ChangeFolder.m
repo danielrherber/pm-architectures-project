@@ -11,7 +11,7 @@
 function origdir = PMA_ChangeFolder(opts,toggleFlag,origdir)
 
     % for python, change current folder to /src/iso/python for code speedup
-    if strcmpi(opts.isomethod,'python')
+    % if strcmpi(opts.isomethod,'python')
         if toggleFlag % change to python folder
             % original directory
             origdir = pwd;
@@ -25,5 +25,5 @@ function origdir = PMA_ChangeFolder(opts,toggleFlag,origdir)
             % return to the original directory
             cd(origdir);
         end        
-    end
+    % end
 end

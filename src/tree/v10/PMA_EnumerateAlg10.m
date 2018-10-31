@@ -34,6 +34,7 @@ Astorage(:,:,1) = A;
 Queue = 1; % one entry in initial queue
 indLast = 1;
 xInd = [];
+NmaxQueue = Nmax;
 
 % for codegen
 % coder.varsize('Queue',[1,inf],[0,1])
@@ -85,6 +86,20 @@ for iter = 1:Ne
             % save to storage
             if ~R2
                 indshift = ind + indLast;
+                if indshift > NmaxQueue
+                    % error(['need larger Nmax: ',num2str(Vf)])
+                    % maybe add more?
+                    disp('adding more storage')
+                    
+                    
+                    Vstorage = [Vstorage;zeros(Nmax,Nc,'uint8')]; 
+                    Estorage = [Estorage;zeros(Nmax,Np,'uint8')];
+                    Astorage = cat(3, Astorage, zeros(Nc,Nc,Nmax,'uint8'));
+                    Tstorage = [Tstorage;zeros(Nmax,Ne,'uint16')];
+                    Rstorage = [Rstorage;zeros(Nmax,1,'logical')];
+                    NmaxQueue = size(Vstorage,1);
+                end
+                
                 Vstorage(indshift,:) = V2;
                 Estorage(indshift,:) = E2;
                 Astorage(:,:,indshift) = A2;
@@ -113,11 +128,6 @@ for iter = 1:Ne
     
     % update coutner for the number of enteries in current storage elements
     indMax = indLast + ind;
-    
-    % error if the preallocated size is not large enough
-    if indMax > Nmax
-        error('need larger Nmax')
-    end
     
     % total number of entries in the queue
     NQueue = length(Queue);
