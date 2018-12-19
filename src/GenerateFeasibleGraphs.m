@@ -44,7 +44,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     
     % create B matrix, if necessary
     if NSC.flag.Bflag
-        Bm = CreateBMatrix(NSC.Bind,R,NSC);
+        Bm = CreateBMatrix(Sorts.NSC.Bind,Sorts.R,Sorts.NSC);
     else
         Bm = [];
     end

@@ -14,14 +14,20 @@ function [P,R,C,NSC,Sorts] = ReorderCRP(P,R,C,NSC,opts)
     P = P(:);
     R = R(:);
 
-    switch opts.algorithm
-
-        case 'tree_v5' % sort P largest to smallest
-             [~,I] = sort(R + P*1000,'descend');
-
-        otherwise % sort P smallest to largest
-             [~,I] = sort(R + P*1000,'ascend');
-
+    % determine the sorting indices
+    if opts.sortflag
+        switch opts.algorithm
+            %--------------------------------------------------------------
+            case 'tree_v5' % sort P largest to smallest
+                 [~,I] = sort(R + P*1000,'descend');
+            %--------------------------------------------------------------
+            otherwise % sort P smallest to largest
+                 [~,I] = sort(R + P*1000,'ascend');
+            %--------------------------------------------------------------
+        end
+    else
+        % default ordering (i.e., no sorting)
+        I = (1:length(R))';
     end
 
     % save sort order for future unsorting of the adjacency matrix

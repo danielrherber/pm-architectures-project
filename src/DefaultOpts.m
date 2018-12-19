@@ -65,6 +65,12 @@ function opts = DefaultOpts(varargin)
         % opts.isomethod = 'None';
     end
     
+    % sorting flag
+    if ~isfield(opts,'sortflag')
+        opts.sortflag = 1; % on
+        % opts.sortflag = 0; % off
+    end
+    
     %----------------------------------------------------------------------
     % START: plot options
     %----------------------------------------------------------------------
