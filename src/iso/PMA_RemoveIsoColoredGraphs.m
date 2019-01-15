@@ -36,8 +36,7 @@ function FinalGraphs = PMA_RemoveIsoColoredGraphs(Graphs,opts)
                 %----------------------------------------------------------
                 case 'none' % don't check for colored isomorphisms
                     if (opts.displevel > 0) % minimal
-                        disp('Warning: colored isomorphisms may be present');
-                        disp('To fix, pick an isomorphism checking method');
+                        disp('-> no isomorphism checking using the ''none'' option')
                     end
                     FinalGraphs = Graphs;
                 %----------------------------------------------------------

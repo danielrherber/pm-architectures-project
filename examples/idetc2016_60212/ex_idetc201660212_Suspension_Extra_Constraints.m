@@ -23,7 +23,7 @@ function [pp,A,unusefulFlag] = ex_idetc201660212_Suspension_Extra_Constraints(pp
         temp = strcmpi(pp.labels.C,'p');
         MyKeep = [MyKeep,find(temp)] ;
         MyA = A(MyKeep,MyKeep);
-        W = ConnectivityMatrix(MyA,20);
+        W = PMA_ConnectivityMatrix(MyA,20);
         if W(1,2) == 1
             unusefulFlag = 1;
         end

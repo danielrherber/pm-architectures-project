@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% GenerateCandidateGraphs.m
+% PMA_GenerateCandidateGraphs.m
 % Generate candidate graphs with the specific algorithm
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [CandidateGraphs,I,N] = GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports)
+function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports)
 
     % select the desired algorithm to generate candidate graphs
     switch opts.algorithm
@@ -22,24 +22,8 @@ function [CandidateGraphs,I,N] = GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports)
             I = 1:N;
             CandidateGraphs = PerfectMatchings(Np); % generate all perfect matchings
 
-        case {'tree_v1',...
-              'tree_v1_mex',...
-              'tree_v1_analysis',...
-              'tree_v8',...
-              'tree_v8_mex',...
-              'tree_v8_analysis',...
-              'tree_v10',...
-              'tree_test',}
-            opts.limited = 0;
-            [CandidateGraphs,I,N] = TreeEnumerateGather(C,P,R,ports.labels.N,ports.NSC,opts,ports.phi);
-
-        case 'treelimited'
-            opts.limited = 1;
-            [CandidateGraphs,I,N] = TreeEnumerateGather(ports.NSC.counts,ports.NSC.A,R,opts);
-
-        case 'treelimitedincomplete'
-            [CandidateGraphs,I,N] = TreeExploreGather(ports.NSC.counts,ports.NSC.A,R,opts,opts.Nmax);
-            
+        otherwise
+            [CandidateGraphs,I,N] = PMA_TreeGather(ports.labels.N,P,R,ports.NSC,opts,ports.phi);
     end
 
     % output some stats to the command window

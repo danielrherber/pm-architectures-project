@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlgAnalysis8.m
+% PMA_EnumerateAlg8_Analysis.m
 % This includes all the relevant enhancements in the technical report 
 % (analysis version)
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = PMA_EnumerateAlgAnalysis8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag,prenode)
+function [SavedGraphs,id] = PMA_EnumerateAlg8_Analysis(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag,prenode)
 
     global node nodelist
 

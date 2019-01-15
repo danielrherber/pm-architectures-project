@@ -1,7 +1,7 @@
 %--------------------------------------------------------------------------
-% GenerateWithSubcatalogs.m
+% PMA_GenerateWithSubcatalogs.m
 % Generate the set of unique, feasible graphs using subcatalogs of the
-% original (C, R, P)
+% original (C,R,P)
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
+function FinalGraphs = PMA_GenerateWithSubcatalogs(C,R,P,NSC,opts)
 
     % ensure that column vectors 
     P = P(:); R = R(:);
@@ -126,7 +126,7 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
         end
 
         % all component types are mandatory
-        nsc.M = ones(size(I));
+        nsc.M = ones(size(new));
         
         % update flags
         nsc.flag.Cflag = uint8(any(nsc.counts));
@@ -139,10 +139,10 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
         % check for parallel computing
         if parallelflag > 0
             % generate feasible graphs for this catalog
-            F(k) = parfeval(@GenerateFeasibleGraphs,1,c,r,p,nsc,opts,sorts);
+            F(k) = parfeval(@PMA_GenerateFeasibleGraphs,1,c,r,p,nsc,opts,sorts);
         else
             % generate feasible graphs for this catalog
-            Graphs{k} = GenerateFeasibleGraphs(c,r,p,nsc,opts,sorts);
+            Graphs{k} = PMA_GenerateFeasibleGraphs(c,r,p,nsc,opts,sorts);
             
             % local display function
             G = SubcatalogsDispFunc(k,G,Graphs,Subcatalogs,displevel);
@@ -195,7 +195,8 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
             graphs{k} = PMA_RemoveIsoColoredGraphs(Graphs{k},opts);
             
             % local display function
-            g = IsoDispFunc(k,g,length(graphs{k}),length(Graphs{k}),displevel,Nfeasible);
+            g = IsoDispFunc(k,g,length(graphs{k}),length(Graphs{k}),...
+                displevel,Nfeasible,opts.isomethod);
       
         end
     end
@@ -210,7 +211,8 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
             graphs{completedIdx} = value;
 
             % local display function
-            g = IsoDispFunc(completedIdx,g,length(value),length(Graphs{completedIdx}),displevel,Nfeasible);
+            g = IsoDispFunc(completedIdx,g,length(value),length(Graphs{completedIdx}),...
+                displevel,Nfeasible,opts.isomethod);
 
         end
     end
@@ -242,8 +244,12 @@ function FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts)
     
     % output some stats to the command window
     if (opts.displevel > 0) % minimal
-        ttime = toc; % stop the timer
-        disp(['Found ',num2str(sum(g)),' unique graphs in ',num2str(ttime),' s'])
+        if strcmpi(opts.isomethod,'none')
+            disp('-> no isomorphism checking using the ''none'' option')
+        else
+            ttime = toc; % stop the timer
+            disp(['Found ',num2str(sum(g)),' unique graphs in ',num2str(ttime),' s'])
+        end
     end
 
 end
@@ -272,13 +278,13 @@ function G = SubcatalogsDispFunc(idx,G,Graphs,Subcatalogs,displevel)
     end
 
 end
-function g = IsoDispFunc(idx,g,Ngraphs,NGraphs,displevel,Nfeasible)
+function g = IsoDispFunc(idx,g,Ngraphs,NGraphs,displevel,Nfeasible,isomethod)
 
     % store the number of unique graphs found
     g(idx) = Ngraphs;
 
     % display some diagnostics
-    if (displevel > 1) % verbose
+    if (displevel > 1) && ~strcmpi(isomethod,'none') % verbose
         % stop the timer
         ttime = toc;
 

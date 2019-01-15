@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% CreateBMatrix.m
+% PMA_CreateBMatrix.m
 % Create 3-D array with line-connectivity constraint information
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Bout = CreateBMatrix(Bind,R,NSC)
+function Bout = PMA_CreateBMatrix(Bind,R,NSC)
 
     % number of component types
     n = numel(R);
@@ -40,7 +40,7 @@ function Bout = CreateBMatrix(Bind,R,NSC)
         % remove the specified component
         Rt(I) = Rt(I) - 1;
         % expand the component's possible adjecency matrix and store    
-        Bout(:,:,k) = ExpandPossibleAdj(Bin(:,:,I),R,NSC,0);
+        Bout(:,:,k) = PMA_ExpandPossibleAdj(Bin(:,:,I),R,NSC,0);
     end
 
 end

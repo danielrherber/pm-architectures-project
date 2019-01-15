@@ -28,14 +28,14 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
     % subcatalogs if there are any mandatory components or R.min is defined
     if NSC.flag.Mflag || isfield(R,'min')
         % generate unique, feasible graphs
-        FinalGraphs = GenerateWithSubcatalogs(C,R,P,NSC,opts);
+        FinalGraphs = PMA_GenerateWithSubcatalogs(C,R,P,NSC,opts);
         
     else % use single catalog
         % sort {C, R, P} to be better suited for enumeration
         [P,R,C,NSC,Sorts] = ReorderCRP(P,R,C,NSC,opts);
         
         % generate feasible graphs
-        Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts);
+        Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts);
 
         % check for colored graph isomorphisms
         FinalGraphs = PMA_RemoveIsoColoredGraphs(Graphs,opts);

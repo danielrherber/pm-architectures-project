@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlgAnalysis1.m
+% PMA_EnumerateAlg1_Analysis.m
 % This is the algorithm in the DETC paper (analysis version)
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = PMA_EnumerateAlgAnalysis1(V,E,SavedGraphs,id,A,cVf,dispflag,prenode)
+function [SavedGraphs,id] = PMA_EnumerateAlg1_Analysis(V,E,SavedGraphs,id,A,cVf,dispflag,prenode)
 
     global node nodelist
 

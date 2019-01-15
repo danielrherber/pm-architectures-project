@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% ParallelToggle.m
+% PMA_ParallelToggle.m
 % Open and close parallel pools without any command window outputs
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function ParallelToggle(opts,flags)
+function PMA_ParallelToggle(opts,flags)
 
     % only if parallel computing is desired
     if (opts.parallel > 0)
@@ -56,7 +56,7 @@ function ParallelToggle(opts,flags)
         if all(ismember({'py'},flagsSplit))
             [~, executable, ~] = pyversion;
             try
-                eval(['pctRunOnAll pyversion(''',executable,''');']);
+                O = evalc(['pctRunOnAll pyversion(''',executable,''');']);
             catch
                 % base workspace will fail if python is already loaded
             end

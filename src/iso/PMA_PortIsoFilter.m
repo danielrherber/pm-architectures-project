@@ -1,7 +1,6 @@
 %--------------------------------------------------------------------------
-% InitialPortIsoFilter.m
-% Apply the initial port-type isomorphism filter to remove isomorphic
-% graphs
+% PMA_PortIsoFilter.m
+% Apply the port-type isomorphism filter to remove isomorphic graphs
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [M,I,N] = InitialPortIsoFilter(M,I,phi,opts)
+function [M,I,N] = PMA_PortIsoFilter(M,I,phi,opts)
 
 % substitute values in data array, same as changem
 Msum = M;
@@ -18,8 +17,8 @@ for k = 1:numel(phi)
     Msum(M == oldval(k)) = phi(k);
 end
 
+% obtain the unique connected component adjacency matrices
 options = 1;
-
 switch options 
     case 1
         % note, this is really a fix for the port-type iso filter

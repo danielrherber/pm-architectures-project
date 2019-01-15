@@ -134,9 +134,9 @@ function opts = DefaultOpts(varargin)
     
     % start the parallel pool
     if strcmpi(opts.isomethod,'python')
-        ParallelToggle(opts,'start-py')
+        PMA_ParallelToggle(opts,'start-py')
     else
-        ParallelToggle(opts,'start')
+        PMA_ParallelToggle(opts,'start')
     end
     
     % structured components default options

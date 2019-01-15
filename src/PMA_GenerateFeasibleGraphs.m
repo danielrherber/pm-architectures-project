@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% GenerateFeasibleGraphs.m
+% PMA_GenerateFeasibleGraphs.m
 % Given an architecture problem, generate a set of feasible graphs
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts) 
+function Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts) 
     
     % number of ports
     Np = P'*R;
@@ -17,10 +17,10 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     Nc = sum(R);
     
     % generate ports graph
-    [ports,~] = GeneratePortsGraph(P,R,C,NSC,1); 
+    [ports,~] = PMA_GeneratePortsGraph(P,R,C,NSC,1); 
 
     % generate candidate graphs
-    [M,I,N] = GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports);
+    [M,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports);
     
     % return if no graphs are present
     if N == 0
@@ -30,7 +30,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     
     % remove basic isomorphism failures
     if opts.filterflag
-        [M,I,N] = InitialPortIsoFilter(M,I,ports.phi,opts);
+        [M,I,N] = PMA_PortIsoFilter(M,I,ports.phi,opts);
     end
     
     % set the custom function if it is present
@@ -44,7 +44,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     
     % create B matrix, if necessary
     if NSC.flag.Bflag
-        Bm = CreateBMatrix(Sorts.NSC.Bind,Sorts.R,Sorts.NSC);
+        Bm = PMA_CreateBMatrix(Sorts.NSC.Bind,Sorts.R,Sorts.NSC);
     else
         Bm = [];
     end
@@ -53,7 +53,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     phiSorted = ports.phi; 
     
     % generated ports graph with original ordering
-    [ports,~] = GeneratePortsGraph(Sorts.P,Sorts.R,Sorts.C,Sorts.NSC,1);
+    [ports,~] = PMA_GeneratePortsGraph(Sorts.P,Sorts.R,Sorts.C,Sorts.NSC,1);
     
     % indices to unsort adjacency matrix
     Iunsort = Sorts.I; 
@@ -91,7 +91,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
         
         % remove stranded components using NSC.M
         if unusefulFlag ~= 1 % only if the graph is currently feasible
-            [Am,pp,unusefulFlag] = RemovedStranded(pp,Am,unusefulFlag);
+            [Am,pp,unusefulFlag] = PMA_RemovedStranded(pp,Am,unusefulFlag);
         end
 
         % check if the number of connections is correct
@@ -112,7 +112,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
         % check line-connectivity constraints
         if unusefulFlag ~= 1 % only if the graph is currently feasible
             if NSC.flag.Bflag % check if this nsc is present
-                unusefulFlag = CheckLineConstraints(Am,Bm,unusefulFlag);
+                unusefulFlag = PMA_CheckLineConstraints(Am,Bm,unusefulFlag);
             end
         end
         
@@ -147,7 +147,7 @@ function Graphs = GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     % output some stats to the command window
     if (opts.displevel > 0) % minimal
         ttime = toc; % stop timer
-        disp(['Found ',num2str(length(Graphs)), ' feasible, trimmed graphs in ', num2str(ttime),' s'])
+        disp(['Found ',num2str(length(Graphs)),' feasible graphs in ',num2str(ttime),' s'])
     end
     
 end % end function

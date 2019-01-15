@@ -24,7 +24,7 @@ function [pp,A,unusefulFlag] = ex_md161635_Suspension_Extra_Constraints(pp,A,unu
         
         MyKeep = [MyKeep,find(temp)] ;
         MyA = A(MyKeep,MyKeep);
-        W = ConnectivityMatrix(MyA,20);
+        W = PMA_ConnectivityMatrix(MyA,20);
         if W(1,2) == 1
             unusefulFlag = 1;
         end

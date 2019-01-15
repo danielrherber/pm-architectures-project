@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% CheckLineConstraints.m
+% PMA_CheckLineConstraints.m
 % Check line-connectivity constraints
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function unusefulFlag = CheckLineConstraints(Am,Bm,unusefulFlag)
+function unusefulFlag = PMA_CheckLineConstraints(Am,Bm,unusefulFlag)
 	% make full and correct data type
     A = uint8(full(Am));
     
