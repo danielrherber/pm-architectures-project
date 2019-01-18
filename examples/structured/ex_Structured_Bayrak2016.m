@@ -51,4 +51,4 @@ opts = [];
 % opts.parallel = 12;
 
 % generate graphs
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

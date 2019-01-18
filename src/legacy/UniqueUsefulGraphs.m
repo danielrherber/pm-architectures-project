@@ -1,21 +1,18 @@
 %--------------------------------------------------------------------------
-% TreeSaveGraphs.m
-% Save edge sets created by the tree algorithm
+% UniqueUsefulGraphs.m
+% Given an architecture class specification, find the set of unique,
+% feasible graphs
 %--------------------------------------------------------------------------
-%
+% NOTE: purpose of this function is only to maintain compatibilty with a
+% previous function name
 %--------------------------------------------------------------------------
 % Primary Contributor: Daniel R. Herber, Graduate Student, University of 
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [M,id] = TreeSaveGraphs(E,M,id,displevel)
-    id = id + 1; % increment index of total graphs
-    M(id,:) = E; % append current graph (a matching)
-    if (displevel > 1) % verbose
-        if (mod(id,10000) == 0)
-            str = sprintf(',%c%c%c',fliplr(num2str(id)));
-            str = fliplr(str(2:end));
-            dispstat(['Graphs generated: ',str])
-        end
-    end
+function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
+
+    % call new function
+    FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
+
 end

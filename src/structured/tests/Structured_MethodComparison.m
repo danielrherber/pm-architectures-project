@@ -26,7 +26,7 @@ saveFlag = 1; % save the results?
 % options
 opts.structured.parallel = 0; % no parallel computing
 opts.isomethod = 'python'; % matlab isomorphism checking option
-opts = DefaultOpts(opts); % default options
+opts = PMA_DefaultOpts(opts); % default options
 
 % obtain the simple graphs for the selected example
 [C,R,P,S,FinalGraphs] = Structured_ExampleSimpleGraphs(example,opts);

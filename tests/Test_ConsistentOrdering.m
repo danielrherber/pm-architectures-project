@@ -37,10 +37,10 @@ P2 = P1(I);
 NSC = []; % no constraints
 
 % run sorted
-Graphs2 = UniqueUsefulGraphs(C2,R2,P2,NSC,opts); disp(' ');
+Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
 
 % run unsorted
-Graphs1 = UniqueUsefulGraphs(C1,R1,P1,NSC,opts); disp(' ');
+Graphs1 = PMA_UniqueFeasibleGraphs(C1,R1,P1,NSC,opts); disp(' ');
 
 % find the unique set of graphs
 FinalGraphs = RemovedColoredIsos([Graphs2,Graphs1],opts); disp(' ');
@@ -70,10 +70,10 @@ NSC.M = ones(1,length(C1));
 NSC.counts = 1;
 
 % run sorted
-Graphs2 = UniqueUsefulGraphs(C2,R2,P2,NSC,opts); disp(' ');
+Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
 
 % run unsorted
-Graphs1 = UniqueUsefulGraphs(C1,R1,P1,NSC,opts); disp(' ');
+Graphs1 = PMA_UniqueFeasibleGraphs(C1,R1,P1,NSC,opts); disp(' ');
 
 % find the unique set of graphs
 FinalGraphs = RemovedColoredIsos([Graphs2,Graphs1],opts); disp(' ');
@@ -104,10 +104,10 @@ P2 = P1(I);
 NSC.counts = 1;
 
 % run sorted
-Graphs2 = UniqueUsefulGraphs(C2,R2,P2,NSC,opts); disp(' ');
+Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
 
 % run unsorted
-Graphs1 = UniqueUsefulGraphs(C1,R1,P1,NSC,opts); disp(' ');
+Graphs1 = PMA_UniqueFeasibleGraphs(C1,R1,P1,NSC,opts); disp(' ');
 
 % find the unique set of graphs
 FinalGraphs = RemovedColoredIsos([Graphs2,Graphs1],opts); disp(' ');

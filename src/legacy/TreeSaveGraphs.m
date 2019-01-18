@@ -1,22 +1,16 @@
 %--------------------------------------------------------------------------
-% SortAsPerfectMatching.m
-% Given a set of edges, sort the edge set to fulfill the requirements of a
-% perfect matching
+% TreeSaveGraphs.m
+% Save edge sets created by the tree algorithm
 %--------------------------------------------------------------------------
-%
+% NOTE: purpose of this function is only to maintain compatibilty with a
+% previous function name
 %--------------------------------------------------------------------------
 % Primary Contributor: Daniel R. Herber, Graduate Student, University of 
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function M = SortAsPerfectMatching(M)
+function [M,id] = TreeSaveGraphs(E,M,id,displevel)
 
-    M = fliplr(M);
-    N = size(M,2);
-    odd = M(:,1:2:N-1);
-    % sort to make a perfect matching
-    for k = 1:size(M,1)
-        [oddsort,Iodd] = sort(odd(k,:),'descend');
-        M(k,1:2:N-1) = oddsort;
-        M(k,2:2:N) = M(k,Iodd*2);
-    end
+    [M,id] = PMA_TreeSaveGraphs(E,M,id,displevel);
+
+end

@@ -47,4 +47,4 @@ opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to sa
 opts.isomethod = 'Matlab'; % option 'Matlab' is available in 2016b or later versions
 
 % generate graphs
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

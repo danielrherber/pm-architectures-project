@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DefaultNSC.m
+% PMA_DefaultNSC.m
 % Default network structure constraints for PM Architectures Project
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function NSC = DefaultNSC(NSC,P)
+function NSC = PMA_DefaultNSC(NSC,P)
 
     % mandatory component boolean vector
     if isfield(NSC,'M')

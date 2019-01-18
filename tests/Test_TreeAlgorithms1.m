@@ -62,7 +62,7 @@ end
 
 % test the first algorithm
 opts.algorithm = alg1;
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
 n1 = numel(FinalGraphs);
 
 if (opts.displevel > 0) % minimal 
@@ -71,7 +71,7 @@ end
 
 % test the second algorithm
 opts.algorithm = alg2;
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
 n2 = numel(FinalGraphs);
 
 disp(' ')

@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% ReorderCRP.m
+% PMA_ReorderCRP.m
 % Sort (C,R,P) to be better suited for enumeration
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [P,R,C,NSC,Sorts] = ReorderCRP(P,R,C,NSC,opts)
+function [P,R,C,NSC,Sorts] = PMA_ReorderCRP(P,R,C,NSC,opts)
 
     % ensure column vectors
     P = P(:);

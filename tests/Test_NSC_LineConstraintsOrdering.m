@@ -3,7 +3,7 @@
 % test line-connectivity constraints when (C,R,P) is reordered
 %--------------------------------------------------------------------------
 % NOTE: this test function was used to fix a bug where NSC.Bind was not
-% sorted properly in ReorderCRP.m
+% sorted properly in PMA_ReorderCRP.m
 %--------------------------------------------------------------------------
 % Primary Contributor: Daniel R. Herber, Graduate Student, University of 
 % Illinois at Urbana-Champaign
@@ -40,4 +40,4 @@ opts.isomethod = 'python'; % need an isomorphism checking method to compare
 opts.plots.plotmax = 0;
 
 % generate the unique useful graphs
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

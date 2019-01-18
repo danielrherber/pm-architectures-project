@@ -36,7 +36,7 @@ switch example
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
             NSC.A(7,6) = 0; % no B-A
-            FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+            FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
     % Real Scenario with 2 planetary gears
@@ -61,7 +61,7 @@ switch example
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
             NSC.A(7,6) = 0; % no B-A
-            FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+            FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
     % Modified Scenario 1 with 1 planetary gears. All ports > 1 components
@@ -87,7 +87,7 @@ switch example
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
             NSC.A(7,6) = 0; % no B-A
-            FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+            FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
     % Modified Scenario 2 with 1 planetary gears. All ports > 1 components
@@ -109,7 +109,7 @@ switch example
             P = [1 3 3 4];
             S = [0 1 1 1]; 
             NSC.counts = 1;  
-            FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+            FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
     % Modified Scenario 1 with 2 planetary gears. All ports > 1 components
@@ -135,7 +135,7 @@ switch example
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
             NSC.A(7,6) = 0; % no B-A
-            FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+            FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
     % Modified Scenario 2 with 2 planetary gears. All ports > 1 components
@@ -158,7 +158,7 @@ switch example
             P = [1 3 3 4];
             S = [0 1 1 1]; 
             NSC.counts = 1;  
-            FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+            FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
     % All components are structured
@@ -183,7 +183,7 @@ switch example
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
             NSC.A(7,6) = 0; % no B-A
-            FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+            FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
 end

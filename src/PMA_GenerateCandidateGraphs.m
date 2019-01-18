@@ -15,12 +15,12 @@ function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,po
         
         case 'pm_incomplete'
             I = randi(prod(1:2:Np-1),opts.Nmax,1);
-            CandidateGraphs = SinglePerfectMatchings(I,Np); % some of the perfect matchings
+            CandidateGraphs = PM_index2pm(I,Np); % some of the perfect matchings
 
         case 'pm_full'     
             N = prod(1:2:Np-1); % (N-1)!! architectures
             I = 1:N;
-            CandidateGraphs = PerfectMatchings(Np); % generate all perfect matchings
+            CandidateGraphs = PM_perfectMatchings(Np); % generate all perfect matchings
 
         otherwise
             [CandidateGraphs,I,N] = PMA_TreeGather(ports.labels.N,P,R,ports.NSC,opts,ports.phi);

@@ -73,7 +73,7 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     displevel = uint8(opts.displevel);
     algorithm = opts.algorithm;
     
-    % default option to use SortAsPerfectMatching
+    % default option to use PMA_SortAsPerfectMatching
     % [change in the algorithm structure below if necessary]
     sortFlag = 1;
     
@@ -169,11 +169,11 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
 
     % sort as perfect matching
     if sortFlag
-        G = SortAsPerfectMatching(G);
+        G = PMA_SortAsPerfectMatching(G);
     end
     
     % obtain perfect matching numbers
-    I = InversePerfectMatchings(G,opts.parallel);
+    I = PM_pm2index(G);
 
     % modify the node list and visualize the tree algorithm
     if contains(algorithm,'analysis')

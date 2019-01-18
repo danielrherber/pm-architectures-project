@@ -49,4 +49,4 @@ opts.plotmax = 0; % maximum number of graphs to display/save
 opts.isomethod = 'None';
 opts.parallel = 0;
 
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

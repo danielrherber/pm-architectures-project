@@ -31,4 +31,4 @@ P = [1,2,3];
 opts = [];
 opts.algorithm = 'tree_v1';
 
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

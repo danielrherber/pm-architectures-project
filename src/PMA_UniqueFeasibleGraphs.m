@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
-% UniqueUsefulGraphs.m
-% Given an architecture problem, find the set of unique useful graphs
+% PMA_UniqueFeasibleGraphs.m
+% Given an architecture class specification, find the set of unique,
+% feasible graphs
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,13 +9,13 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
+function FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts)
 
     % set opts with defaults if not specified
-    opts = DefaultOpts(opts);
+    opts = PMA_DefaultOpts(opts);
 
     % set NSC with defaults if not specified
-    NSC = DefaultNSC(NSC,P);
+    NSC = PMA_DefaultNSC(NSC,P);
 
     % change current folder
     origdir = PMA_ChangeFolder(opts,true,[]);
@@ -31,8 +32,8 @@ function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
         FinalGraphs = PMA_GenerateWithSubcatalogs(C,R,P,NSC,opts);
         
     else % use single catalog
-        % sort {C, R, P} to be better suited for enumeration
-        [P,R,C,NSC,Sorts] = ReorderCRP(P,R,C,NSC,opts);
+        % sort (C,R,P) to be better suited for enumeration
+        [P,R,C,NSC,Sorts] = PMA_ReorderCRP(P,R,C,NSC,opts);
         
         % generate feasible graphs
         Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts);

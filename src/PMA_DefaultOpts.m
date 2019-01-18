@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% DefaultOpts.m
+% PMA_DefaultOpts.m
 % Default options for PM Architectures Project
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function opts = DefaultOpts(varargin)
+function opts = PMA_DefaultOpts(varargin)
 
     % check if any options are provided
     if isempty(varargin)

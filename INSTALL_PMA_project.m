@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% INSTALL_PM_Architectures_Project
+% INSTALL_PMA_project
 % This scripts helps you get the PM Architectures Project up and running
 %--------------------------------------------------------------------------
 % Automatically adds project files to your MATLAB path, downloads the
@@ -14,7 +14,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function INSTALL_PM_Architectures_Project
+function INSTALL_PMA_project
 
 	warning('off','MATLAB:dispatcher:nameConflict');
 
@@ -78,6 +78,11 @@ function RequiredWebZips
 	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/47246/versions/3/download/zip/tint.zip';
 	zips(ind).folder = 'MFX 47246';
 	zips(ind).test = 'tint';
+    
+	ind = ind + 1;
+	zips(ind).url = 'https://github.com/danielrherber/perfect-matchings-of-a-complete-graph/archive/master.zip';
+	zips(ind).folder = 'MFX 52301';
+	zips(ind).test = 'PM_perfectMatchings';
 
     % obtain full function path
     full_fun_path = which(mfilename('fullpath'));

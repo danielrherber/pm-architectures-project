@@ -134,7 +134,7 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(C,R,P,NSC,opts)
         nsc.flag.Bflag = uint8(~isempty(nsc.Bind));
 
         % sort {C, R, P} to be better suited for enumeration
-        [p,r,c,nsc,sorts] = ReorderCRP(p,r,c,nsc,opts);
+        [p,r,c,nsc,sorts] = PMA_ReorderCRP(p,r,c,nsc,opts);
 
         % check for parallel computing
         if parallelflag > 0

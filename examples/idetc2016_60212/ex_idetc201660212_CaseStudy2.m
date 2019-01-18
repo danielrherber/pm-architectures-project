@@ -52,4 +52,4 @@ opts.plots.path = mfoldername(mfilename('fullpath'),[opts.plots.name,'_figs']); 
 opts.plots.labelnumflag = 0; % add replicate numbers when plotting
 
 % generate graphs
-FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

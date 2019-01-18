@@ -61,7 +61,7 @@ function PermLoops = GenerateAllConnections(n,nl)
     I = nchoosek(1:n,2*nl);
 
     % generate all perfect matchings
-    PM = PerfectMatchings(2*nl);
+    PM = PM_perfectMatchings(2*nl);
     
     % number of perfect matchings
     nPM = size(PM,1);
