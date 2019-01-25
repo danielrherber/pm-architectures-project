@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function unusefulFlag = PMA_CheckLineConstraints(Am,Bm,unusefulFlag)
+function feasibleFlag = PMA_CheckLineConstraints(Am,Bm,feasibleFlag)
 	% make full and correct data type
     A = uint8(full(Am));
     
@@ -22,7 +22,7 @@ function unusefulFlag = PMA_CheckLineConstraints(Am,Bm,unusefulFlag)
         A2 = A(I2(k),:)'; % find what #2 is connected to
         A2(I1(k)) = A2(I1(k)) - 1; % remove the current connection
         if any((2*B21 + A2) == 1) % check if infeasible edge exists
-            unusefulFlag = 1; % declare graph infeasible
+            feasibleFlag = false; % declare graph infeasible
             break % break for loop
         end
         
@@ -31,7 +31,7 @@ function unusefulFlag = PMA_CheckLineConstraints(Am,Bm,unusefulFlag)
         A1 = A(I1(k),:)'; % find what #2 is connected to
         A1(I2(k)) = A1(I2(k)) - 1; % remove the current connection
         if any((2*B12 + A1) == 1) % check if infeasible edge exists
-            unusefulFlag = 1; % declare graph infeasible
+            feasibleFlag = false; % declare graph infeasible
             break % break for loop
         end
         

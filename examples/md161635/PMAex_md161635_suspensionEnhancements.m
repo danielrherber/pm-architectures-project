@@ -1,10 +1,10 @@
 %--------------------------------------------------------------------------
-% ex_md161635_Suspension_Enhancements.m
+% PMAex_md161635_suspensionEnhancements.m
 % Replicates the results from Case Study 3 in the paper below
 % Uses the enhancements in the technical report
 %--------------------------------------------------------------------------
 % Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
-% Matchings. ASME. J. Mech. Des. 2017;139(5):051403. doi:10.1115/1.4036132
+% Matchings. ASME. J. Mech. Des. 2017; 139(5):051403. doi:10.1115/1.4036132
 %--------------------------------------------------------------------------
 % Primary Contributor: Daniel R. Herber, Graduate Student, University of 
 % Illinois at Urbana-Champaign
@@ -46,7 +46,7 @@ opts.algorithm = 'tree_v8_mex';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 12; % 1 to enable parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
-opts.customfun = @(pp,A,infeasibleFlag) ex_md161635_Suspension_Extra_Constraints(pp,A,infeasibleFlag);
+opts.customfun = @(pp,A,feasibleFlag) PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag);
 opts.isomethod = 'python'; % option 'Matlab' is available in 2016b or later versions
 
 opts.plots.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio' % 'matlab'

@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [A,pp,unusefulFlag] = PMA_RemovedStranded(pp,A,unusefulFlag)
+function [A,pp,feasibleFlag] = PMA_RemovedStranded(pp,A,feasibleFlag)
 
 % obtain connectivity matrix
 W = PMA_ConnectivityMatrix(A,length(A));
@@ -35,9 +35,9 @@ else
     pp.removephi = sort(find(R),1,'descend');
 end
 
-% if there are no remaining vertices, graph is unuseful
+% if there are no remaining vertices, graph is infeasible (unuseful)
 if isempty(A)
-    unusefulFlag = 1;
+    feasibleFlag = false;
 end
 
 end

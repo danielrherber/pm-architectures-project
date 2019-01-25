@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% Structured_Bayrak2016.m
+% PMAex_structured_bayrak2016.m
 % Example based on the reference below for generating different hybrid
 % powertrain architectures
 %--------------------------------------------------------------------------

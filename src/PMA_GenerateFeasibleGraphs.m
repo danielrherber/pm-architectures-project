@@ -10,6 +10,10 @@
 %--------------------------------------------------------------------------
 function Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts) 
     
+    % extract 
+    Cflag = NSC.flag.Cflag;
+    Bflag = NSC.flag.Bflag;
+    
     % number of ports
     Np = P'*R;
     
@@ -20,7 +24,7 @@ function Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     [ports,~] = PMA_GeneratePortsGraph(P,R,C,NSC,1); 
 
     % generate candidate graphs
-    [M,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports);
+    [G,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports);
     
     % return if no graphs are present
     if N == 0
@@ -30,20 +34,20 @@ function Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     
     % remove basic isomorphism failures
     if opts.filterflag
-        [M,I,N] = PMA_PortIsoFilter(M,I,ports.phi,opts);
+        [G,I,N] = PMA_PortIsoFilter(G,I,ports.phi,opts);
     end
     
     % set the custom function if it is present
     customfunFlag = 0;
     if isfield(opts,'customfun')
         customfunFlag = 1;
-        CustomFeasibilityChecks = opts.customfun;
+        CustFeasChecks = opts.customfun;
     else
-        CustomFeasibilityChecks = @(pp,A,unusefulFlag) [pp,A,unusefulFlag];
+        CustFeasChecks = @(pp,A,feasibleFlag) [pp,A,feasibleFlag];
     end
     
     % create B matrix, if necessary
-    if NSC.flag.Bflag
+    if Bflag
         Bm = PMA_CreateBMatrix(Sorts.NSC.Bind,Sorts.R,Sorts.NSC);
     else
         Bm = [];
@@ -57,92 +61,53 @@ function Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     
     % indices to unsort adjacency matrix
     Iunsort = Sorts.I; 
+
+    % initialize
+    Graphs = struct('A',[],'L',[],'Ln',[],'removephi',[],'N',[],'Am',[]);
+    [Graphs(1:N)] = Graphs;   
+    F = zeros(N,1); % all graphs are infeasible
     
     % loop through the candidate graphs and check if they are feasible
-    parfor (i = 1:N, opts.parallel)
-%     for i = 1:N
- 
-        % graph is initially feasible
-        unusefulFlag = 0;
-
-        % local structure variable since pp might change
-        pp = ports;
-        
-        % get the current PM vertices
-        PM = M(i,:); 
-        
-        % three-tuple for the interconnectivity graph
-        Ii = PM(1:2:end); % odd values
-        Ji = PM(2:2:end); % even values
-        
-        % map edges from CP graph to CC graph with phi
-        Icc = phiSorted(Ii); % rows
-        Jcc = phiSorted(Ji); % columns
-        Vcc = ones(size(Jcc)); % edges
-        
-        % connected components graph adjacency matrix (multiedge)
-        Am = sparse([Icc,Jcc],[Jcc,Icc],[Vcc,Vcc],Nc,Nc); % symmetric matrix
-        iDiag = 1:Nc+1:Nc^2; % diagonal entry linear indices
-        Am(iDiag) = Am(iDiag)/2; % half 
-
-        % unsort
-        Am = Am(Iunsort,:);
-        Am = Am(:,Iunsort);
-        
-        % remove stranded components using NSC.M
-        if unusefulFlag ~= 1 % only if the graph is currently feasible
-            [Am,pp,unusefulFlag] = PMA_RemovedStranded(pp,Am,unusefulFlag);
-        end
-
-        % check if the number of connections is correct
-        if unusefulFlag ~= 1 % only if the graph is currently feasible
-            if NSC.flag.Cflag % check if this nsc is present
-                % remove self loops and multi-edges
-                A = sign(Am + Am' + eye(length(Am))) - eye(length(Am));
-                % compare number of connections to port counts
-                check = full(sum(A)) == pp.NSC.Vfull;
-                % declare infeasible if any components with required
-                % unique connections does not have this property
-                if ~all(check(pp.NSC.counts==1))
-                    unusefulFlag = 1; % declare graph infeasible
-                end
+    if opts.parallel == 0
+        for idx = 1:N
+            % check feasibility
+            [A,L,Ln,rmphi,Am,f] = PMA_CheckNSCFeasibility(G(idx,:),Nc,...
+                phiSorted,Iunsort,ports,Cflag,Bflag,Bm,customfunFlag,CustFeasChecks);
+            
+            % assign if the graph is feasible
+            if f
+                F(idx) = f;
+                Graphs(idx).A = A;
+                Graphs(idx).L = L;
+                Graphs(idx).Ln = Ln;
+                Graphs(idx).removephi = rmphi;
+                Graphs(idx).N = I(idx);
+                Graphs(idx).Am = Am;
             end
-        end
 
-        % check line-connectivity constraints
-        if unusefulFlag ~= 1 % only if the graph is currently feasible
-            if NSC.flag.Bflag % check if this nsc is present
-                unusefulFlag = PMA_CheckLineConstraints(Am,Bm,unusefulFlag);
-            end
-        end
-        
-        % run custom infeasibility check function
-        if unusefulFlag ~= 1 % only if the graph is currently feasible
-            if customfunFlag
-                [pp,Am,unusefulFlag] = CustomFeasibilityChecks(pp,Am,unusefulFlag);
-            end
-        end
-        
-        % if the graph is feasible, save it
-        if unusefulFlag ~= 1
-            Graphs(i).A = full(Am);
-            Graphs(i).L = pp.labels.C;
-            Graphs(i).Ln = pp.labels.N;
-            Graphs(i).removephi = pp.removephi;
-            Graphs(i).N = I(i); % perfect matching number
-            Graphs(i).Am = full(Am); % get multiedge adjacency matrix
-        end
-        
-    end % end for loop
-
-    % remove empty graphs
-    if exist('Graphs','var')
-        empty_elems = arrayfun(@(s) all(structfun(@isempty,s)), Graphs);
-        Graphs(empty_elems) = [];
+        end % end for loop
     else
-        Graphs = [];
-        return
+        parfor (idx = 1:N, opts.parallel)
+            % check feasibility
+            [A,L,Ln,rmphi,Am,f] = PMA_CheckNSCFeasibility(G(idx,:),Nc,...
+                phiSorted,Iunsort,ports,Cflag,Bflag,Bm,customfunFlag,CustFeasChecks);
+
+            % assign if the graph is feasible
+            if f
+                F(idx) = f;
+                Graphs(idx).A = A;
+                Graphs(idx).L = L;
+                Graphs(idx).Ln = Ln;
+                Graphs(idx).removephi = rmphi;
+                Graphs(idx).N = I(idx);
+                Graphs(idx).Am = Am;
+            end
+
+        end % end for loop
     end
+    
+    % remove empty graphs
+    Graphs(~F) = [];
     
     % output some stats to the command window
     if (opts.displevel > 0) % minimal

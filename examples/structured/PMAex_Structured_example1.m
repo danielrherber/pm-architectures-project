@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% ex_Structured_Example1.m
+% PMAex_structured_example1.m
 % Simple example with some structured components
 %--------------------------------------------------------------------------
 %

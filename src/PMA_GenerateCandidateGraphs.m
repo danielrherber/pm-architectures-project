@@ -10,6 +10,14 @@
 %--------------------------------------------------------------------------
 function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports)
 
+    % output some stats to the command window
+    if (opts.displevel > 1) % verbose
+        disp([num2str(2^(Nc*(Nc-1)/2)),' adjacency matrices using 2^(Nc*(Nc-1)/2)'])
+        disp([num2str(prod(1:2:Np-1)), ' perfect matchings using (Np-1)!! method'])
+        [L,~] = PMA_CalcUniqueGraphBnds(P,R);
+        disp(['At least ',num2str(floor(L)),' unique graphs for (C,R,P) using Eqn. (12)'])
+    end
+
     % select the desired algorithm to generate candidate graphs
     switch opts.algorithm
         
@@ -27,10 +35,6 @@ function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,po
     end
 
     % output some stats to the command window
-    if (opts.displevel > 1) % verbose
-        disp([num2str(2^(Nc*(Nc-1)/2)),' adjacency matrices, 2^(Nc*(Nc-1)/2) method'])
-        disp([num2str(prod(1:2:Np-1)), ' perfect matchings, (Np-1)!! method'])
-    end
     if (opts.displevel > 0) % minimal
         ttime = toc; % stop timer
         disp(['Generated ',num2str(N), ' candidate matchings with ',opts.algorithm,' option in ', num2str(ttime),' s'])

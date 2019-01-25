@@ -1,9 +1,9 @@
 %--------------------------------------------------------------------------
-% ex_md161635_CaseStudy1.m
+% PMAex_md161635_caseStudy1.m
 % This example replicates the results from Case Study 1 in the paper below
 %--------------------------------------------------------------------------
 % Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
-% Matchings. ASME. J. Mech. Des. 2017;139(5):051403. doi:10.1115/1.4036132
+% Matchings. ASME. J. Mech. Des. 2017; 139(5):051403. doi:10.1115/1.4036132
 % FIGURE 10: All 16 unique graphs with no additional NSCs for Case Study 1.
 %--------------------------------------------------------------------------
 % Primary Contributor: Daniel R. Herber, Graduate Student, University of 

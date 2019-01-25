@@ -16,6 +16,7 @@ n = sum(R);
 
 % replicate the labels for each replicate
 labelsC = repelem(C,R);
+labelsC = labelsC(:);
 
 % replicate the number of ports for each replicate
 Vfull = repelem(P,R)';
@@ -29,6 +30,7 @@ for idx = R'
     R2 = [R2,1:idx];
 end
 R2 = string(R2);
+R2 = R2(:); % column vector
 labelsP = cellstr(repelem(strcat(labelsC,R2),Vfull));
 
 % replicate the mandatory vector for each replicate
