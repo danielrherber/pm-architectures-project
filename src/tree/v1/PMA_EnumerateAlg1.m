@@ -32,7 +32,7 @@ function [SavedGraphs,id] = PMA_EnumerateAlg1(V,E,SavedGraphs,id,A,cVf,dispflag)
         if any(V2) % recursive call if any remaining vertices
             [SavedGraphs,id] = PMA_EnumerateAlg1(V2,E2,SavedGraphs,id,A,cVf,dispflag);
         else % save the complete perfect matching graph
-            [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+            [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
         end
 
     end % for iR = I

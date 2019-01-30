@@ -111,6 +111,9 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
         case 'tree_v8_mex'
             [G,~] = PMA_EnumerateAlg8_mex(Vf,E,G,id,A,B,iInitRep,cVf,...
                 Vf,counts,M,Mf,Bf,displevel);
+        case 'tree_v10_mex'
+            G = PMA_EnumerateAlg10_mex(cVf,Vf,iInitRep,counts,...
+                phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
         %------------------------------------------------------------------
         % analysis
         %------------------------------------------------------------------

@@ -36,14 +36,14 @@ NSC.A = A;
 % options
 opts.algorithm = 'tree_v1';
 opts.Nmax = 2e8; % maximum number of graphs to preallocate for
-opts.parallel = 12; % 1 to enable parallel computing, 0 to disable it
+opts.parallel = 12; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 opts.customfun = @(pp,A,feasibleFlag) PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag);
 opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'
 opts.plotmax = 0; % maximum number of graphs to display/save
 opts.name = mfilename; % name of the example
 opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
-opts.isomethod = 'Python'; % option 'Matlab' is available in 2016b or later versions
+opts.isomethod = 'python'; % option 'matlab' is available in 2016b or later versions
 
 % generate graphs
 FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

@@ -136,7 +136,7 @@ for iter = 1:Ne
     if dispflag > 2 % very verbose
         fprintf('---\n')    
         fprintf('Iteration: %2i\n',iter)
-        fprintf('       Current Queue Length: %8d\n',length(Queue))
+        fprintf('       Current Queue Length: %8d\n',int64(length(Queue)))
     end
     %----------------------------------------------------------------------
     
@@ -156,7 +156,7 @@ for iter = 1:Ne
         
         % print
         if dispflag > 2 % very verbose
-            fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-length(Queue))
+            fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-int64(length(Queue)))
         end
     end
     %----------------------------------------------------------------------

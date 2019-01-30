@@ -33,9 +33,9 @@ A = round((A+A')/3);
 NSC.A = A;
 
 % options
-opts.algorithm = 'tree_v1'; % 'tree_v3' % 'pm_full' % 'pm_incomplete'
+opts.algorithm = 'tree_v1';
 opts.Nmax = 2e8; % maximum number of graphs to preallocate for
-opts.parallel = 1; % 1 to enable parallel computing, 0 to disable it
+opts.parallel = 12; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 opts.customfun = @(pp,A,feasibleFlag) PMAex_idetc201660212_suspensionConstraints(pp,A,feasibleFlag);
 opts.isomethod = 'python'; % option 'Matlab' is available in 2016b or later versions

@@ -44,10 +44,10 @@ NSC.Bind(4,:) = [2,8,1]; % u-p-s
 % options
 opts.algorithm = 'tree_v8_mex';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
-opts.parallel = 12; % 1 to enable parallel computing, 0 to disable it
+opts.parallel = 12; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 opts.customfun = @(pp,A,feasibleFlag) PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag);
-opts.isomethod = 'python'; % option 'Matlab' is available in 2016b or later versions
+opts.isomethod = 'python'; % option 'matlab' is available in 2016b or later versions
 
 opts.plots.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio' % 'matlab'
 opts.plots.plotmax = 0; % maximum number of graphs to display/save

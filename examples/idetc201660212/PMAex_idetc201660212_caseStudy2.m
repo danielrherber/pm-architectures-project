@@ -38,14 +38,14 @@ switch num
 end
 
 % options
-opts.algorithm = 'tree_v1'; %
+opts.algorithm = 'tree_v1';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
-opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
+opts.parallel = 0; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example2_Extra_Constraints(pp,A,infeasibleFlag);
 opts.isomethod = 'matlab'; % option 'Matlab' is available in 2016b or later versions
 
-opts.plots.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio' % 'matlab'
+opts.plots.plotfun = 'matlab'; % 'circle' % 'bgl' % 'bio' % 'matlab'
 opts.plots.plotmax = 20; % maximum number of graphs to display/save
 opts.plots.name = mfilename; % name of the example
 opts.plots.path = mfoldername(mfilename('fullpath'),[opts.plots.name,'_figs']); % path to save figures to

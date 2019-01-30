@@ -49,7 +49,7 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cV
                         V2(k) = V2(k)-1; % remove port
                         E2 = [E2,LR]; % add port
                     end
-                    [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+                    [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
                     continue
                 elseif (nUncon == sum(M))
                     % continue iterating
@@ -80,7 +80,7 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cV
         if any(V2) % recursive call if any remaining vertices
             [SavedGraphs,id] = PMA_EnumerateAlg8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
         else % save the complete perfect matching graph
-            [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+            [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
         end
 
     end % for iR = I

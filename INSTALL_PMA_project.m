@@ -14,30 +14,40 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function INSTALL_PMA_project
+function INSTALL_PMA_project(varargin)
+
+    % intialize
+    silentflag = 0; % don't be silent
+    
+    % parse inputs
+    if ~isempty(varargin)
+        if any(strcmpi(varargin,'silent'))
+            silentflag = 1; % be silent
+        end
+    end
 
 	warning('off','MATLAB:dispatcher:nameConflict');
 
     % add contents to path
-    AddSubmissionContents(mfilename)
+    RunSilent('AddSubmissionContents(mfilename)',silentflag)
 
     % download required web zips
-    RequiredWebZips
+    RunSilent('RequiredWebZips',silentflag)
 
     % Matlab isomorphism function check
-    CheckMatlabIsomorphismFunction
+    RunSilent('CheckMatlabIsomorphismFunction',silentflag)
     
 	% Python check
-	PythonSetupCheck
+    RunSilent('PythonSetupCheck',silentflag)
 
     % add contents to path
-    AddSubmissionContents(mfilename)
+    RunSilent('AddSubmissionContents(mfilename)',silentflag)
 
 	% open an example
-	OpenThisFile('ex_md161635_CaseStudy1')
+    if ~silentflag, OpenThisFile('PMAex_md161635_caseStudy1'); end
 
 	% close this file
-	CloseThisFile(mfilename)
+    RunSilent('CloseThisFile(mfilename)',silentflag)
     
 	warning('on','MATLAB:dispatcher:nameConflict');
 
@@ -261,4 +271,12 @@ function DownloadWebZips(zips,outputdir)
     
     % change back to the original directory
     cd(olddir)
+end
+%--------------------------------------------------------------------------
+function RunSilent(str,silentflag)
+    if silentflag
+        O = evalc(str);
+    else
+        eval(str);
+    end
 end

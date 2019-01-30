@@ -19,14 +19,19 @@ function opts = PMA_DefaultOpts(varargin)
 
     % algorithm for generate candidate graphs
     if ~isfield(opts,'algorithm')
+        % opts.algorithm = 'pm_full'; % generate all perfect matchings
+        % opts.algorithm = 'pm_incomplete'; % some of the perfect matchings
         % opts.algorithm = 'tree_v1';
         % opts.algorithm = 'tree_v1_mex';
         % opts.algorithm = 'tree_v1_analysis';
+        % opts.algorithm = 'tree_v1_stochastic';
         opts.algorithm = 'tree_v8';
         % opts.algorithm = 'tree_v8_mex';
+        % opts.algorithm = 'tree_v8_analysis';
+        % opts.algorithm = 'tree_v8_stochastic';
         % opts.algorithm = 'tree_v10';
-        % opts.algorithm = 'pm_full'; % generate all perfect matchings
-        % opts.algorithm = 'pm_incomplete'; % some of the perfect matchings        
+        % opts.algorithm = 'tree_v10_mex';
+        % opts.algorithm = 'tree_v10_stochastic';
     end
 
     % maximum number of graphs to preallocate for
