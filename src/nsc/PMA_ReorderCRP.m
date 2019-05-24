@@ -55,7 +55,7 @@ function [P,R,C,NSC,Sorts] = PMA_ReorderCRP(P,R,C,NSC,opts)
     NSC.counts = NSC.counts(I);
     NSC.A = NSC.A(I,:);
     NSC.A = NSC.A(:,I);
-    NSC.Bind = changem(NSC.Bind,1:length(P),I);
+    NSC.Bind = PMA_changem(NSC.Bind,1:length(P),I);
 
 end
 % notes on the formula

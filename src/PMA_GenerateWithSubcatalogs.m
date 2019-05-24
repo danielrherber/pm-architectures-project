@@ -121,7 +121,7 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(C,R,P,NSC,opts)
             if ~all(ismember(nsc.Bind(t,:),find(I)))
                 nsc.Bind(t,:) = []; % remove the constraint
             else
-                nsc.Bind(t,:) = changem(nsc.Bind(t,:),new,org);
+                nsc.Bind(t,:) = PMA_changem(nsc.Bind(t,:),new,org);
             end
         end
 

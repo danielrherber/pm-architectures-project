@@ -50,10 +50,7 @@ function PMA_PlotCircle(A,L,PM,I,opts)
     xy(:,2) = sin(theta);
     
     % get color spec
-    c = zeros(length(L),3);
-    for k = 1:numel(L)
-        c(k,:) = PMA_LabelColors(L{k});
-    end
+    c = PMA_LabelColors(L,opts.colorlib);
     
     % find all the edges
     [IA,JA,VA] = find(A);

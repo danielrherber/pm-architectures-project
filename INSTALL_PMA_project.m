@@ -53,7 +53,7 @@ function INSTALL_PMA_project(varargin)
 
 end
 %--------------------------------------------------------------------------
-function RequiredWebZips
+function RequiredWebZips %#ok<DEFNU>
     disp('--- Obtaining required web zips')
     
     % initialize index
@@ -104,7 +104,7 @@ function RequiredWebZips
 	disp(' ')
 end
 %-------------------------------------------------------------------------- 
-function CheckMatlabIsomorphismFunction
+function CheckMatlabIsomorphismFunction %#ok<DEFNU>
     disp('--- Checking Matlab''s isomorphism function')
     
     % check if isisomorphic is available
@@ -120,7 +120,7 @@ function CheckMatlabIsomorphismFunction
     disp(' ')
 end
 %--------------------------------------------------------------------------
-function PythonSetupCheck
+function PythonSetupCheck %#ok<DEFNU>
 	disp('--- Checking Python setup')
     
     CheckFlag = 0;
@@ -163,7 +163,7 @@ function PythonSetupCheck
 	disp(' ')
 end
 %--------------------------------------------------------------------------
-function AddSubmissionContents(name)
+function AddSubmissionContents(name) %#ok<DEFNU>
     disp('--- Adding submission contents to path')
     disp(' ')
 
@@ -177,7 +177,7 @@ function AddSubmissionContents(name)
     addpath(genpath(submissiondir)) 
 end
 %--------------------------------------------------------------------------
-function CloseThisFile(name)
+function CloseThisFile(name) %#ok<DEFNU>
     disp(['--- Closing ', name])
     disp(' ')
 
@@ -275,7 +275,7 @@ end
 %--------------------------------------------------------------------------
 function RunSilent(str,silentflag)
     if silentflag
-        O = evalc(str);
+        O = evalc(str); %#ok<NASGU>
     else
         eval(str);
     end

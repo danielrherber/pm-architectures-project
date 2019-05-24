@@ -37,10 +37,7 @@ function PMA_PlotMatlab2018b(A,L,PM,I,opts)
     end
     
     % get color spec
-    c = zeros(length(L),3);
-    for k = 1:numel(L)
-        c(k,:) = PMA_LabelColors(L{k});
-    end
+    c = PMA_LabelColors(L,opts.colorlib);
 
 	% create a new figure and save handle
     hf = figure;

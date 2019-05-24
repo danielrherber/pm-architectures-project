@@ -10,12 +10,8 @@
 %--------------------------------------------------------------------------
 function [M,I,N] = PMA_PortIsoFilter(M,I,phi,opts)
 
-% substitute values in data array, same as changem
-Msum = M;
-oldval = 1:length(phi);
-for k = 1:numel(phi)
-    Msum(M == oldval(k)) = phi(k);
-end
+% substitute values in data array
+Msum = PMA_changem(M,phi,1:length(phi));
 
 % obtain the unique connected component adjacency matrices
 options = 1;

@@ -1,0 +1,12 @@
+!.gitignore
+
+# ignore certain file extensions
+*.ini
+*.asv
+
+# ignore certain folders
+.private*/
+*_figs/
+
+# ignore specific files
+notes.txt

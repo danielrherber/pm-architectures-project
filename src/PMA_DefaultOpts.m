@@ -125,6 +125,12 @@ function opts = PMA_DefaultOpts(varargin)
         opts.plots.labelnumflag = 0; % no
         % opts.plots.labelnumflag = 1; % yes
     end
+
+    % color library to use (see PMA_LabelColors.m)
+    if ~isfield(opts.plots,'colorlib')
+        opts.plots.colorlib = 1; % ColorLibrary1
+        % opts.plots.colorlib = 2; % ColorLibrary2
+    end    
     %----------------------------------------------------------------------
     % END: plot options
     %----------------------------------------------------------------------

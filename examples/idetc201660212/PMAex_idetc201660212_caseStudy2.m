@@ -50,6 +50,7 @@ opts.plots.plotmax = 20; % maximum number of graphs to display/save
 opts.plots.name = mfilename; % name of the example
 opts.plots.path = mfoldername(mfilename('fullpath'),[opts.plots.name,'_figs']); % path to save figures to
 opts.plots.labelnumflag = 0; % add replicate numbers when plotting
+opts.plots.colorlib = 2; % color library
 
 % generate graphs
 FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

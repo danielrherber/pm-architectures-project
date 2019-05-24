@@ -189,7 +189,7 @@ end
 
 % old code
 
-%             Ct = changem(Ct, 1:max(Ct), unique(Ct,'stable')); % canonical ordering by index (might not be needed)
+%             Ct = PMA_changem(Ct, 1:max(Ct), unique(Ct,'stable')); % canonical ordering by index (might not be needed)
 %             C(idx,:) = Ct;
 
 %             while (NKeep > 0) && ~IsoFlag

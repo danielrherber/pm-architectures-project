@@ -37,10 +37,7 @@ function PMA_PlotMatlab(A,L,PM,I,opts)
     end
     
     % get color spec
-    c = zeros(length(L),3);
-    for k = 1:numel(L)
-        c(k,:) = PMA_LabelColors(L{k});
-    end
+    c = PMA_LabelColors(L,opts.colorlib);
 
     % get unique data for the labels
     [~,ia1,ic1] = unique(base2dec(L,36));
