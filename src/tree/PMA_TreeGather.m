@@ -76,11 +76,6 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     % default option to use PMA_SortAsPerfectMatching
     % [change in the algorithm structure below if necessary]
     sortFlag = 1;
-    
-    % initialize dispstat for overwritable messages to the command line
-    if (displevel > 1)
-        dispstat('','init');
-    end
 
     % global variable used to save the tree structure (optional addition)
     if contains(algorithm,'analysis')
@@ -103,6 +98,12 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
         case 'tree_v10'
             G = PMA_EnumerateAlg10(cVf,Vf,iInitRep,counts,...
                 phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
+        case 'tree_v11DFS'
+            [G,~] = PMA_EnumerateAlg_v11DFS(Vf,E,G,id,A,B,iInitRep,cVf,...
+                Vf,counts,M,Mf,Bf,displevel);
+        case 'tree_v11BFS'
+            G = PMA_EnumerateAlg_v11BFS(cVf,Vf,iInitRep,counts,...
+                phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
         %------------------------------------------------------------------
         % mex
         %------------------------------------------------------------------
@@ -113,6 +114,12 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
                 Vf,counts,M,Mf,Bf,displevel);
         case 'tree_v10_mex'
             G = PMA_EnumerateAlg10_mex(cVf,Vf,iInitRep,counts,...
+                phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
+        case 'tree_v11DFS_mex'
+            [G,~] = PMA_EnumerateAlg_v11DFS_mex(Vf,E,G,id,A,B,iInitRep,cVf,...
+                Vf,counts,M,Mf,Bf,displevel);
+        case 'tree_v11BFS_mex'
+            G = PMA_EnumerateAlg_v11BFS_mex(cVf,Vf,iInitRep,counts,...
                 phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
         %------------------------------------------------------------------
         % analysis
@@ -141,6 +148,10 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
                 G(idx,:) = PMA_StochasticAlg10(cVf,Vf,iInitRep,counts,...
                     phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
             end
+        case 'tree_v11DFS_stochastic'
+            error('need to implement')
+        case 'tree_v11BFS_stochastic'
+            error('need to implement')
         %------------------------------------------------------------------
         case 'tree_test'
             % for testing new algorithms
