@@ -11,7 +11,16 @@
 %--------------------------------------------------------------------------
 function G = PMA_SortAsPerfectMatching(G)
 
-    G = fliplr(G); % flip so even and odd vertices switch
+    % first check that is this a perfect matching
+    dG = diff(int8(G),1,2);
+    if all(dG(:,1:2:end)>0,'all')
+        G = fliplr(G); % flip so even and odd vertices switch
+    elseif all(dG(:,1:2:end)<0,'all')
+        % do nothing
+    else
+        error('Provided G does not represent a perfect matching')
+    end
+
     N = size(G,1); % number of edge sets
     n = size(G,2); % number of vertices
     Vo = G(:,1:2:n-1); % odd index vertices

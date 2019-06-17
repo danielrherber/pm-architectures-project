@@ -53,10 +53,6 @@ end
 bin(1).Graphs(1) = Graphs(1);
 nNonIso = nNonIso + 1;
 % v(1) = 1;
-    
-% initialize dispstat
-dispstat('','init') % does not print anything
-Ndispstat = floor((n-1)/100);
 
 % check remaining graphs for uniqueness
 for i = 2:n

@@ -27,7 +27,9 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cV
     I = find(Vallow);  
 
 	% loop through all nonzero entries
-    for iR = I
+    for iRidx = 1:length(I)
+        
+        iR = I(iRidx);
 
         % local for loop variables
         V2 = V; A2 = A;
@@ -61,7 +63,7 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cV
         % END ENHANCEMENT: saturated subgraphs
 
         % START ENHANCEMENT: multi-edges
-        if counts(iL) || counts(iR) % if either component needs unique connections
+        if any(counts(iR)) || any(counts(iL)) % if either component needs unique connections
             if (iR ~= iL) % don't do for self loops
                 A2(iR,iL) = uint8(0); % limit this connection
                 A2(iL,iR) = uint8(0); % limit this connection

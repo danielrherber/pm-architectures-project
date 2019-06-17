@@ -12,10 +12,19 @@ function [M,id] = PMA_TreeSaveGraphs(E,M,id,displevel)
     id = id + 1; % increment index of total graphs
     M(id,:) = E; % append current graph (a matching)
     if (displevel > 1) % verbose
-        if (mod(id,10000) == 0)
-            str = sprintf(',%c%c%c',fliplr(num2str(id)));
-            str = fliplr(str(2:end));
-            dispstat(['Graphs generated: ',str])
+        if (mod(id,uint64(10000)) == 0) || (id == 1)
+            % check if this is the first graph generated
+            if id == 1
+                % initial string
+                fprintf('Graphs generated: ');
+            else
+                % remove previous
+                fprintf(repmat('\b', 1, 11));
+            end
+            % current number of graphs (fixed size)
+            fprintf('%10d',int64(id));
+            % new line
+            fprintf('\n');
         end
     end
 end

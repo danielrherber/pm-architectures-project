@@ -34,7 +34,7 @@ switch options
         P = sort(P,2,'descend'); % descending is a bit faster
 
         % obtain the unique connected component adjacency matrices
-        [~,IA] = unique(P,'rows');
+        [~,IA] = unique(P,'rows','stable');
 
     case 2 % see the note above
         % extract on the unique rows

@@ -51,6 +51,9 @@ idx = idx + 1; C(idx,:) = [121,85,72]; % brown 500
 idx = idx + 1; C(idx,:) = [158,158,158]; % grey 500
 idx = idx + 1; C(idx,:) = [96,125,139]; % blueGrey 500
 
+% only certain number of colors available
+IC = min(idx,IC);
+
 % map and scale colors
 c = C(IC,:)/255;
 

@@ -28,6 +28,11 @@ Astorage = zeros(Nc,Nc,Nmax,'uint8'); % potential adjacency matrix
 Tstorage = zeros(Nmax,Ne,'uint16'); % linear index in adjacency matrix
 Rstorage = zeros(Nmax,1,'logical');
 
+% for codegen
+coder.varsize('Queue',[1,inf],[0,1])
+coder.varsize('xInd',[1,inf],[0,1])
+Ne = int64(Ne);
+
 % initialize first node
 Vstorage(1,:) = Vf;
 Astorage(:,:,1) = A;
@@ -35,10 +40,6 @@ Queue = 1; % one entry in initial queue
 indLast = 1;
 xInd = [];
 NmaxQueue = Nmax;
-
-% for codegen
-% coder.varsize('Queue',[1,inf],[0,1])
-% coder.varsize('xInd',[1,inf],[0,1])
 
 % each iteration adds one edge
 for iter = 1:Ne

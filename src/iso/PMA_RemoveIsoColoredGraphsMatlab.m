@@ -103,11 +103,8 @@ end
 bin{1} = IndList(1);
 nNonIso = nNonIso + 1;
 
-% initialize dispstat
-if (displevel > 0) % minimal
-    dispstat('','init') % does not print anything
-    Ndispstat = floor((n-1)/100);
-end
+% number of graphs per percentage point
+Ndispnum = floor((n-1)/100);
 
 % check remaining graphs for uniqueness
 for i = 2:n
@@ -189,8 +186,15 @@ for i = 2:n
     
     % output some stats to the command window    
     if (displevel > 1) % verbose
-        if mod(i,Ndispstat) == 0
-            dispstat(['Percentage complete: ',int2str(ceil(i/n*100)),' %'])
+        if (mod(i,Ndispnum) == 0) || (i == 2)
+            % check if this is the first graph generated
+            if i == 2
+                fprintf('Percentage complete: '); % initial string
+            else
+                fprintf(repmat('\b', 1, 5)); % remove previous
+            end
+            % current percentage of graphs (fixed size)
+            fprintf('%3d%%\n',int64(ceil(i/n*100)));
         end
     end
 end

@@ -40,6 +40,9 @@ function INSTALL_PMA_project(varargin)
 	% Python check
     RunSilent('PythonSetupCheck',silentflag)
 
+    % run mex creation scripts
+    RunSilent('RequiredRunFiles',silentflag)
+    
     % add contents to path
     RunSilent('AddSubmissionContents(mfilename)',silentflag)
 
@@ -52,6 +55,25 @@ function INSTALL_PMA_project(varargin)
 	warning('on','MATLAB:dispatcher:nameConflict');
 
 end
+%--------------------------------------------------------------------------
+function RequiredRunFiles %#ok<DEFNU>
+
+    % initialize index
+	ind = 0;
+
+    ind = ind + 1;
+    files(ind).file = 'PMA_EnumerateAlg1_coder';
+
+    ind = ind + 1;
+    files(ind).file = 'PMA_EnumerateAlg8_coder';
+
+    ind = ind + 1;
+    files(ind).file = 'PMA_EnumerateAlg10_coder';
+
+    % run the files
+    RunFiles(files)
+end
+
 %--------------------------------------------------------------------------
 function RequiredWebZips %#ok<DEFNU>
     disp('--- Obtaining required web zips')
@@ -78,11 +100,6 @@ function RequiredWebZips %#ok<DEFNU>
 	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/40397/versions/7/download/zip/mfoldername_v2.zip';
 	zips(ind).folder = 'MFX 40397';
 	zips(ind).test = 'mfoldername';
-
-	ind = ind + 1;
-	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/44673/versions/2/download/zip/dispstat.zip';
-	zips(ind).folder = 'MFX 44673';
-	zips(ind).test = 'dispstat';
 
 	ind = ind + 1;
 	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/47246/versions/3/download/zip/tint.zip';
@@ -279,4 +296,22 @@ function RunSilent(str,silentflag)
     else
         eval(str);
     end
+end
+%--------------------------------------------------------------------------
+function RunFiles(files)
+
+    % go through each file and run
+    for k = 1:length(files)
+        disp(['--- Running ', files(k).file])
+
+        try
+            % run the file
+            run(files(k).file);
+        catch % error
+            disp(['Could not run ', files(k).file])
+        end
+
+        disp(' ')
+    end
+
 end

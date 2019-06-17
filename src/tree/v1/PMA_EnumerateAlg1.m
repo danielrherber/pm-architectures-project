@@ -22,8 +22,10 @@ function [SavedGraphs,id] = PMA_EnumerateAlg1(V,E,SavedGraphs,id,A,cVf,dispflag)
     I = find(Vallow);  
 
 	% loop through all nonzero entries
-    for iR = I
-        
+    for iRidx = 1:length(I)
+
+        iR = I(iRidx); % extract
+
         V2 = V; % local for loop variables
         R = cVf(iR)-V2(iR); % right port
         E2 = [E,L,R]; % combine left, right ports for an edge
@@ -35,6 +37,6 @@ function [SavedGraphs,id] = PMA_EnumerateAlg1(V,E,SavedGraphs,id,A,cVf,dispflag)
             [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
         end
 
-    end % for iR = I
+    end % for iRidx = 1:length(I)
 
 end % function PMA_EnumerateAlg1
