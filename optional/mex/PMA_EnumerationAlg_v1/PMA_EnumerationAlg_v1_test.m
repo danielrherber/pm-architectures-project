@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlg1_test.m
-% Test function for PMA_EnumerateAlg1
+% PMA_EnumerationAlg_v1_test.m
+% Test function for PMA_EnumerationAlg_v1
 %--------------------------------------------------------------------------
 % 
 %--------------------------------------------------------------------------
@@ -8,33 +8,33 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function PMA_EnumerateAlg1_test
+function PMA_EnumerationAlg_v1_test
 
 % display level
-displevel = 0;
+displevellocal = 0;
 
 % inputs
 V = uint8([1   1   1   2   2   3   4]);
 E = zeros(0,'uint8');
 SavedGraphs = zeros(270270,14,'uint8');
 id = uint64(0);
-A = ones(7,'uint8');
 cVf = uint8([2    3    4    6    8   11   15]);
-dispflag = uint8(1);
+A = ones(7,'uint8');
+displevel = uint8(1);
 
 % start timer
 tic
 
 % original
-[output11,output12] = PMA_EnumerateAlg1(V,E,SavedGraphs,id,A,cVf,dispflag);
-if displevel, toc, end
+[output11,output12] = PMA_EnumerationAlg_v1(V,E,SavedGraphs,id,cVf,A,displevel);
+if displevellocal, toc, end
 
 % mex version
 try
     % run mex version
     tic
-    [output21,output22] = PMA_EnumerateAlg1_mex(V,E,SavedGraphs,id,A,cVf,dispflag);
-    if displevel, toc, end
+    [output21,output22] = PMA_EnumerationAlg_v1_mex(V,E,SavedGraphs,id,cVf,A,displevel);
+    if displevellocal, toc, end
     
     % tests
     if isequal(output11,output21)

@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlg_v11DFS_test.m
-% Test function for PMA_EnumerateAlg_v11DFS
+% PMA_EnumerationAlg_v11DFS_test.m
+% Test function for PMA_EnumerationAlg_v11DFS
 %--------------------------------------------------------------------------
 % 
 %--------------------------------------------------------------------------
@@ -8,40 +8,42 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function PMA_EnumerateAlg_v11DFS_test
+function PMA_EnumerationAlg_v11DFS_test
 
 % display level
-displevel = 0;
+displevellocal = 0;
 
 % inputs
 V = uint8([1   1   1   2   2   3   4]);
 E = zeros(0,'uint8');
 SavedGraphs = zeros(270270,14,'uint8');
 id = uint64(0);
-A = ones(7,'uint8');
-B = zeros(0,'uint8');
-iInitRep = uint8([1;2;4;6;7]);
 cVf = uint8([2    3    4    6    8   11   15]);
 Vf = uint8([1   1   1   2   2   3   4]);
+iInitRep = uint8([1;2;4;6;7]);
 counts = uint8([0   0   0   0   0   0   0]);
-M = uint8([0   0   0   0   0   0   0]);
+A = ones(7,'uint8');
+Bflag = false;
+B = zeros(0,'uint8');
 Mflag = false;
-Bflag = uint8(0);
-dispflag = uint8(1);
+M = uint8([0   0   0   0   0   0   0]);
+displevel = uint8(1);
 
 % start timer
 tic
 
 % original
-[output11,output12] = PMA_EnumerateAlg_v11DFS(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
-if displevel, toc, end
+[output11,output12] = PMA_EnumerationAlg_v11DFS(V,E,SavedGraphs,id,...
+    cVf,Vf,iInitRep,counts,A,Bflag,B,Mflag,M,displevel);
+if displevellocal, toc, end
 
 % mex version
 try
     % run mex version
     tic
-    [output21,output22] = PMA_EnumerateAlg_v11DFS_mex(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
-    if displevel, toc, end
+    [output21,output22] = PMA_EnumerationAlg_v11DFS_mex(V,E,SavedGraphs,id,...
+        cVf,Vf,iInitRep,counts,A,Bflag,B,Mflag,M,displevel);
+    if displevellocal, toc, end
     
     % tests
     if isequal(output11,output21)

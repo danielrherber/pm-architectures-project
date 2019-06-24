@@ -8,13 +8,10 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,dispflag)
-    % maximum number of graphs to perform this isomorphism checking procedure
-    Ncheck = 1e6; % NEED: expose this value
+function Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,dispflag,Ncheck,isomethod)
 
     % isomorphism checking method
-    IsoFlag = 2; % NEED: expose this value
-    switch IsoFlag
+    switch isomethod
         case 1 % matlab implementation
             Queue = MATLABiso(Queue,Tsort,Ln,Nc,iter);
         case 2 % python implementation
@@ -184,41 +181,3 @@ function Queue = MATLABiso(Queue,Tsort,Ln,Nc,iter)
     end
 
 end
-
-
-
-% old code
-
-%             Ct = PMA_changem(Ct, 1:max(Ct), unique(Ct,'stable')); % canonical ordering by index (might not be needed)
-%             C(idx,:) = Ct;
-
-%             while (NKeep > 0) && ~IsoFlag
-%                 % get old graph index
-%                 idx = Keep(NKeep);
-%                 
-%                 % go through the simple checks
-%                 if Clogical(idx)
-%                   if isequal(Vnew,V(idx,:)) % should be degree sequences matching with respect to colors
-%                     if isequal(Tnew,T(idx,:)) % distribution of the numbers of triangles (uncolored)    
-%                       % check for full isomorphism
-%                       IsoFlag = py.detectiso_func4.detectiso(Anew,A(:,:,idx),Ln',Ln',Nc,Nc);
-%                     end
-%                   end
-%                 end
-% 
-%                 % go to the next graph             
-%                 NKeep = NKeep - 1;
-%             end
-
-
-% Vsort = sort(Vstorage(Queue,:),2,'ascend');
-
-
-%             Anew = zeros(Nc);
-%             Anew(Tsort(1,end-iter+1:end)) = 1;
-%             Anew = Anew + Anew';
-%             AKeep(:,:,1) = Anew;
-%             VKeep(1,:) = Vsort(1,:);
-%             TKeep(:,1) = sort(diag(Anew^3)); % /6, triangle distribution
-            % [~, C] = graphconncomp(sparse(Anew), 'Directed', false);
-            % CKeep{1} = sort(histcounts(C));

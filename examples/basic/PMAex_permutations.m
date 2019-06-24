@@ -27,7 +27,7 @@ NSC.M = 1; % all components are mandatory
 NSC.counts = 1; % all connections must be unique
 
 % options
-opts.algorithm = 'tree_v8_mex';
+opts.algorithm = 'tree_v11DFS_mex';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate
 opts.parallel = 0; % 0 to disable parallel computing
 opts.filterflag = 1; % 1 is on, 0 is off

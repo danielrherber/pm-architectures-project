@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_StochasticAlg8.m
+% PMA_StochasticAlg_v8.m
 % Using the tree_v8 algorithm, generate a single graph using randomly
 % selected feasible edges
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = PMA_StochasticAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag)
+function [SavedGraphs,id] = PMA_StochasticAlg_v8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag)
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -83,9 +83,9 @@ function [SavedGraphs,id] = PMA_StochasticAlg8(V,E,SavedGraphs,id,A,B,iInitRep,c
     % END ENHANCEMENT: line-connectivity constraints
 
     if any(V2) % recursive call if any remaining vertices
-        [SavedGraphs,id] = PMA_StochasticAlg8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
+        [SavedGraphs,id] = PMA_StochasticAlg_v8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
     else % save the complete perfect matching graph
         [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
     end
 
-end % function PMA_StochasticAlg8
+end % function PMA_StochasticAlg_v8

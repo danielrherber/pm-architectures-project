@@ -25,7 +25,7 @@ NSC.M = ones(size(C));
 NSC.counts = 1;
 
 % options
-opts.algorithm = 'tree_v10';
+opts.algorithm = 'tree_v11DFS';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate
 opts.parallel = 0; % 0 to disable parallel computing
 opts.filterflag = 1; % 1 is on, 0 is off

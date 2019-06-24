@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlg8_Analysis.m
+% PMA_EnumerationAlg_v8_analysis.m
 % This includes all the relevant enhancements in the technical report 
 % (analysis version)
 %--------------------------------------------------------------------------
@@ -9,9 +9,10 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = PMA_EnumerateAlg8_Analysis(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag,prenode)
+function [SavedGraphs,id] = PMA_EnumerationAlg_v8_analysis(V,E,SavedGraphs,id,...
+    cVf,Vf,iInitRep,counts,A,Bflag,B,Mflag,M,displevel,prenode)
 
-    global node nodelist
+    global node nodelist labellist
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -27,13 +28,19 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8_Analysis(V,E,SavedGraphs,id,A,B,iI
     Vallow = V.*Vordering.*A(iL,:);
 
     % find remaining nonzero entries
-    I = find(Vallow);  
+    % I = find(Vallow);
+    I = find(V); % modification for analysis function
 
 	% loop through all nonzero entries
     for iR = I
 
         nodelist = [nodelist,prenode];
+        labellist = [labellist,[iL;iR]];
         node = node + 1;
+        
+        if V(iR)~=Vallow(iR) % modification for analysis function
+           continue 
+        end
         
         % local for loop variables
         V2 = V; A2 = A;
@@ -55,7 +62,7 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8_Analysis(V,E,SavedGraphs,id,A,B,iI
                         V2(k) = V2(k)-1; % remove port
                         E2 = [E2,LR]; % add port
                     end
-                    [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+                    [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,displevel);
                     continue
                 elseif (nUncon == sum(M))
                     % continue iterating
@@ -84,11 +91,11 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8_Analysis(V,E,SavedGraphs,id,A,B,iI
         % END ENHANCEMENT: line-connectivity constraints
 
         if any(V2) % recursive call if any remaining vertices
-            [SavedGraphs,id] = PMA_EnumerateAlgAnalysis8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag,node);
+            [SavedGraphs,id] = PMA_EnumerationAlg_v8_analysis(V2,E2,SavedGraphs,id,cVf,Vf,iInitRep,counts,A2,Bflag,B,Mflag,M,displevel,node);
         else % save the complete perfect matching graph
-            [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+            [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,displevel);
         end
 
     end % for iR = I
 
-end % function PMA_EnumerateAlgAnalysis8
+end % function PMA_EnumerationAlg_v8_analysis

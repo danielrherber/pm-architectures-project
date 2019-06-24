@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_StochasticAlg10.m
+% PMA_EnumerationAlg_v10.m
 % Breadth-first search implementation of v8
 % This new method should be considered under development
 % At each level, you can optionally perform for port-type and/or full 
@@ -14,7 +14,8 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function SavedGraphs = PMA_StochasticAlg10(cVf,Vf,iInitRep,counts,phi,Ln,A,B,M,Nmax,Mflag,Bflag,dispflag)
+function SavedGraphs = PMA_EnumerationAlg_v10(cVf,Vf,iInitRep,phi,counts,...
+    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,IN,Ln,Nmax,displevel)
 
 % determine some problem properties
 Np = sum(Vf); % number of ports
@@ -28,17 +29,18 @@ Astorage = zeros(Nc,Nc,Nmax,'uint8'); % potential adjacency matrix
 Tstorage = zeros(Nmax,Ne,'uint16'); % linear index in adjacency matrix
 Rstorage = zeros(Nmax,1,'logical');
 
+% for codegen
+coder.varsize('Queue',[1,inf],[0,1])
+coder.varsize('xInd',[1,inf],[0,1])
+Ne = int64(Ne);
+
 % initialize first node
 Vstorage(1,:) = Vf;
 Astorage(:,:,1) = A;
 Queue = 1; % one entry in initial queue
 indLast = 1;
-xInd = [];
+xInd = zeros(1,0);
 NmaxQueue = Nmax;
-
-% for codegen
-% coder.varsize('Queue',[1,inf],[0,1])
-% coder.varsize('xInd',[1,inf],[0,1])
 
 % each iteration adds one edge
 for iter = 1:Ne
@@ -71,43 +73,44 @@ for iter = 1:Ne
         % find remaining nonzero entries
         I = find(Vallow);  
 
-        % randomly select an available edge
-        if isempty(I)
-            return
-        else
-            iR = I(randi(length(I)));
-        end
+        % loop through all nonzero entries
+        for iRidx = 1:length(I)
+            
+            % get right edge
+            iR = I(iRidx);
+            
+            % increment 
+            ind = ind + 1;
 
-        % increment 
-        ind = ind + 1;
+            % update elements by adding one edge
+            [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V,E,A,T,false,iR,cVf,iter,L,Nc,phi,Ne,Mflag,Vf,Bflag,iL,counts,B,M);
 
-        % update elements by adding one edge
-        [V2,E2,A2,T2,R2] = TreeEnumerateCreatev10Inner(V,E,A,T,false,iR,cVf,iter,L,Nc,phi,Ne,Mflag,Vf,Bflag,iL,counts,B,M);
-
-        % save to storage
-        if ~R2
-            indshift = ind + indLast;
-            if indshift > NmaxQueue
-                % error(['need larger Nmax: ',num2str(Vf)])
-                % maybe add more?
-                disp('adding more storage')
-
-
-                Vstorage = [Vstorage;zeros(Nmax,Nc,'uint8')]; 
-                Estorage = [Estorage;zeros(Nmax,Np,'uint8')];
-                Astorage = cat(3, Astorage, zeros(Nc,Nc,Nmax,'uint8'));
-                Tstorage = [Tstorage;zeros(Nmax,Ne,'uint16')];
-                Rstorage = [Rstorage;zeros(Nmax,1,'logical')];
-                NmaxQueue = size(Vstorage,1);
+            % save to storage
+            if ~R2
+                indshift = ind + indLast;
+                if indshift > NmaxQueue
+                    if displevel > 2 % very verbose
+                        disp('adding more storage')
+                    end
+                    
+                    % add storage
+                    Vstorage = [Vstorage;zeros(Nmax,Nc,'uint8')];  %#ok<AGROW>
+                    Estorage = [Estorage;zeros(Nmax,Np,'uint8')];  %#ok<AGROW>
+                    Astorage = cat(3, Astorage, zeros(Nc,Nc,Nmax,'uint8'));
+                    Tstorage = [Tstorage;zeros(Nmax,Ne,'uint16')];  %#ok<AGROW>
+                    Rstorage = [Rstorage;zeros(Nmax,1,'logical')];  %#ok<AGROW>
+                    NmaxQueue = uint64(size(Vstorage,1));
+                end
+                
+                Vstorage(indshift,:) = V2;
+                Estorage(indshift,:) = E2;
+                Astorage(:,:,indshift) = A2;
+                Tstorage(indshift,:) = T2;
+            else
+                Rstorage(ind,1) = R2;
             end
 
-            Vstorage(indshift,:) = V2;
-            Estorage(indshift,:) = E2;
-            Astorage(:,:,indshift) = A2;
-            Tstorage(indshift,:) = T2;
-        else
-            Rstorage(ind,1) = R2;
-        end
+        end % for iR = I
             
     end % end for
     
@@ -132,17 +135,16 @@ for iter = 1:Ne
     NQueue = length(Queue);
     
     % print
-    if dispflag > 2 % very verbose
+    if displevel > 2 % very verbose
         fprintf('---\n')    
         fprintf('Iteration: %2i\n',iter)
-        fprintf('       Current Queue Length: %8d\n',length(Queue))
+        fprintf('       Current Queue Length: %8d\n',int64(length(Queue)))
     end
     %----------------------------------------------------------------------
     
     %----------------------------------------------------------------------
     % simple port-type isomorphism check
     %----------------------------------------------------------------------
-    Pflag = 1; % NEED: bring outside this function
     if Pflag
         % sort the elements in each row
         Tsort = sort(Tstorage(Queue,:),2,'ascend'); % ascending is a bit faster here
@@ -152,10 +154,10 @@ for iter = 1:Ne
 
         % assign current queue to the next queue
         Queue = Queue(IA);
-        
+
         % print
-        if dispflag > 2 % very verbose
-            fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-length(Queue))
+        if displevel > 2 % very verbose
+            fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-int64(length(Queue)))
         end
     end
     %----------------------------------------------------------------------
@@ -163,27 +165,28 @@ for iter = 1:Ne
     %----------------------------------------------------------------------
     % full isomorphism check
     %----------------------------------------------------------------------
-    Iflag = 0; % NEED: bring outside this function
-    if Iflag
-        % extract using current queue
-        Tsort = sort(Tstorage(Queue,:),2,'ascend'); 
-        Vsort = Vstorage(Queue,:);
-        
-        % determine new queue with only unique graphs
-        Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,dispflag);
+    if coder.target('MATLAB')
+        if Iflag
+            % extract using current queue
+            Tsort = sort(Tstorage(Queue,:),2,'ascend'); 
+            Vsort = Vstorage(Queue,:);
+
+            % determine new queue with only unique graphs
+            Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,displevel,IN,Imethod);
+        end
     end
     %----------------------------------------------------------------------
 
     % determine the number of rows for the next queue
     indLast = length(Queue);
-    
+
     % shift up rows for the next queue
     xInd = 1:indLast;
     Vstorage(xInd,:) = Vstorage(Queue,:);
     Estorage(xInd,:) = Estorage(Queue,:);
     Astorage(:,:,xInd) = Astorage(:,:,Queue);
     Tstorage(xInd,:) = Tstorage(Queue,:);
-    
+
     % clean up storage elements
     Rstorage(1:indMax,1) = false;
     % Vstorage(indLast+1:indMax,:) = 0; % not strictly needed
@@ -196,8 +199,8 @@ end
 % extract results from the final queue
 SavedGraphs = Estorage(xInd,:);
 
-end % function TreeEnumerateCreatev10
-function [V2,E2,A2,T2,R2] = TreeEnumerateCreatev10Inner(V2,E2,A2,T2,R2,iR,cVf,iter,L,Nc,phi,Ne,Mflag,Vf,Bflag,iL,counts,B,M)
+end % function PMA_EnumerationAlg_v10
+function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V2,E2,A2,T2,R2,iR,cVf,iter,L,Nc,phi,Ne,Mflag,Vf,Bflag,iL,counts,B,M)
 
     % remove another port creating an edge
     R = cVf(iR)-V2(iR); % right port

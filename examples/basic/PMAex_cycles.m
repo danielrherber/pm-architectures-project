@@ -26,7 +26,7 @@ NSC.M = 1; % all components are mandatory
 NSC.counts = 1; % all connections must be unique
 
 % options
-opts.algorithm = 'tree_v10';
+opts.algorithm = 'tree_v11DFS';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate
 opts.parallel = 0; % disable parallel computing
 opts.filterflag = 1; % 1 is on, 0 is off

@@ -26,7 +26,7 @@ NSC.counts = 1; % no multiedges
 NSC.M = ones(size(R)); % all components are mandatory
 
 % options
-opts.algorithm = 'tree_v10';
+opts.algorithm = 'tree_v11BFS';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate
 opts.parallel = 0; % disable parallel computing
 opts.filterflag = 0; % 1 is on, 0 is off

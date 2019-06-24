@@ -11,11 +11,7 @@
 function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
 
     % set this number based on user value or predefined large value
-    if isfield(opts,'Nmax')
-        Nmemory = opts.Nmax;
-    else
-        Nmemory = 1e7;
-    end
+    Nmemory = opts.algorithms.Nmax;
 
     % number of perfect matchings
     Npm = 2*prod(1:2:(P'*R-1)); % factor of 2 needed for tree_v10
@@ -23,9 +19,9 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     % maximum number of graphs to preallocate for or generate
     % [in some cases, the code greatly slows if this number is succeeded]
     if contains(opts.algorithm,'stochastic')
-        Nmax = Nmemory;
+        Nmax = uint64(Nmemory);
     else
-        Nmax = min(Npm,Nmemory);
+        Nmax = uint64(min(Npm,Nmemory));
     end
 
     % vector when all ports are unconnected
@@ -72,6 +68,10 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     M = NSC.M;
     displevel = uint8(opts.displevel);
     algorithm = opts.algorithm;
+    Pf = opts.algorithms.filterflag;
+    If = opts.algorithms.isoflag;
+    IN = opts.algorithms.isoNmax;
+    Im = opts.algorithms.isomethod;
     
     % default option to use PMA_SortAsPerfectMatching
     % [change in the algorithm structure below if necessary]
@@ -79,10 +79,11 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
 
     % global variable used to save the tree structure (optional addition)
     if contains(algorithm,'analysis')
-        global node nodelist %#ok
-        node = 1; % 
-        nodelist = []; % 
-        prenode = 0; % 
+        global node nodelist labellist %#ok
+        node = 1; % first node
+        nodelist = []; % list of nodes
+        labellist = []; % list of labels 
+        prenode = 0; % root node
     end
 
     % use the specified algorithm
@@ -91,61 +92,70 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
         % tree
         %------------------------------------------------------------------
         case 'tree_v1'
-            [G,~] = PMA_EnumerateAlg1(Vf,E,G,id,A,cVf,displevel);
+            [G,~] = PMA_EnumerationAlg_v1(Vf,E,G,id,cVf,A,displevel);
         case 'tree_v8'
-            [G,~] = PMA_EnumerateAlg8(Vf,E,G,id,A,B,iInitRep,cVf,...
-                Vf,counts,M,Mf,Bf,displevel);
+            [G,~] = PMA_EnumerationAlg_v8(Vf,E,G,id,cVf,Vf,iInitRep,...
+                counts,A,Bf,B,Mf,M,displevel);
         case 'tree_v10'
-            G = PMA_EnumerateAlg10(cVf,Vf,iInitRep,counts,...
-                phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
+            G = PMA_EnumerationAlg_v10(cVf,Vf,iInitRep,phi,counts,...
+                A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         case 'tree_v11DFS'
-            [G,~] = PMA_EnumerateAlg_v11DFS(Vf,E,G,id,A,B,iInitRep,cVf,...
-                Vf,counts,M,Mf,Bf,displevel);
+            [G,~] = PMA_EnumerationAlg_v11DFS(Vf,E,G,id,cVf,Vf,iInitRep,...
+                counts,A,Bf,B,Mf,M,displevel);
         case 'tree_v11BFS'
-            G = PMA_EnumerateAlg_v11BFS(cVf,Vf,iInitRep,counts,...
-                phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
+            G = PMA_EnumerationAlg_v11BFS(cVf,Vf,iInitRep,phi,counts,...
+                A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         %------------------------------------------------------------------
         % mex
         %------------------------------------------------------------------
         case 'tree_v1_mex'
-            [G,~] = PMA_EnumerateAlg1_mex(Vf,E,G,id,A,cVf,displevel);
+            [G,~] = PMA_EnumerationAlg_v1_mex(Vf,E,G,id,cVf,A,displevel);
         case 'tree_v8_mex'
-            [G,~] = PMA_EnumerateAlg8_mex(Vf,E,G,id,A,B,iInitRep,cVf,...
-                Vf,counts,M,Mf,Bf,displevel);
+            [G,~] = PMA_EnumerationAlg_v8_mex(Vf,E,G,id,cVf,Vf,iInitRep,...
+                counts,A,Bf,B,Mf,M,displevel);
         case 'tree_v10_mex'
-            G = PMA_EnumerateAlg10_mex(cVf,Vf,iInitRep,counts,...
-                phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
+            G = PMA_EnumerationAlg_v10_mex(cVf,Vf,iInitRep,phi,counts,...
+                A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         case 'tree_v11DFS_mex'
-            [G,~] = PMA_EnumerateAlg_v11DFS_mex(Vf,E,G,id,A,B,iInitRep,cVf,...
-                Vf,counts,M,Mf,Bf,displevel);
+            [G,~] = PMA_EnumerationAlg_v11DFS_mex(Vf,E,G,id,cVf,Vf,iInitRep,...
+                counts,A,Bf,B,Mf,M,displevel);
         case 'tree_v11BFS_mex'
-            G = PMA_EnumerateAlg_v11BFS_mex(cVf,Vf,iInitRep,counts,...
-                phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
+            G = PMA_EnumerationAlg_v11BFS_mex(cVf,Vf,iInitRep,phi,counts,...
+                A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         %------------------------------------------------------------------
         % analysis
         %------------------------------------------------------------------
         case 'tree_v1_analysis'
-            [G,~] = PMA_EnumerateAlg1_Analysis(Vf,E,G,id,A,cVf,displevel,prenode);
+            [G,~] = PMA_EnumerationAlg_v1_analysis(Vf,E,G,id,cVf,A,displevel,prenode);
         case 'tree_v8_analysis'
-            [G,~] = PMA_EnumerateAlg8_Analysis(Vf,E,G,id,A,B,iInitRep,cVf,...
-                Vf,counts,M,Mf,Bf,displevel,prenode);
+            [G,~] = PMA_EnumerationAlg_v8_analysis(Vf,E,G,id,cVf,Vf,iInitRep,...
+                counts,A,Bf,B,Mf,M,displevel,prenode);
+        case 'tree_v10_analysis'
+            G = PMA_EnumerationAlg_v10_analysis(cVf,Vf,iInitRep,phi,counts,...
+                A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
+        case 'tree_v11DFS_analysis'
+            [G,~] = PMA_EnumerationAlg_v11DFS_analysis(Vf,E,G,id,cVf,Vf,iInitRep,...
+                counts,A,Bf,B,Mf,M,displevel,prenode);
+        case 'tree_v11BFS_analysis'
+            G = PMA_EnumerationAlg_v11BFS_analysis(cVf,Vf,iInitRep,phi,counts,...
+                A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         %------------------------------------------------------------------
         % stochastic
         %------------------------------------------------------------------
         case 'tree_v1_stochastic'
             M0 = zeros(1,sum(Vf),'uint8');
             for idx = 1:Nmax
-                [G(idx,:),~] = PMA_StochasticAlg1(Vf,E,M0,id,A,cVf,displevel);
+                [G(idx,:),~] = PMA_StochasticAlg_v1(Vf,E,M0,id,A,cVf,displevel);
             end
         case 'tree_v8_stochastic'
             M0 = zeros(1,sum(Vf),'uint8');
             for idx = 1:Nmax
-                [G(idx,:),~] = PMA_StochasticAlg8(Vf,E,M0,id,A,B,iInitRep,...
+                [G(idx,:),~] = PMA_StochasticAlg_v8(Vf,E,M0,id,A,B,iInitRep,...
                     cVf,Vf,counts,M,Mf,Bf,displevel);
             end
         case 'tree_v10_stochastic'
             for idx = 1:Nmax
-                G(idx,:) = PMA_StochasticAlg10(cVf,Vf,iInitRep,counts,...
+                G(idx,:) = PMA_StochasticAlg_v10(cVf,Vf,iInitRep,counts,...
                     phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
             end
         case 'tree_v11DFS_stochastic'
@@ -191,9 +201,23 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
 
     % modify the node list and visualize the tree algorithm
     if contains(algorithm,'analysis')
+        % change data type
+        nodelist = double(nodelist);
+
+        % add dummy root node
         nodelist(nodelist == 0) = 1;
         nodelist = [0,nodelist];
+
+        % fix order of parent vector
+        [nodelist,pv] = fixparent(nodelist);
+                
+        % sort label list
+        labellist = [[0;0],labellist];
+        labellist = labellist(:,pv);
+        labellist(:,pv==1) = [];
+
+        % create plot
         PMA_PlotTreeEnumerate
     end
-    
+
 end

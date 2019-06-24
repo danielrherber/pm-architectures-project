@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_PlotTreeEnumerate.m
-% Visualize tree algorithm
+% Visualize the tree algorithm
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -8,90 +8,117 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-
-set(0,'DefaultTextInterpreter','latex'); % change the text interpreter
-set(0,'DefaultLegendInterpreter','latex'); % change the legend interpreter
-set(0,'DefaultAxesTickLabelInterpreter','latex'); % change the tick interpreter
-
-% get all first column elements of M
-A = M(:,1);
-
-% find the first zero row in M
-k = find(~A,1);
-
-% extract the nonzero rows of M
-if ~isempty(k)
-    M = M(1:k-1,:); 
+if isempty(G)
+    return % because there is not a tree
 end
 
-figure('Color',[1 1 1],'Position', [100, 100, 1100, 200]);
-treeplot(nodelist); hold on
-h = gcf;
-axesObjs = get(h, 'Children');  %axes handles
-dataObjs = get(axesObjs, 'Children');
+% options
+markersize = 16;
+fontsize = 12;
+s = 0.05;
+nodeflag = false;
+labelflag = false;
 
-if length(dataObjs) == 2
-    dataObjs(2).Marker = 'none';
+% change default interpreters
+set(0,'DefaultTextInterpreter','latex');
+set(0,'DefaultLegendInterpreter','latex');
+set(0,'DefaultAxesTickLabelInterpreter','latex');
+
+% obtain edge pair indices
+IL = nodelist;
+IR = 1:length(nodelist);
+
+% remove dummy root node
+IR(nodelist==0) = [];
+IL(nodelist==0) = [];
+
+% source node
+source = find(pv==1);
+
+% create adjacency matrix
+A = zeros(max([IL,IR]));
+A(sub2ind(size(A),IR,IL)) = 1;
+A(sub2ind(size(A),IL,IR)) = 1;
+
+% create figure
+hf = figure('Color',[1 1 1],'Position', [100, 100, 1100, 200]); hold on
+
+% create graph object
+Grph = graph(A);
+
+% plot tree
+hp = plot(Grph,'k','Layout','layered','Sources',source,'AssignLayers','asap');
+
+% modify graph appearance
+hp.EdgeColor = [0 0 0]; % change edge color
+hp.EdgeAlpha = 1;
+if nodeflag
+    hp.NodeColor = [0 0 0];
+    hp.Marker = '.';
+    hp.MarkerSize = 2;
+else
+    hp.NodeColor = 'none'; % remove node marker
 end
-dataObjs(1).Color = [0 0 0];
+if ~labelflag
+    hp.NodeLabel = []; % remove node labels
+end
 
-% scale X data
-X = dataObjs(1).XData;
+% extract data
+X = hp.XData; Y = hp.YData;
+
+% normalize X (between 0-1)
 X = (X-min(X))/(max(X)-min(X));
-dataObjs(1).XData = (length(M)-1)*X + 1;
-xlim([0 length(M)+1])
+hp.XData = X;
 
-% scale Y data
-Np = sum(Vfull);
-Y = dataObjs(1).YData;
-Y = (Y-min(Y))/(max(Y)-min(Y));
-dataObjs(1).YData = Np/2*Y;
+% shift Y (down by one)
+Y = Y - 1;
+hp.YData = Y;
 
-ylim([0 Np/2])
+% get color spec
+c = PMA_LabelColors(dec2base(Ln,36),1);
 
-for i = 1:Np/2+1
-    yticks{i} = ['$',num2str(i-1),'$'];
+% total number of nodes in the tree
+Nnodes = length(labellist);
+
+% plot edges
+for idx = 1:Nnodes
+    % coordinates
+    X1 = X(IL(idx)); X2 = X(IR(idx)); Y1 = Y(IL(idx)); Y2 = Y(IR(idx));
+    
+    % shift along line
+    XL = X2*(0.5+s) + X1*(0.5-s);
+    YL = Y2*(0.5+s) + Y1*(0.5-s);
+    XR = X2*(0.5-s) + X1*(0.5+s);
+    YR = Y2*(0.5-s) + Y1*(0.5+s);
+    
+    % plot nodes
+    plot(XL,YL,'.','color',c(labellist(2,idx),:),'markersize',markersize)
+    plot(XR,YR,'.','color',c(labellist(1,idx),:),'markersize',markersize)
 end
 
-myfont2 = 12;
+% number of edges
+Np = size(G,2)/2; 
 
-% [hx,hy] = format_ticks_v2(gca,[],yticks,...
-%     [],0:1:Np/2,[],[],[],0.006);
-% set(hy,'fontsize',myfont2)
-% ylabh = get(gca,'YLabel');
-% set(ylabh,'Position',get(ylabh,'Position') - [20 0 0])
-% % set(ylabh,'Position',get(ylabh,'Position') - [1.5 0 0])
-% delete(hx)
-
-for i = 1:Np/2+1
-    xticks{i} = ['$',num2str(i-1),'$'];
-end
-
-
-% [hx,hy] = format_ticks_v2(gca,{'$2$','$6$','$10$','$20$','$30$','$40$'},[],...
-%     0:Np/2,[],[],[],[],0.006);
-% set(hx,'fontsize',myfont2)
-% xlabh = get(gca,'XLabel');
-% set(xlabh,'Position',get(xlabh,'Position') - [0 0.5 0])
-
+% axis 
 ax = gca;
-ax.XColor = [0.5 0.5 0.5];
-ax.YColor = [0.5 0.5 0.5];
+ax.XColor = [0 0 0];
+ax.YColor = [0 0 0];
 ax.Layer = 'top';
+box on
+ax.XTick = [];
+ax.YTick = 0:Np;
+ylabel('Edges Available','fontsize',fontsize,'Color',[0 0 0])
 
-ylabel('Edges Available','interpreter','latex','fontsize',myfont2,'Color',[0 0 0])
-xlabel('','interpreter','latex','fontsize',myfont2)
+% change axis limits
+xlim([-0.03 1.03])
+ylim([-0.05*Np 1.05*Np])
 
-set(gca,'xtick',[])
-set(gca,'xticklabel',[])
-
-figname = 'TreeEnumerate'; % name the figure
-% foldername = opts.path; % name the folder the figure will be placed in
-exportfigopts = '-png -pdf'; % export_fig options (see documentation)
-% exportfigopts = '-tif -nocrop -append'; % export_fig options (see documentation)
-% mypath2 = mfoldername(mfilename('fullpath'),foldername); % folder string
-filename = [opts.path,figname]; % combine folder string and name string
-str = ['export_fig ''',filename,''' ',exportfigopts]; % total str for export_fig
-eval(str) % evaluate and save the figure
-
-% close(h)
+% (potentially) save plot
+if opts.plots.saveflag
+    figname = 'tree-visualization'; % name the figure
+    foldername = opts.plots.path; % name the folder the figure will be placed in
+    exportfigopts = '-png -pdf'; % export_fig options (see documentation)
+    filename = [foldername,figname]; % combine folder string and name string
+    str = ['export_fig ''',filename,''' ',exportfigopts]; % total str for export_fig
+    eval(str) % evaluate and save the figure
+end

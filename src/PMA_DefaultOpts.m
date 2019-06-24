@@ -25,18 +25,20 @@ function opts = PMA_DefaultOpts(varargin)
         % opts.algorithm = 'tree_v1_mex';
         % opts.algorithm = 'tree_v1_analysis';
         % opts.algorithm = 'tree_v1_stochastic';
-        opts.algorithm = 'tree_v8';
+        % opts.algorithm = 'tree_v8';
         % opts.algorithm = 'tree_v8_mex';
         % opts.algorithm = 'tree_v8_analysis';
         % opts.algorithm = 'tree_v8_stochastic';
         % opts.algorithm = 'tree_v10';
         % opts.algorithm = 'tree_v10_mex';
+        % opts.algorithm = 'tree_v10_analysis';
         % opts.algorithm = 'tree_v10_stochastic';
-    end
-
-    % maximum number of graphs to preallocate for
-    if ~isfield(opts,'Nmax')
-        opts.Nmax = 1e7;
+        opts.algorithm = 'tree_v11DFS';
+        % opts.algorithm = 'tree_v11DFS_mex';
+        % opts.algorithm = 'tree_v11DFS_analysis';
+        % opts.algorithm = 'tree_v11BFS';
+        % opts.algorithm = 'tree_v11BFS_mex';
+        % opts.algorithm = 'tree_v11BFS_analysis';
     end
     
     % control parallel computing
@@ -49,9 +51,10 @@ function opts = PMA_DefaultOpts(varargin)
 
     % initial port type isomorphism filter
     if ~isfield(opts,'filterflag')
-        opts.filterflag = 1; % on
-        % opts.filterflag = 0; % off
+        opts.filterflag = true; % on
+        % opts.filterflag = false; % off
     end
+    opts.filterflag = logical(opts.filterflag); % ensure data type
 
     % custom network structure constraint function
     if ~isfield(opts,'customfun')
@@ -72,9 +75,66 @@ function opts = PMA_DefaultOpts(varargin)
     
     % sorting flag
     if ~isfield(opts,'sortflag')
-        opts.sortflag = 1; % on
-        % opts.sortflag = 0; % off
+        opts.sortflag = true; % on
+        % opts.sortflag = false; % off
     end
+    opts.sortflag = logical(opts.sortflag); % ensure data type
+
+    %----------------------------------------------------------------------
+    % START: algorithm options
+    %----------------------------------------------------------------------
+    % algorithms option structure
+    if ~isfield(opts,'algorithms')
+        opts.algorithms = [];
+    end
+
+    % maximum number of graphs to preallocate for
+    if ~isfield(opts.algorithms,'Nmax')
+        opts.algorithms.Nmax = uint64(1e7);
+    end
+    opts.algorithms.Nmax = uint64(opts.algorithms.Nmax); % ensure data type
+
+    % simple port-type isomorphism (BFS methods only)
+    if ~isfield(opts.algorithms,'filterflag')
+        opts.algorithms.filterflag = opts.filterflag; % same as above
+        % opts.algorithms.filterflag = true; % on
+        % opts.algorithms.filterflag = false; % off
+    end
+    opts.algorithms.filterflag = logical(opts.algorithms.filterflag); % ensure data type
+    
+    % full isomorphism check (BFS methods only)
+    if ~isfield(opts.algorithms,'isoflag')
+        if strcmpi(opts.isomethod,'none')
+            opts.algorithms.isoflag = false; % off
+        else
+            opts.algorithms.isoflag = false; % off
+            % opts.algorithms.isoflag = true; % on
+        end
+    end
+    opts.algorithms.isoflag = logical(opts.algorithms.isoflag); % ensure data type
+
+    % maximum number of graphs to perform full isomorphism check (BFS methods only)
+    if ~isfield(opts.algorithms,'isoNmax')
+        % opts.algorithms.isoNmax = uint64(inf); % no limit
+        opts.algorithms.isoNmax = uint64(100); % 100 graph limit
+    end
+    opts.algorithms.isoNmax = uint64(opts.algorithms.isoNmax); % ensure data type
+    
+    % isomorphism checking option (BFS methods only)
+    if ~isfield(opts.algorithms,'isomethod')
+        switch lower(opts.isomethod)
+            case 'matlab'
+                opts.algorithms.isomethod = uint8(1); % matlab
+            case 'python'
+                opts.algorithms.isomethod = uint8(2); % python
+            otherwise
+                opts.algorithms.isomethod = uint8(0); % none
+        end
+    end        
+    opts.algorithms.isomethod = uint8(opts.algorithms.isomethod); % ensure data type
+    %----------------------------------------------------------------------
+    % END: algorithm options
+    %----------------------------------------------------------------------
     
     %----------------------------------------------------------------------
     % START: plot options
@@ -100,9 +160,10 @@ function opts = PMA_DefaultOpts(varargin)
     
     % save the graphs to disk?
     if ~isfield(opts.plots,'saveflag')
-        % opts.plots.saveflag = 1; % save the graphs
-        opts.plots.saveflag = 0; % don't save the graphs
+        % opts.plots.saveflag = true; % save the graphs
+        opts.plots.saveflag = false; % don't save the graphs
     end
+    opts.plots.saveflag = logical(opts.plots.saveflag); % ensure data type
 
     % name of the example
     if ~isfield(opts.plots,'name')
@@ -122,9 +183,10 @@ function opts = PMA_DefaultOpts(varargin)
 
     % add replicate numbers when plotting
     if ~isfield(opts.plots,'labelnumflag')
-        opts.plots.labelnumflag = 0; % no
-        % opts.plots.labelnumflag = 1; % yes
+        opts.plots.labelnumflag = true; % no
+        % opts.plots.labelnumflag = false; % yes
     end
+    opts.plots.labelnumflag = logical(opts.plots.labelnumflag); % ensure data type
 
     % color library to use (see PMA_LabelColors.m)
     if ~isfield(opts.plots,'colorlib')
@@ -137,12 +199,13 @@ function opts = PMA_DefaultOpts(varargin)
 
     % controls displaying diagnostics to the command window
     if ~isfield(opts,'displevel')
-        opts.displevel = 2; % verbose
-        % opts.displevel = 1; % minimal
-        % opts.displevel = 0; % none
+        % opts.displevel = uint8(3); % very verbose
+        opts.displevel = uint8(2); % verbose
+        % opts.displevel = uint8(1); % minimal
+        % opts.displevel = uint8(0); % none
     end
-    opts.displevel = uint8(opts.displevel); % update data type
-    
+    opts.displevel = uint8(opts.displevel); % ensure data type
+
     % start the parallel pool
     if strcmpi(opts.isomethod,'python')
         PMA_ParallelToggle(opts,'start-py')
@@ -153,4 +216,7 @@ function opts = PMA_DefaultOpts(varargin)
     % structured components default options
     opts = Structured_DefaultOpts(opts);
     
+    % reorder fields
+    opts = orderfields(opts);
+
 end

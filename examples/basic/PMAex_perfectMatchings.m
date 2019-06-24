@@ -26,7 +26,7 @@ R = ones(n,1); % replicates vector
 NSC = []; % no constraints
 
 % options
-opts.algorithm = 'tree_v8_mex';
+opts.algorithm = 'tree_v11DFS_mex';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate
 opts.parallel = 0; % 0 to disable parallel computing
 opts.filterflag = 0; % 1 is on, 0 is off

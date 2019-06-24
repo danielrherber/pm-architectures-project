@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlg8.m
+% PMA_EnumerationAlg_v8.m
 % This includes all the relevant enhancements in the technical report
 %--------------------------------------------------------------------------
 %
@@ -8,7 +8,8 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = PMA_EnumerateAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag)
+function [SavedGraphs,id] = PMA_EnumerationAlg_v8(V,E,SavedGraphs,id,...
+    cVf,Vf,iInitRep,counts,A,Bflag,B,Mflag,M,displevel)
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -51,7 +52,7 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cV
                         V2(k) = V2(k)-1; % remove port
                         E2 = [E2,LR]; % add port
                     end
-                    [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+                    [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,displevel);
                     continue
                 elseif (nUncon == sum(M))
                     % continue iterating
@@ -80,11 +81,11 @@ function [SavedGraphs,id] = PMA_EnumerateAlg8(V,E,SavedGraphs,id,A,B,iInitRep,cV
         % END ENHANCEMENT: line-connectivity constraints
 
         if any(V2) % recursive call if any remaining vertices
-            [SavedGraphs,id] = PMA_EnumerateAlg8(V2,E2,SavedGraphs,id,A2,B,iInitRep,cVf,Vf,counts,M,Mflag,Bflag,dispflag);
+            [SavedGraphs,id] = PMA_EnumerationAlg_v8(V2,E2,SavedGraphs,id,cVf,Vf,iInitRep,counts,A2,Bflag,B,Mflag,M,displevel);
         else % save the complete perfect matching graph
-            [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+            [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,displevel);
         end
 
     end % for iR = I
 
-end % function PMA_EnumerateAlg8
+end % function PMA_EnumerationAlg_v8

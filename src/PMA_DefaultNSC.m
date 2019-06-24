@@ -17,7 +17,7 @@ function NSC = PMA_DefaultNSC(NSC,P)
         NSC.M = zeros(1,length(P),'uint8'); % no components are mandatory
         % NSC.M = ones(1,length(P),'uint8'); % all components are mandatory
     end
-    NSC.flag.Mflag = any(NSC.M);
+    NSC.flag.Mflag = logical(any(NSC.M)); % ensure data type
         
     % reduced potential adjacency matrix 
     if isfield(NSC,'A')
@@ -47,13 +47,13 @@ function NSC = PMA_DefaultNSC(NSC,P)
         NSC.counts = uint8(0*ones(length(P),1)); % no connections need to be unique
         % NSC.counts = uint8(1*ones(length(P),1)); % all connections need to be unique
     end
-    NSC.flag.Cflag = any(NSC.counts);
+    NSC.flag.Cflag = logical(any(NSC.counts)); % ensure data type
     
     % n x 3 vector of indices for pair constraints
     if ~isfield(NSC,'Bind')
         NSC.Bind = []; % no pair constraints
     end
-    NSC.flag.Bflag = uint8(~isempty(NSC.Bind));
+    NSC.flag.Bflag = logical(~isempty(NSC.Bind)); % ensure data type
 
     % structured components boolean vector
     % NSC.S = [];

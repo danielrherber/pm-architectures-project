@@ -62,19 +62,19 @@ function RequiredRunFiles %#ok<DEFNU>
 	ind = 0;
 
     ind = ind + 1;
-    files(ind).file = 'PMA_EnumerateAlg1_coder';
+    files(ind).file = 'PMA_EnumerationAlg_v1_coder';
 
     ind = ind + 1;
-    files(ind).file = 'PMA_EnumerateAlg8_coder';
+    files(ind).file = 'PMA_EnumerationAlg_v8_coder';
 
     ind = ind + 1;
-    files(ind).file = 'PMA_EnumerateAlg10_coder';
+    files(ind).file = 'PMA_EnumerationAlg_v10_coder';
     
     ind = ind + 1;
-    files(ind).file = 'PMA_EnumerateAlg_v11DFS_coder';
+    files(ind).file = 'PMA_EnumerationAlg_v11DFS_coder';
 
     ind = ind + 1;
-    files(ind).file = 'PMA_EnumerateAlg_v11BFS_coder';
+    files(ind).file = 'PMA_EnumerationAlg_v11BFS_coder';
 
     % run the files
     RunFiles(files)

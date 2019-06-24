@@ -129,9 +129,9 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(C,R,P,NSC,opts)
         nsc.M = ones(size(new));
         
         % update flags
-        nsc.flag.Cflag = uint8(any(nsc.counts));
+        nsc.flag.Cflag = logical(any(nsc.counts));
         nsc.flag.Mflag = true;
-        nsc.flag.Bflag = uint8(~isempty(nsc.Bind));
+        nsc.flag.Bflag = logical(~isempty(nsc.Bind));
 
         % sort {C, R, P} to be better suited for enumeration
         [p,r,c,nsc,sorts] = PMA_ReorderCRP(p,r,c,nsc,opts);

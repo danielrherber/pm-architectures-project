@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlg1.m
+% PMA_EnumerationAlg_v1.m
 % this is the algorithm in the DETC paper
 %--------------------------------------------------------------------------
 % 
@@ -8,7 +8,7 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = PMA_EnumerateAlg1(V,E,SavedGraphs,id,A,cVf,dispflag)
+function [SavedGraphs,id] = PMA_EnumerationAlg_v1(V,E,SavedGraphs,id,cVf,A,displevel)
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -32,11 +32,11 @@ function [SavedGraphs,id] = PMA_EnumerateAlg1(V,E,SavedGraphs,id,A,cVf,dispflag)
         V2(iR) = V2(iR)-1; % remove port (local copy)
 
         if any(V2) % recursive call if any remaining vertices
-            [SavedGraphs,id] = PMA_EnumerateAlg1(V2,E2,SavedGraphs,id,A,cVf,dispflag);
+            [SavedGraphs,id] = PMA_EnumerationAlg_v1(V2,E2,SavedGraphs,id,cVf,A,displevel);
         else % save the complete perfect matching graph
-            [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
+            [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,displevel);
         end
 
     end % for iRidx = 1:length(I)
 
-end % function PMA_EnumerateAlg1
+end % function PMA_EnumerationAlg_v1

@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerateAlg_v11BFS_test.m
-% Test function for PMA_EnumerateAlg_v11BFS
+% PMA_EnumerationAlg_v10_test.m
+% Test function for PMA_EnumerationAlg_v10
 %--------------------------------------------------------------------------
 % 
 %--------------------------------------------------------------------------
@@ -8,41 +8,45 @@
 % Illinois at Urbana-Champaign
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function PMA_EnumerateAlg_v11BFS_test
+function PMA_EnumerationAlg_v10_test
 
 % display level
-displevel = 0;
+displevellocal = 0;
 
 % inputs
 cVf = uint8([2    3    4    6    8   11   15]);
 Vf = uint8([1   1   1   2   2   3   4]);
 iInitRep = uint8([1;2;4;6;7]);
-counts = uint8([0   0   0   0   0   0   0]);
 phi = uint16([1   2   3   4   4   5   5   6   6   6   7   7   7   7]);
-Ln = [25    27    27    16    16    11    24];
+counts = uint8([0   0   0   0   0   0   0]);
 A = ones(7,'uint8');
+Bflag = false;
 B = zeros(0,'uint8');
-M = uint8([0   0   0   0   0   0   0]);
-Nmax = 270270;
 Mflag = false;
-Bflag = uint8(0);
-dispflag = uint8(2);
+M = uint8([0   0   0   0   0   0   0]);
+Pflag = true;
+Iflag = false;
+Imethod = uint8(2);
+IN = uint64(100);
+Ln = [25    27    27    16    16    11    24];
+Nmax = uint64(270270);
+displevel = uint8(2);
 
 % start timer
 tic
 
 % original
-output1 = PMA_EnumerateAlg_v11BFS(cVf,Vf,iInitRep,counts,phi,Ln,A,B,M,...
-    Nmax,Mflag,Bflag,dispflag);
-if displevel, toc, end
+output1 = PMA_EnumerationAlg_v10(cVf,Vf,iInitRep,phi,counts,...
+    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,IN,Ln,Nmax,displevel);
+if displevellocal, toc, end
 
 % mex version
 try
     % run mex version
     tic
-    output2 = PMA_EnumerateAlg_v11BFS_mex(cVf,Vf,iInitRep,counts,phi,Ln,A,B,M,...
-        Nmax,Mflag,Bflag,dispflag);
-    if displevel, toc, end
+    output2 = PMA_EnumerationAlg_v10_mex(cVf,Vf,iInitRep,phi,counts,...
+    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,IN,Ln,Nmax,displevel);
+    if displevellocal, toc, end
     
     % tests
     if isequal(output1,output2)
