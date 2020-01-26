@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% Test_ConsistentOrdering.m
+% PMA_TEST_ConsistentLabelOrdering.m
 % if the initial label ordering is maintained and the set of graphs are
 % identical between to similar problems
 %--------------------------------------------------------------------------
@@ -12,8 +12,8 @@ clear; clc; close all; closeallbio;
 
 % options
 opts.algorithm = 'tree_v8_mex';
-opts.isomethod = 'python';
-opts.plotmax = 0;
+opts.isomethod = 'py-igraph';
+opts.plots.plotmax = 0;
 opts.displevel = 2;
 
 disp('all numbers between the versions of the problem should be the same'); disp(' ');

@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function PMA_PlotGraphs(G,NSC,opts)
@@ -16,7 +15,7 @@ function PMA_PlotGraphs(G,NSC,opts)
     if isfield(plots,'plotfun')
 
         % determine if matlab plots are needed
-        if (sum(NSC.M) == 0) && strcmp(plots.plotfun,'bgl')
+        if (~NSC.connected) && strcmp(plots.plotfun,'bgl')
             if (opts.displevel > 1) % verbose
                 warning('switching to ''matlab'' since there may be incomplete graphs')
             end
@@ -29,7 +28,7 @@ function PMA_PlotGraphs(G,NSC,opts)
         else
             Nplot = length(G);
         end
-        
+
         % select the desired plot function
         switch lower(plots.plotfun)
             case 'matlab'
@@ -42,12 +41,12 @@ function PMA_PlotGraphs(G,NSC,opts)
                 PlotFun = @PMA_PlotBio;
             case 'bgl'
                 PlotFun = @PMA_PlotBGL;
-        end        
-        
+        end
+
         % plot each graph
         for idx = 1:Nplot
             PlotFun(G(idx).A,G(idx).L,G(idx).N,idx,plots);
-        end    
+        end
 
     end
 end

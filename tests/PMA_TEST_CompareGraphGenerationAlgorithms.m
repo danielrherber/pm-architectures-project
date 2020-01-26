@@ -1,77 +1,72 @@
 %--------------------------------------------------------------------------
-% Test_TreeAlgorithms.m
+% PMA_TEST_CompareGraphGenerationAlgorithms.m
 % Compares the number of unique, feasible graphs generated using
 % two different generation methods
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clear
-clc
+clear; clc; close all; closeallbio;
 
-% alg1 = 'pm_full';
-alg1 = 'tree_v4';
-alg2 = 'tree_v1';
+testnum = 3; % test number (see below)
+alg1 = 'pm_full'; % first algorithm
+alg2 = 'tree_v1'; % second algorithm
 
-testnum = 4;
-
-opts.displevel = 1; % off
-opts.plotmax = 100;
-opts.isomethod = 'Python'; % 'Matlab'
+opts.isomethod = 'python'; % 'matlab'
+opts.displevel = 1; % display level
+opts.plotmax = 5; % number of graphs to plot
 
 switch testnum
     case 1 % best case, only 1 graph
         n = 8;
-        P = [2]; % ports vector 
-        R = [n]; % replicates vector
-        C = {'R'}; % label vector
-        NSC.counts = 1;
-        NSC.M = 1;
-        
+        P = 2; % ports vector
+        R = n; % replicates vector
+        L = {'R'}; % label vector
+        NSC.simple = 1;
+        NSC.connected = 1;
+
     case 2 % worst case, pure pm (n-1)!!
-        n = 8;
+        n = 10;
         P = ones(n,1);
         R = ones(n,1);
-        for k = 1:n
-            C{k} = num2str(k);
-        end
+        L = string(dec2base((1:n)+9,36));
         NSC = [];
-        
+
     case 3 % general problem
        P = [1 2 3];
        R = [4 3 2];
-       C = {'R','G','B'};
+       L = {'R','G','B'};
        NSC = [];
-       
+
     case 4 % general problem with NSCs
         P = [1 2 3];
-        R = [4 4 4];
-        C = {'R','G','B'};
+        R = [2 2 2];
+        L = {'R','G','B'};
         A = ones(length(P));
         A(2,1) = 0; % G-R
         A(3,3) = 0; % B-B
         A = round((A+A')/3);
         NSC.A = A;
-        NSC.counts = 1;
-        NSC.M = [1 1 1];
-        
+        NSC.simple = 1; % simple components
+        NSC.connected = 1; % connected graph
+        % currently pm_full does not work because Ar check not implemented
+
 end
 
 % test the first algorithm
 opts.algorithm = alg1;
-FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 n1 = numel(FinalGraphs);
 
-if (opts.displevel > 0) % minimal 
+if (opts.displevel > 0) % minimal
     disp(' ')
 end
 
 % test the second algorithm
 opts.algorithm = alg2;
-FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
+FinalGraphs = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 n2 = numel(FinalGraphs);
 
 disp(' ')

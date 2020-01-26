@@ -4,21 +4,29 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function c = PMA_LabelColors(L,libnum)
 
 % assign colors
 switch libnum
+    case 0
+        c = ColorLibrary0(L);
     case 1
         c = ColorLibrary1(L);
     case 2
         c = ColorLibrary2(L);
     otherwise
-        
+        error("color library not defined")
 end
+
+end
+
+function c = ColorLibrary0(L)
+
+% initialize
+c = zeros(length(L),3);
 
 end
 
@@ -96,7 +104,7 @@ for k = 1:length(L)
         case 'Y'
             ct = [3,169,244]/255; % light blue material
         case 'Z'
-            ct = [96,125,139]/255; % blue grey material 
+            ct = [96,125,139]/255; % blue gray material
         otherwise % default
             ct = [0.95,0.95,0.95];
     end
@@ -104,5 +112,5 @@ for k = 1:length(L)
     % assign
     c(k,:) = ct;
 end
-    
+
 end

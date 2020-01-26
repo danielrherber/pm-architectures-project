@@ -5,8 +5,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function PMA_PlotBio(A,L,PM,I,opts)
@@ -32,8 +31,8 @@ function PMA_PlotBio(A,L,PM,I,opts)
     bg.LayoutType = 'equilibrium';
 
     % calculate node positions and edge trajectories
-    dolayout(bg); 
-    
+    dolayout(bg);
+
     % view the plot
     view(bg);
 end

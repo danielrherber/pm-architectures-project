@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% Test_plotDesignMatlab.m
-% test for Test_plotDesignMatlab
+% PMA_TEST_PlotMatlab.m
+% test for PMA_PlotMatlab
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -27,9 +27,11 @@ A(6,7) = 1; % C2-C3
 A = (A+A') - diag(diag(A));
 
 opts.saveflag = 0;
+opts.labelnumflag = true;
+opts.colorlib = 1;
 
 % no multi-edges
-plotDesignMatlab(A>0,L,1,nan,opts)
+PMA_PlotMatlab(A>0,L,1,nan,opts)
 
 % multi-edges
-plotDesignMatlab(A,L,1,nan,opts)
+PMA_PlotMatlab(A,L,1,nan,opts)

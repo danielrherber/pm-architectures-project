@@ -6,8 +6,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function PMA_PlotMatlab2018b(A,L,PM,I,opts)
@@ -29,13 +28,13 @@ function PMA_PlotMatlab2018b(A,L,PM,I,opts)
         % add numbers to the labels
         Lnum = cell(length(C),1);
         for idx = 1:length(C)
-            Lnum{idx} = strcat('\textsl{',C{idx},'}$_',string(1:N(idx)),'$');
+            Lnum{idx} = strcat('\textsl{',C{idx},'}$_{',string(1:N(idx)),'}$');
         end
         Lnum = horzcat(Lnum{:});
     else
         Lnum = strcat('\textsl{',L,'}');
     end
-    
+
     % get color spec
     c = PMA_LabelColors(L,opts.colorlib);
 
@@ -43,16 +42,16 @@ function PMA_PlotMatlab2018b(A,L,PM,I,opts)
     hf = figure;
     hf.Color = [1 1 1]; % change the figure background
 
-    % create undirected graph object   
+    % create undirected graph object
     G = graph(A);
 
     % graph plot
     if any(A(:) > 1) % check if multiedges are present
         [~,~,V] = find(tril(A));
         V = strrep(string(V),'1',''); % remove simple edge labels
-        hg = plot(G,'k','NodeLabel',{},'EdgeLabel',V); 
+        hg = plot(G,'k','NodeLabel',{},'EdgeLabel',V);
     else
-        hg = plot(G,'k','NodeLabel',{}); 
+        hg = plot(G,'k','NodeLabel',{});
     end
 
     % set plot properties

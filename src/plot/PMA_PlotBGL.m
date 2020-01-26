@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function PMA_PlotBGL(A,L,PM,I,opts)
@@ -32,7 +31,7 @@ function PMA_PlotBGL(A,L,PM,I,opts)
             Lnum{idx} = strcat('\textsl{',C{idx},'}$_',string(1:N(idx)),'$');
         end
         Lnum = horzcat(Lnum{:});
-        
+
         % make font size a bit smaller
         nodefontsize = 0.8*nodefontsize;
     else
@@ -58,7 +57,7 @@ function PMA_PlotBGL(A,L,PM,I,opts)
 
     % find all the edges
     [IA,JA,VA] = find(A);
-    
+
 	% create a new figure and save handle
     hf = figure; hold on
     hf.Color = [1 1 1]; % change the figure background
@@ -66,8 +65,8 @@ function PMA_PlotBGL(A,L,PM,I,opts)
     % plot edges
     for idx = 1:length(VA)
         x1 = xy(IA(idx),1); x2 = xy(JA(idx),1);
-        y1 = xy(IA(idx),2); y2 = xy(JA(idx),2);     
-        
+        y1 = xy(IA(idx),2); y2 = xy(JA(idx),2);
+
         % plot the edge
         hp = plot([x1,x2], [y1,y2], '-');
         hp.LineWidth = linewidth;
@@ -84,7 +83,7 @@ function PMA_PlotBGL(A,L,PM,I,opts)
             ht.Margin = weightmargin;
             ht.BackgroundColor = 'white';
             ht.Rotation = 180/pi*atan((y2-y1)/(x2-x1));
-        end 
+        end
     end
 
     % plot each component
@@ -110,20 +109,20 @@ function PMA_PlotBGL(A,L,PM,I,opts)
     hl = title(['\textsl{PM ',num2str(PM),'}']);
     hl.Interpreter = 'latex';
     hl.FontSize = titlefontsize;
- 
+
     % turn off axis box
     box off;
 
     % get current axis
     ha = gca;
-    
+
     % set 'equal' figure aspect ratio
     axis equal
-    
+
     % turn off both axises
     ha.XColor = 'none';
     ha.YColor = 'none';
-    
+
     % set axis limits
     ha.XLim = [-1.2 1.2];
     ha.YLim = [-1.2 1.2];

@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 if isempty(G)
@@ -13,9 +12,9 @@ if isempty(G)
 end
 
 % options
-markersize = 16;
-fontsize = 12;
-s = 0.05;
+markersize = 20;
+fontsize = 14;
+s = 0.08;
 nodeflag = false;
 labelflag = false;
 
@@ -41,13 +40,16 @@ A(sub2ind(size(A),IR,IL)) = 1;
 A(sub2ind(size(A),IL,IR)) = 1;
 
 % create figure
-hf = figure('Color',[1 1 1],'Position', [100, 100, 1100, 200]); hold on
+hf = figure('Color',[1 1 1],'Position', [100, 100, 1000, 200]); hold on
 
 % create graph object
 Grph = graph(A);
 
 % plot tree
 hp = plot(Grph,'k','Layout','layered','Sources',source,'AssignLayers','asap');
+
+%
+set(gca,'LooseInset',get(gca,'TightInset')+0.03)
 
 % modify graph appearance
 hp.EdgeColor = [0 0 0]; % change edge color
@@ -68,7 +70,11 @@ X = hp.XData; Y = hp.YData;
 
 % normalize X (between 0-1)
 X = (X-min(X))/(max(X)-min(X));
+ha = gca;
+aspect = ha.PlotBoxAspectRatio;
+X = X*(aspect(1)/aspect(2))*max(Y);
 hp.XData = X;
+
 
 % shift Y (down by one)
 Y = Y - 1;
@@ -84,22 +90,49 @@ Nnodes = length(labellist);
 for idx = 1:Nnodes
     % coordinates
     X1 = X(IL(idx)); X2 = X(IR(idx)); Y1 = Y(IL(idx)); Y2 = Y(IR(idx));
-    
+
+    % length of the line
+    l = sqrt((X1-X2)^2+(Y1-Y2)^2);
+
+    % midpoint of the line
+    Xm = 0.5*(X1+X2);
+    Ym = 0.5*(Y1+Y2);
+
+    % slope of the line
+    m = (Y2-Y1)/(X2-X1);
+
+    if m < 0
+        XL = Xm + s*cos(atan(m));
+        YL = Ym + s*sin(atan(m));
+        XR = Xm - s*cos(atan(m));
+        YR = Ym - s*sin(atan(m));
+    else
+        XL = Xm - s*cos(atan(m));
+        YL = Ym - s*sin(atan(m));
+        XR = Xm + s*cos(atan(m));
+        YR = Ym + s*sin(atan(m));
+    end
+
     % shift along line
-    XL = X2*(0.5+s) + X1*(0.5-s);
-    YL = Y2*(0.5+s) + Y1*(0.5-s);
-    XR = X2*(0.5-s) + X1*(0.5+s);
-    YR = Y2*(0.5-s) + Y1*(0.5+s);
-    
+%     XL = X2*(0.5+s) + X1*(0.5-s);
+%     YL = Y2*(0.5+s) + Y1*(0.5-s);
+%     XR = X2*(0.5-s) + X1*(0.5+s);
+%     YR = Y2*(0.5-s) + Y1*(0.5+s);
+
     % plot nodes
-    plot(XL,YL,'.','color',c(labellist(2,idx),:),'markersize',markersize)
-    plot(XR,YR,'.','color',c(labellist(1,idx),:),'markersize',markersize)
+    if feasiblelist(idx)
+        plot(XL,YL,'.','color',c(labellist(2,idx),:),'markersize',markersize)
+        plot(XR,YR,'.','color',c(labellist(1,idx),:),'markersize',markersize)
+    else
+        plot(XL,YL,'.','color',tint(c(labellist(2,idx),:),0.8),'markersize',markersize)
+        plot(XR,YR,'.','color',tint(c(labellist(1,idx),:),0.8),'markersize',markersize)
+    end
 end
 
 % number of edges
-Np = size(G,2)/2; 
+Np = size(G,2)/2;
 
-% axis 
+% axis
 ax = gca;
 ax.XColor = [0 0 0];
 ax.YColor = [0 0 0];
@@ -110,8 +143,11 @@ ax.YTick = 0:Np;
 ylabel('Edges Available','fontsize',fontsize,'Color',[0 0 0])
 
 % change axis limits
-xlim([-0.03 1.03])
+% xlim([-0.03 1.03])
+xlim([-0.03*max(X) 1.03*max(X)])
 ylim([-0.05*Np 1.05*Np])
+% axis equal
+% axis tight
 
 % (potentially) save plot
 if opts.plots.saveflag

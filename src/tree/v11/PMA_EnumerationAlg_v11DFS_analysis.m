@@ -4,14 +4,13 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [SavedGraphs,id] = PMA_EnumerationAlg_v11DFS_analysis(V,E,SavedGraphs,id,...
     cVf,Vf,iInitRep,counts,A,Bflag,B,Mflag,M,displevel,prenode)
 
-    global node nodelist labellist % modification for analysis function
+    global node nodelist labellist feasiblelist % modification for analysis function
 
     % START ENHANCEMENT: touched vertex promotion
     istouched = logical(Vf-V); % vertices that have been touched
@@ -27,7 +26,7 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v11DFS_analysis(V,E,SavedGraphs,i
     % END ENHANCEMENT: touched vertex promotion
 
     % remove a port
-    L = cVf(iL)-V(iL); % left port 
+    L = cVf(iL)-V(iL); % left port
     V(iL) = V(iL)-1; % remove left port
 
     % START ENHANCEMENT: replicate ordering
@@ -47,12 +46,14 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v11DFS_analysis(V,E,SavedGraphs,i
 
         nodelist = [nodelist,prenode];
         labellist = [labellist,[iL;iR]];
+        feasiblelist = [feasiblelist,1];
         node = node + 1;
-        
+
         if V(iR)~=Vallow(iR) % modification for analysis function
-           continue 
+            feasiblelist(end) = 0;
+            continue
         end
-        
+
         % local for loop variables
         V2 = V; A2 = A;
 
@@ -67,7 +68,7 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v11DFS_analysis(V,E,SavedGraphs,i
 
         % START ENHANCEMENT: saturated subgraphs
         if Mflag
-            iNonSat = find(V2); % find the nonsaturated components 
+            iNonSat = find(V2); % find the nonsaturated components
             if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
                 nUncon = sum(M(iNonSat));
                 if (nUncon == 0) % define a one set of edges and stop
@@ -82,8 +83,9 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v11DFS_analysis(V,E,SavedGraphs,i
                 elseif (nUncon == sum(M))
                     % continue iterating
                 else
+                    feasiblelist(end) = 0;
                     continue % stop, this graph is infeasible
-                end     
+                end
             end
         end
         % END ENHANCEMENT: saturated subgraphs
@@ -99,8 +101,8 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v11DFS_analysis(V,E,SavedGraphs,i
 
         % START ENHANCEMENT: line-connectivity constraints
         if Bflag
-            A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections 
-            A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections 
+            A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections
+            A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections
             A2([iR,iL],:) = A2(:,[iR,iL])'; % make symmetric
         end
         % END ENHANCEMENT: line-connectivity constraints

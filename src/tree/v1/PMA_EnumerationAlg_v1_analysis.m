@@ -4,17 +4,16 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [SavedGraphs,id] = PMA_EnumerationAlg_v1_analysis(V,E,SavedGraphs,id,cVf,A,displevel,prenode)
 
-    global node nodelist labellist
+    global node nodelist labellist feasiblelist % modification for analysis function
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
-    L = cVf(iL)-V(iL); % left port 
+    L = cVf(iL)-V(iL); % left port
     V(iL) = V(iL)-1; % remove left port
 
     % zero infeasible edges
@@ -29,17 +28,19 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v1_analysis(V,E,SavedGraphs,id,cV
 
         nodelist = [nodelist,prenode];
         labellist = [labellist,[iL;iR]];
+        feasiblelist = [feasiblelist,1];
         node = node + 1;
-        
+
         if V(iR)~=Vallow(iR) % modification for analysis function
-           continue 
+            feasiblelist(end) = 0;
+            continue
         end
 
         V2 = V; % local for loop variables
         R = cVf(iR)-V2(iR); % right port
         E2 = [E,L,R]; % combine left, right ports for an edge
         V2(iR) = V2(iR)-1; % remove port (local copy)
-        
+
         if any(V2) % recursive call if any remaining vertices
             [SavedGraphs,id] = PMA_EnumerationAlg_v1_analysis(V2,E2,SavedGraphs,id,cVf,A,displevel,node);
         else % save the complete perfect matching graph

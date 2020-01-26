@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
-% Test_DispAdjacencyIdxLabels.m
-% test for DispAdjacencyIdxLabels
+% PMA_TEST_SimpleNSC.m
+% test for NSC.simple
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,25 +9,24 @@
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
-C = {'R','G','B','O'};
-R = [3,2,1,2];
-P = [1,2,5,3];
-S = [1,0,1,0];
+testnum = 4;
 
-AdjType = DispAdjacencyIdxLabels(C,P,S);
+switch testnum
+    case 1 % just B (6 graphs)
+        NSC.simple = [0,0,1];
+    case 2 % just G and R (6 graphs)
+        NSC.simple = [1,1,0];
+    case 3 % all (3 graphs)
+        NSC.simple = 1;
+    case 4 % none (16 graphs)
+        NSC.simple = 0;
+end
 
-%
-C = {'R','G','B','O'};
-R = [3,2,1,2];
-P = [1,2,5,3];
-S = [1,1,1,1];
+C = {'R','G','B'};
+R = [3,2,1];
+P = [1,2,3];
 
-AdjType = DispAdjacencyIdxLabels(C,P,S);
+opts = [];
+opts.algorithm = 'tree_v8';
 
-%
-C = {'R','G','B','O'};
-R = [3,2,1,2];
-P = [1,2,5,3];
-S = [0,0,0,0];
-
-AdjType = DispAdjacencyIdxLabels(C,P,S);
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

@@ -1,20 +1,19 @@
 %--------------------------------------------------------------------------
-% Test_NSC_LineConstraintsOrdering.m
+% PMA_TEST_LineConstraintOrdering.m
 % test line-connectivity constraints when (C,R,P) is reordered
 %--------------------------------------------------------------------------
 % NOTE: this test function was used to fix a bug where NSC.Bind was not
 % sorted properly in PMA_ReorderCRP.m
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-close all; clear; clc
+clear; clc; close all; closeallbio;
 
 % test options
-testnum = 3;
-N = 3; % number of B replicates
-sortflag = 1; % 1:on, 0:off
+testnum = 0;
+sortflag = 0; % 1:on, 0:off
+N = 2; % number of B replicates
 
 switch testnum
     case 1 % A-B\C
@@ -30,14 +29,16 @@ end
 C = {'A','B','C','D'};
 R = [1,N,2,1];
 P = [2,2,4,2];
-NSC.counts = 1;
+NSC.simple = 1;
+NSC.connected = 1;
+NSC.loops = 0;
 
 % options
 opts = [];
-opts.algorithm = 'tree_v1'; % 'tree_v2'
+opts.algorithm = 'tree_v11BFS';
 opts.sortflag = sortflag;
 opts.isomethod = 'python'; % need an isomorphism checking method to compare
-opts.plots.plotmax = 0;
+opts.plots.plotmax = 10;
 
 % generate the unique useful graphs
 FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
