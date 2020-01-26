@@ -53,7 +53,7 @@ function [A,L,Ln,rmphi,Amout,feasibleFlag] = PMA_CheckNSCFeasibility(PM,Nc,phi,I
     if Sflag % check if this nsc is present
         Aports = Am-diag(diag(Am)); % remove loops
         Aports = logical(Aports); % remove multiedges
-        simpleCheck = ports.NSC.Vfull==sum(Aports,1);
+        simpleCheck = ports.NSC.Vfull-2*diag(Am)'==sum(Aports,1);
         feasibleFlag = all(simpleCheck(logical(ports.NSC.simple))); % check simple NSC
         if ~feasibleFlag
             return; % graph infeasible

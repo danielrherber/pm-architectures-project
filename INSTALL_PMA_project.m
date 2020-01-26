@@ -33,6 +33,12 @@ function INSTALL_PMA_project(varargin)
     % download required web zips
     RunSilent('RequiredWebZips',silentflag)
 
+    % delete assert.m in MFX 10922
+    disp('--- Deleting assert.m in MFX 10922')
+    listing = dir(which(mfilename));
+    delete(fullfile(listing.folder,'include','MFX 10922','matlab_bgl','test','assert.m'));
+    disp(' ')
+    
     % Matlab isomorphism function check
     RunSilent('CheckMatlabIsomorphismFunction',silentflag)
 
@@ -45,8 +51,9 @@ function INSTALL_PMA_project(varargin)
     % add contents to path
     RunSilent('AddSubmissionContents(mfilename)',silentflag)
 
-	% open an example
+	% open examples
     if ~silentflag, OpenThisFile('PMAex_md161635_caseStudy1'); end
+    if ~silentflag, OpenThisFile('PMA_EX_A001187'); end
 
 	% close this file
     RunSilent('CloseThisFile(mfilename)',silentflag)
