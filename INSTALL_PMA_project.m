@@ -3,22 +3,21 @@
 % This scripts helps you get the PM Architectures Project up and running
 %--------------------------------------------------------------------------
 % Automatically adds project files to your MATLAB path, downloads the
-% required MATLAB File Exchange submissions, checks your Python setup, 
+% required MATLAB File Exchange submissions, checks your Python setup,
 % and opens an example.
 %--------------------------------------------------------------------------
 % Install script based on MFX Submission Install Utilities
 % https://github.com/danielrherber/mfx-submission-install-utilities
 % https://www.mathworks.com/matlabcentral/fileexchange/62651
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function INSTALL_PMA_project(varargin)
 
-    % intialize
+    % initialize
     silentflag = 0; % don't be silent
-    
+
     % parse inputs
     if ~isempty(varargin)
         if any(strcmpi(varargin,'silent'))
@@ -36,13 +35,13 @@ function INSTALL_PMA_project(varargin)
 
     % Matlab isomorphism function check
     RunSilent('CheckMatlabIsomorphismFunction',silentflag)
-    
+
 	% Python check
     RunSilent('PythonSetupCheck',silentflag)
 
     % run mex creation scripts
     RunSilent('RequiredRunFiles',silentflag)
-    
+
     % add contents to path
     RunSilent('AddSubmissionContents(mfilename)',silentflag)
 
@@ -51,7 +50,7 @@ function INSTALL_PMA_project(varargin)
 
 	% close this file
     RunSilent('CloseThisFile(mfilename)',silentflag)
-    
+
 	warning('on','MATLAB:dispatcher:nameConflict');
 
 end
@@ -69,7 +68,7 @@ function RequiredRunFiles %#ok<DEFNU>
 
     ind = ind + 1;
     files(ind).file = 'PMA_EnumerationAlg_v10_coder';
-    
+
     ind = ind + 1;
     files(ind).file = 'PMA_EnumerationAlg_v11DFS_coder';
 
@@ -83,7 +82,7 @@ end
 %--------------------------------------------------------------------------
 function RequiredWebZips %#ok<DEFNU>
     disp('--- Obtaining required web zips')
-    
+
     % initialize index
 	ind = 0;
 
@@ -111,7 +110,7 @@ function RequiredWebZips %#ok<DEFNU>
 	zips(ind).url = 'http://www.mathworks.com/matlabcentral/mlc-downloads/downloads/submissions/47246/versions/3/download/zip/tint.zip';
 	zips(ind).folder = 'MFX 47246';
 	zips(ind).test = 'tint';
-    
+
 	ind = ind + 1;
 	zips(ind).url = 'https://github.com/danielrherber/perfect-matchings-of-a-complete-graph/archive/master.zip';
 	zips(ind).folder = 'MFX 52301';
@@ -126,12 +125,12 @@ function RequiredWebZips %#ok<DEFNU>
 
 	disp(' ')
 end
-%-------------------------------------------------------------------------- 
+%--------------------------------------------------------------------------
 function CheckMatlabIsomorphismFunction %#ok<DEFNU>
     disp('--- Checking Matlab''s isomorphism function')
-    
+
     % check if isisomorphic is available
-    try 
+    try
         graph;
         isisomorphic(graph(1,1),graph(1,1));
         disp('isisomorphic is available')
@@ -145,9 +144,9 @@ end
 %--------------------------------------------------------------------------
 function PythonSetupCheck %#ok<DEFNU>
 	disp('--- Checking Python setup')
-    
+
     CheckFlag = 0;
-    
+
 	% need python
 	[version, ~, ~] = pyversion;
     if isempty(version)
@@ -156,7 +155,7 @@ function PythonSetupCheck %#ok<DEFNU>
         CheckFlag = CheckFlag + 1;
 	    disp('python is available')
     end
-    
+
 	% need numpy
     try
         py.numpy.matrixlib.defmatrix.matrix([]);
@@ -167,22 +166,37 @@ function PythonSetupCheck %#ok<DEFNU>
     end
 
 	% need python_igraph
+    igraphFlag = false;
     try
         py.igraph.Graph;
-        CheckFlag = CheckFlag + 1;
-	    disp('igraph is available')
+        if CheckFlag == 2
+            igraphFlag = true;
+        end
+        disp('igraph is available')
     catch
-	    disp('igraph is NOT available X')
+        disp('igraph is NOT available X')
     end
-    
+
+    % need python_networkx
+    networkxFlag = false;
+    try
+        py.networkx.Graph();
+        if CheckFlag == 2
+            networkxFlag = true;
+        end
+        disp('networkx is available')
+    catch
+        disp('networkx is NOT available X')
+    end
+
     % if all required python packages are available
-    if CheckFlag == 3
-        disp('opts.isomethod = ''Python'' is available')
+    if igraphFlag || networkxFlag
+        disp('opts.isomethod = ''python'' is available')
     else
-        disp('opts.isomethod = ''Python'' is NOT available X')
+        disp('opts.isomethod = ''python'' is NOT available X')
         disp('please see https://github.com/danielrherber/pm-architectures-project/blob/master/optional/PythonIsoSetup.md')
     end
-    
+
 	disp(' ')
 end
 %--------------------------------------------------------------------------
@@ -193,11 +207,11 @@ function AddSubmissionContents(name) %#ok<DEFNU>
     % current file
     fullfuncdir = which(name);
 
-    % current folder 
+    % current folder
     submissiondir = fullfile(fileparts(fullfuncdir));
 
     % add folders and subfolders to path
-    addpath(genpath(submissiondir)) 
+    addpath(genpath(submissiondir))
 end
 %--------------------------------------------------------------------------
 function CloseThisFile(name) %#ok<DEFNU>
@@ -234,14 +248,14 @@ function DownloadWebZips(zips,outputdir)
 
     % store the current directory
     olddir = pwd;
-    
+
     % create a folder for outputdir
     if ~exist(outputdir, 'dir')
         mkdir(outputdir); % create the folder
     else
         addpath(genpath(outputdir)); % add folders and subfolders to path
     end
-    
+
     % change to the output directory
     cd(outputdir)
 
@@ -276,22 +290,22 @@ function DownloadWebZips(zips,outputdir)
 
                 % output to the command window
                 disp(['Downloaded and unzipped ',folder])
-            
+
             catch % failed to download
                 % output to the command window
                 disp(['Failed to download ',folder])
-                
+
                 % remove the html file
                 delete([folder,'.html'])
-                
+
             end
-            
+
         else
             % output to the command window
             disp(['Already available ',folder])
         end
     end
-    
+
     % change back to the original directory
     cd(olddir)
 end

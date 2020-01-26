@@ -1,11 +1,10 @@
 %--------------------------------------------------------------------------
 % PMA_ColorBasedHistcounts.m
-% 
+%
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function V = PMA_ColorBasedHistcounts(V,Ln)

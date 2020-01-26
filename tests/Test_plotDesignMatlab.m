@@ -4,13 +4,10 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-close all
-clear
-clc
+clear; clc; close all; closeallbio;
 
 L = {'A','B','B','B','C','C','C','D','D'};
 % L = {'G','L','L','L','o','o','o','P','P'}; % other labels

@@ -1,17 +1,14 @@
 %--------------------------------------------------------------------------
 % Test_ConsistentOrdering.m
-% if the initial label ordering is maintained and the set of graphs are 
+% if the initial label ordering is maintained and the set of graphs are
 % identical between to similar problems
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clc
-clear
-close all
+clear; clc; close all; closeallbio;
 
 % options
 opts.algorithm = 'tree_v8_mex';
@@ -43,7 +40,7 @@ Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
 Graphs1 = PMA_UniqueFeasibleGraphs(C1,R1,P1,NSC,opts); disp(' ');
 
 % find the unique set of graphs
-FinalGraphs = RemovedColoredIsos([Graphs2,Graphs1],opts); disp(' ');
+FinalGraphs = PMA_RemoveIsoLabeledGraphs([Graphs2,Graphs1],opts); disp(' ');
 
 if length(Graphs2) == length(FinalGraphs)
     disp(Graphs1(1).L)
@@ -60,14 +57,14 @@ I = [2 1 3]; % sorting indices
 
 C1 = {'A','B','C'};
 R1 = [2 2 2];
-P1 = [3 2 3]; 
+P1 = [3 2 3];
 
 C2 = C1(I);
 R2 = R1(I);
 P2 = P1(I);
 
 NSC.M = ones(1,length(C1));
-NSC.counts = 1;
+NSC.simple = 1;
 
 % run sorted
 Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
@@ -76,7 +73,7 @@ Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
 Graphs1 = PMA_UniqueFeasibleGraphs(C1,R1,P1,NSC,opts); disp(' ');
 
 % find the unique set of graphs
-FinalGraphs = RemovedColoredIsos([Graphs2,Graphs1],opts); disp(' ');
+FinalGraphs = PMA_RemoveIsoLabeledGraphs([Graphs2,Graphs1],opts); disp(' ');
 
 if length(Graphs2) == length(FinalGraphs)
     disp(Graphs1(1).L)
@@ -94,14 +91,14 @@ I = [2 1 3]; % sorting indices
 C1 = {'A','B','C'};
 R1.min = [0 0 0];
 R1.max = [2 2 2];
-P1 = [3 2 3]; 
+P1 = [3 2 3];
 
 C2 = C1(I);
 R2.min = R1.min(I);
 R2.max = R1.max(I);
 P2 = P1(I);
 
-NSC.counts = 1;
+NSC.simple = 1;
 
 % run sorted
 Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
@@ -110,7 +107,7 @@ Graphs2 = PMA_UniqueFeasibleGraphs(C2,R2,P2,NSC,opts); disp(' ');
 Graphs1 = PMA_UniqueFeasibleGraphs(C1,R1,P1,NSC,opts); disp(' ');
 
 % find the unique set of graphs
-FinalGraphs = RemovedColoredIsos([Graphs2,Graphs1],opts); disp(' ');
+FinalGraphs = PMA_RemoveIsoLabeledGraphs([Graphs2,Graphs1],opts); disp(' ');
 
 if length(Graphs2) == length(FinalGraphs)
     disp(Graphs1(4).L)

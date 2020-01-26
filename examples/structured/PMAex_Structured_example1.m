@@ -4,21 +4,19 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
-% Additional Contributor: Shangtingli, Undergraduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
+% Additional Contributor: Shangtingli, Undergraduate Student, UIUC
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
 % problem specifications
-P = [1 2 3]; % ports vector 
+P = [1 2 3]; % ports vector
 R = [3 2 1]; % replicates vector
 C = {'R','G','B'}; % label vector
 
 % test number
-num = 4; 
+num = 4;
 
 % different modifications to original problem specification
 switch num
@@ -30,13 +28,13 @@ switch num
         NSC.S = [0,1,1]; % structured components
     case 4
         NSC.M = [0,0,1]; % mandatory components
-        NSC.counts = 1; % all connections must be unique
+        NSC.simple = 1; % all connections must be unique
         NSC.S = [0,0,1]; % structured components
 end
 % structured-specific options
 opts.structured.isotree = 'AIO'; % AIO (all-in-one) or LOE (level-order)
 opts.structured.ordering = 'none'; % RA
-    
+
 % general options
 opts.parallel = 0; % 0 to disable parallel computing, otherwise max number of workers
 opts.plotfun = 'circle'; % 'circle' % 'bgl' % 'matlab'

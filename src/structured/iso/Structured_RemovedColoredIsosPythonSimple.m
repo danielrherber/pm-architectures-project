@@ -6,10 +6,10 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+
 % Additional Contributor: Shangtingli,Undergraduate Student,University of 
-% Illinois at Urbana-Champaign
+
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function UniqueGraphs = Structured_RemovedColoredIsosPythonSimple(Graphs,opts,iStruct,np)
@@ -28,7 +28,7 @@ end
 origdir = pwd; % original directory
 pydir = mfoldername('RemovedColoredIsosPython','python'); % python directory
 cd(pydir) % change directory
-py.importlib.import_module('detectiso_func4'); % import module 
+py.importlib.import_module('detectiso_igraph'); % import module 
 
 % number of graphs to check
 n = length(Graphs);
@@ -109,7 +109,7 @@ for i = 2:n
                     pyadj2 = bin(c).Graphs(j).pylist;
                     color2 = bin(c).Graphs(j).colors;
                     nnode2 = bin(c).Graphs(j).nnode;
-                    IsoFlag = py.detectiso_func4.detectiso(pyadj1,pyadj2,...
+                    IsoFlag = py.detectiso_igraph.detectiso(pyadj1,pyadj2,...
                                 color1,color2,nnode1,nnode2);
                 end
             end

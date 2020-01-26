@@ -4,10 +4,10 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+
 % Additional Contributor: Shangtingli, Undergraduate Student, University of 
-% Illinois at Urbana-Champaign
+
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [C,R,P,S,FinalGraphs] = Structured_ExampleSimpleGraphs(example,opts)
@@ -31,7 +31,7 @@ switch example
             C = {'M','E','V','G','P','A','B'};
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 0 0];
-            NSC.counts = 1; % unique edges
+            NSC.simple = 1; % unique edges
             NSC.A = ones(length(P));
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
@@ -56,7 +56,7 @@ switch example
             C = {'M','E','V','G','P','A','B'};
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 0 0];
-            NSC.counts = 1; % unique edges
+            NSC.simple = 1; % unique edges
             NSC.A = ones(length(P));
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
@@ -82,7 +82,7 @@ switch example
             C = {'M','E','V','G','P','A','B'};
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 1 1];
-            NSC.counts = 1; % unique edges
+            NSC.simple = 1; % unique edges
             NSC.A = ones(length(P));
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
@@ -108,7 +108,7 @@ switch example
             C = {'M','P','A','B'};
             P = [1 3 3 4];
             S = [0 1 1 1]; 
-            NSC.counts = 1;  
+            NSC.simple = 1;  
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -130,7 +130,7 @@ switch example
             C = {'M','E','V','G','P','A','B'};
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 1 1];
-            NSC.counts = 1; % unique edges
+            NSC.simple = 1; % unique edges
             NSC.A = ones(length(P));
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B
@@ -157,7 +157,7 @@ switch example
             C = {'M','P','A','B'};
             P = [1 3 3 4];
             S = [0 1 1 1]; 
-            NSC.counts = 1;  
+            NSC.simple = 1;  
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -178,7 +178,7 @@ switch example
             C = {'M','E','V','G','P','A','B'};
             P = [1 1 1 1 3 3 4];
             S = [1 1 1 1 1 1 1];
-            NSC.counts = 1; % unique edges
+            NSC.simple = 1; % unique edges
             NSC.A = ones(length(P));
             NSC.A(6,6) = 0; % no A-A
             NSC.A(7,7) = 0; % no B-B

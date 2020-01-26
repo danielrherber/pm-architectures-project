@@ -2,10 +2,9 @@
 % PMA_EnumerationAlg_v11BFS_coder.m
 % Generate MEX-function for PMA_EnumerationAlg_v11BFS
 %--------------------------------------------------------------------------
-% 
+%
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 % files

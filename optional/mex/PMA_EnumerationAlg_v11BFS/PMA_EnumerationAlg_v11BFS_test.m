@@ -2,10 +2,9 @@
 % PMA_EnumerationAlg_v11BFS_test.m
 % Test function for PMA_EnumerationAlg_v11BFS
 %--------------------------------------------------------------------------
-% 
+%
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function PMA_EnumerationAlg_v11BFS_test
@@ -47,7 +46,7 @@ try
     output2 = PMA_EnumerationAlg_v11BFS_mex(cVf,Vf,iInitRep,phi,counts,...
     A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,IN,Ln,Nmax,displevel);
     if displevellocal, toc, end
-    
+
     % tests
     if isequal(output1,output2)
         c1 = 'passed';

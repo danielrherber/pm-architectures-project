@@ -3,15 +3,13 @@
 % Example based on the reference below for generating different hybrid
 % powertrain architectures
 %--------------------------------------------------------------------------
-% Bayrak A, Ren Y, Papalambros PY. Topology Generation for Hybrid Electric 
+% Bayrak A, Ren Y, Papalambros PY. Topology Generation for Hybrid Electric
 % Vehicle Architecture Design. ASME. J. Mech. Des. 2016; 138(8):081401.
 % doi:10.1115/1.4033656.
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
-% Additional Contributor: Shangtingli, Undergraduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
+% Additional Contributor: Shangtingli, Undergraduate Student, UIUC
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
@@ -23,8 +21,9 @@ clear; clc; close all; closeallbio;
 % A <-> Three Port Connection
 % B <-> Four Port Connection
 C = {'M','E','V','G','P','A','B'}; % label vector
-P = [1 1 1 1 3 3 4]; % ports vector 
-NSC.counts = 1; % unique edges
+P = [1 1 1 1 3 3 4]; % ports vector
+NSC.simple = 1; % unique edges
+NSC.connected = 1;
 NSC.A = ones(length(P)); % limit connections, initialize
 NSC.A(6,6) = 0; % no A-A
 NSC.A(7,7) = 0; % no B-B

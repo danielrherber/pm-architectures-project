@@ -1,17 +1,13 @@
 %--------------------------------------------------------------------------
 % Test_Enhancements.m
-% 
+%
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clear
-clc
-close all
-closeallbio
+clear; clc; close all; closeallbio;
 
 alg1 = 'tree_v1'; % original tree algorithm
 alg2 = 'tree_v8'; % with all enhancements
@@ -25,12 +21,12 @@ opts.isomethod = 'Python'; % 'Matlab'
 switch testnum
     case 1 % best case, only 1 graph
         n = 8;
-        P = [2]; % ports vector 
+        P = [2]; % ports vector
         R = [n]; % replicates vector
         C = {'R'}; % label vector
-        NSC.counts = 1;
+        NSC.simple = 1;
         NSC.M = 1;
-        
+
     case 2 % worst case, pure pm (n-1)!!
         n = 8;
         P = ones(n,1);
@@ -39,13 +35,13 @@ switch testnum
             C{k} = num2str(k);
         end
         NSC = [];
-        
+
     case 3 % general problem
        P = [1 2 3];
        R = [4 3 2];
        C = {'R','G','B'};
        NSC = [];
-       
+
     case 4 % general problem with NSCs
         P = [1 2 3];
         R = [4 4 4];
@@ -55,9 +51,9 @@ switch testnum
         A(3,3) = 0; % B-B
         A = round((A+A')/3);
         NSC.A = A;
-        NSC.counts = 1;
+        NSC.simple = 1;
         NSC.M = [1 1 1];
-        
+
 end
 
 % test the first algorithm
@@ -65,7 +61,7 @@ opts.algorithm = alg1;
 FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
 n1 = numel(FinalGraphs);
 
-if (opts.displevel > 0) % minimal 
+if (opts.displevel > 0) % minimal
     disp(' ')
 end
 

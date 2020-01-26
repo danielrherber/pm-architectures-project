@@ -2,24 +2,23 @@
 % PMA_EnumerationAlg_v1.m
 % this is the algorithm in the DETC paper
 %--------------------------------------------------------------------------
-% 
+%
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [SavedGraphs,id] = PMA_EnumerationAlg_v1(V,E,SavedGraphs,id,cVf,A,displevel)
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
-    L = cVf(iL)-V(iL); % left port 
+    L = cVf(iL)-V(iL); % left port
     V(iL) = V(iL)-1; % remove left port
 
     % zero infeasible edges
     Vallow = V.*A(iL,:);
 
     % find remaining nonzero entries
-    I = find(Vallow);  
+    I = find(Vallow);
 
 	% loop through all nonzero entries
     for iRidx = 1:length(I)

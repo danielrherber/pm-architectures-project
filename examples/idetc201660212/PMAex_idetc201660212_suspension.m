@@ -4,20 +4,19 @@
 %--------------------------------------------------------------------------
 % http://systemdesign.illinois.edu/publications/Her16b.pdf
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
 % problem specification
-P = [1 1 1 2 2 2 3 4]'; % ports vector 
-R = [1 1 2 2 2 1 2 2]'; % replicate vector 
-C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector 
+P = [1 1 1 2 2 2 3 4]'; % ports vector
+R = [1 1 2 2 2 1 2 2]'; % replicate vector
+C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector
 
 % constraints
 NSC.M = [1 1 0 0 0 0 0 0];
-NSC.counts = 1;
+NSC.simple = 1;
 NSC.self = 1; % allow self-loops
 % provide potential adjacency matrix
 A = ones(length(P));

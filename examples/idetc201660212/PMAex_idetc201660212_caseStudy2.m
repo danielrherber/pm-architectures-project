@@ -3,17 +3,16 @@
 % This example replicates the results from Case Study 2 in the paper below
 %--------------------------------------------------------------------------
 % http://systemdesign.illinois.edu/publications/Her16b.pdf
-% FIGURE 12: All 12 unique graphs for Case Study 2 requiring all components 
+% FIGURE 12: All 12 unique graphs for Case Study 2 requiring all components
 % to be connected and a specified number of unique edges.
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
 % test number
-num = 1; 
+num = 1;
 
 % problem specification
 P = [1 1 2 3 4]; % ports vector
@@ -27,14 +26,14 @@ switch num
     case 2 % Case Study 2, #2 constraints
         NSC.M = [1 0 0 0 0];
     case 3 % Case Study 2, #3 constraints
-        NSC.M = [1 1 1 1 1];       
-        NSC.counts = 1;
+        NSC.M = [1 1 1 1 1];
+        NSC.simple = 1;
     case 4 % Case Study 2, #4 constraints
         P = [1 1 2 2 3 4]'; % ports vector
         R = [1 2 1 1 1 1]'; % replicates vector
         C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
         NSC.M = [1 1 1 0 1 1];
-        NSC.counts = 1;
+        NSC.simple = 1;
 end
 
 % options

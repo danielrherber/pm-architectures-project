@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [P,R,C,NSC,Sorts] = PMA_ReorderCRP(P,R,C,NSC,opts)
@@ -39,10 +38,10 @@ function [P,R,C,NSC,Sorts] = PMA_ReorderCRP(P,R,C,NSC,opts)
     end
     SortArray = cell2mat(SortCell(I));
     [~,ISorts] = sort(SortArray);
-    
+
     % original ordering
     Sorts.P = P;
-    Sorts.R = R; 
+    Sorts.R = R;
     Sorts.C = C;
     Sorts.NSC = NSC;
     Sorts.I = ISorts;
@@ -52,7 +51,8 @@ function [P,R,C,NSC,Sorts] = PMA_ReorderCRP(P,R,C,NSC,opts)
     R = R(I);
     C = C(I);
     NSC.M = NSC.M(I);
-    NSC.counts = NSC.counts(I);
+    NSC.simple = NSC.simple(I);
+    NSC.loops = NSC.loops(I);
     NSC.A = NSC.A(I,:);
     NSC.A = NSC.A(:,I);
     NSC.Bind = PMA_changem(NSC.Bind,1:length(P),I);

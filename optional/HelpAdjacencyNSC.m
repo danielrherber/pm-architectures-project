@@ -1,11 +1,10 @@
 %--------------------------------------------------------------------------
 % HelpAdjacencyNSC.m
-% 
+%
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function ConstraintMatrix = HelpAdjacencyNSC(C,P,S)
@@ -42,7 +41,7 @@ end
 function array = prompt_user(P,S,AdjType)
     % set two numbers as a pair to locate one constraint
     % Ex. [1,2,3,4] represents (1,2) = 0, (3,4) = 0 (up  to 50 constraints)
-    array = zeros(1,100); 
+    array = zeros(1,100);
 
     % prompt the user to choose to add a constraint or not
     prompt = 'Do you want to add a constraint? Enter Y, or N to quit: ';
@@ -63,7 +62,7 @@ function array = prompt_user(P,S,AdjType)
 
     % this is used to disable invalid entry of index
     size_elem = getNumberOfElements(P,S,AdjType);
-  
+
     while strcmp(choice,'Y')
         % prompt the user to enter the first number used for that specific constraint
     string1 = ['Constraint ', num2str(Cons_num), ', row: '];
@@ -109,7 +108,7 @@ function array = prompt_user(P,S,AdjType)
     end
 end
 %--------------------------------------------------------------------------
-% simple function to find the actual number of colored labels we need to 
+% simple function to find the actual number of colored labels we need to
 % consider after expansion
 function size_elem = getNumberOfElements(P,S,AdjType)
 

@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_DetectCycle.m
-% Given undirected graph adjaency matrix, determine if a cycle is present
+% Given undirected graph adjacency matrix, determine if a cycle is present
 % Code modified from MFX 29438
 %--------------------------------------------------------------------------
 % From https://www.mathworks.com/matlabcentral/fileexchange/29438
@@ -9,11 +9,10 @@
 %   4, 77), but for undirected graphs, and without the look-ahead
 %   feature.  The lack of look-ahead is expected to have
 %   negligible performance impact on dense random graphs.
-% Copyright (c) 2011, J. Jeffry Howbert and Laboratory for 
+% Copyright (c) 2011, J. Jeffry Howbert and Laboratory for
 %   Experimental Combinatorics.  All rights reserved.
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function cycleFlag = PMA_DetectCycle(A)
@@ -29,11 +28,11 @@ function cycleFlag = PMA_DetectCycle(A)
 
     % initialize cycle flag
     cycleFlag = false;
-    
-    % Generate all unique triples of connected vertices which have indices 
+
+    % Generate all unique triples of connected vertices which have indices
     % v1 < v2 < v3 and connections v2 - v1 - v3, then search for paths
     % which connect v2 to v3
-    for ix = 1:nVert-2 % v1       
+    for ix = 1:nVert-2 % v1
         for jx = ix+1:nVert-1 % v2
             if A(ix,jx)
                 inclVert = [zeros(1,ix), ones(1,nVert-ix)];

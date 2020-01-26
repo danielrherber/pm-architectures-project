@@ -4,17 +4,16 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function feasibleFlag = PMA_CheckLineConstraints(Am,Bm,feasibleFlag)
 	% make full and correct data type
     A = uint8(full(Am));
-    
+
 	% find connections in lower triangular matrix
     [I1,I2] = find(tril(A,-1));
-    
+
 	% go through each connection
     for k = 1:length(I1)
         % check #1-#2-#3
@@ -25,7 +24,7 @@ function feasibleFlag = PMA_CheckLineConstraints(Am,Bm,feasibleFlag)
             feasibleFlag = false; % declare graph infeasible
             break % break for loop
         end
-        
+
         % check #2-#1-#3
         B12 = Bm(:,I1(k),I2(k)); % find what is allowed after #1-#2
         A1 = A(I1(k),:)'; % find what #2 is connected to
@@ -34,7 +33,7 @@ function feasibleFlag = PMA_CheckLineConstraints(Am,Bm,feasibleFlag)
             feasibleFlag = false; % declare graph infeasible
             break % break for loop
         end
-        
+
     end
 
 end

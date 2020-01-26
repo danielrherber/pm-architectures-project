@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [A,pp,feasibleFlag] = PMA_RemovedStranded(pp,A,feasibleFlag)
@@ -28,7 +27,7 @@ else
         pp.labels.N(R) = []; % remove labels (numbers)
         pp.NSC.Vfull(R) = [];
         pp.NSC.M(R) = [];
-        pp.NSC.counts(R) = [];
+        pp.NSC.simple(R) = [];
     end
 
     % sort removed components

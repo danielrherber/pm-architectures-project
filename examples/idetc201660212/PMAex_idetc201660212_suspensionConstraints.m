@@ -5,8 +5,7 @@
 %--------------------------------------------------------------------------
 % http://systemdesign.illinois.edu/publications/Her16b.pdf
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [pp,A,feasibleFlag] = PMAex_idetc201660212_suspensionConstraints(pp,A,feasibleFlag)

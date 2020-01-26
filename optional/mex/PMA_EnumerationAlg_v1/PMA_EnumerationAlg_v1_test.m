@@ -2,10 +2,9 @@
 % PMA_EnumerationAlg_v1_test.m
 % Test function for PMA_EnumerationAlg_v1
 %--------------------------------------------------------------------------
-% 
+%
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function PMA_EnumerationAlg_v1_test
@@ -35,7 +34,7 @@ try
     tic
     [output21,output22] = PMA_EnumerationAlg_v1_mex(V,E,SavedGraphs,id,cVf,A,displevel);
     if displevellocal, toc, end
-    
+
     % tests
     if isequal(output11,output21)
         c1 = 'passed';
@@ -45,7 +44,7 @@ try
 
     % display
     disp(['test 1 status: ',c1])
-    
+
     % tests
     if isequal(output12,output22)
         c2 = 'passed';

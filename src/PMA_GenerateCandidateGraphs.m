@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports)
@@ -20,12 +19,12 @@ function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,po
 
     % select the desired algorithm to generate candidate graphs
     switch opts.algorithm
-        
+
         case 'pm_incomplete'
             I = randi(prod(1:2:Np-1),opts.Nmax,1);
             CandidateGraphs = PM_index2pm(I,Np); % some of the perfect matchings
 
-        case 'pm_full'     
+        case 'pm_full'
             N = prod(1:2:Np-1); % (N-1)!! architectures
             I = 1:N;
             CandidateGraphs = PM_perfectMatchings(Np); % generate all perfect matchings

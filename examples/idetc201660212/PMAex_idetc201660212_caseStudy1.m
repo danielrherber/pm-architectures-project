@@ -1,21 +1,20 @@
 %--------------------------------------------------------------------------
-% PMAex_idetc201660212_caseStudy1.m.m
+% PMAex_idetc201660212_caseStudy1.m
 % This example replicates the results from Case Study 1 in the paper below
 %--------------------------------------------------------------------------
 % http://systemdesign.illinois.edu/publications/Her16b.pdf
 % FIGURE 10: All 16 unique graphs with no additional NSCs for Case Study 1.
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
 % test number
-num = 1; 
+num = 1;
 
 % problem specification
-P = [1 2 3]; % ports vector 
+P = [1 2 3]; % ports vector
 R = [3 2 1]; % replicates vector
 C = {'R','G','B'}; % label vector
 
@@ -26,7 +25,7 @@ switch num
     case 2 % Case Study 1, #2 constraints
         NSC.M = [0 0 1];
         % NSC.M = [1 1 1];
-        NSC.counts = 1;
+        NSC.simple = 1;
 end
 
 % options

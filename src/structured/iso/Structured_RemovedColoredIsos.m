@@ -5,10 +5,10 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+
 % Additional Contributor: Shangtingli, Undergraduate Student, University of 
-% Illinois at Urbana-Champaign
+
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function FinalGraphs = Structured_RemovedColoredIsos(Graphs,opts,varargin)

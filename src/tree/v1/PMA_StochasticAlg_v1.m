@@ -3,24 +3,23 @@
 % Using the tree_v1 algorithm, generate a single graph using randomly
 % selected feasible edges
 %--------------------------------------------------------------------------
-% 
+%
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [SavedGraphs,id] = PMA_StochasticAlg_v1(V,E,SavedGraphs,id,A,cVf,dispflag)
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
-    L = cVf(iL)-V(iL); % left port 
+    L = cVf(iL)-V(iL); % left port
     V(iL) = V(iL)-1; % remove left port
 
     % zero infeasible edges
     Vallow = V.*A(iL,:);
 
     % find remaining nonzero entries
-    I = find(Vallow);  
+    I = find(Vallow);
 
 	% randomly select an available edge
     if isempty(I)
@@ -28,7 +27,7 @@ function [SavedGraphs,id] = PMA_StochasticAlg_v1(V,E,SavedGraphs,id,A,cVf,dispfl
     else
         iR = I(randi(length(I)));
     end
-        
+
     V2 = V; % local for loop variables
     R = cVf(iR)-V2(iR); % right port
     E2 = [E,L,R]; % combine left, right ports for an edge
