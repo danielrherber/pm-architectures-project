@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function origdir = PMA_ChangeFolder(opts,toggleFlag,origdir)
@@ -15,15 +14,15 @@ function origdir = PMA_ChangeFolder(opts,toggleFlag,origdir)
         if toggleFlag % change to python folder
             % original directory
             origdir = pwd;
-            
+
             % python directory
-            pydir = mfoldername('PMA_RemoveIsoColoredGraphs','python');
-            
+            pydir = mfoldername('PMA_RemoveIsoLabeledGraphs','python');
+
             % change directory
             cd(pydir)
         else % change to original directory
             % return to the original directory
             cd(origdir);
-        end        
+        end
     % end
 end

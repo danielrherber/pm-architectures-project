@@ -4,17 +4,55 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function PMA_ParallelToggle(opts,flags)
+function PMA_ParallelToggle(flags,varargin)
+
+    % initialize # of workers
+    nworkers = true;
+
+    % parse variable inputs
+    if ~isempty(varargin)
+        % initialize
+        errorstr = "PMA_ParallelToggle: inputs defined incorrectly";
+
+        % parse size of the inputs
+        if length(varargin) ~= 1
+            error(errorstr)
+        end
+
+        % extract input
+        in = varargin{1};
+
+        % parse input data type
+        if isstruct(in)
+            % check if parallel field is present
+            if isfield(in,'parallel')
+                nworkers = in.parallel; % # of workers as an input
+            else
+                error(errorstr)
+            end
+        elseif islogical(in)
+            nworkers = in;
+        elseif isscalar(in)
+            if in == 0
+                nworkers = false; % do not start a parallel pool
+            elseif in > 0
+                nworkers = in; % # of workers as an input
+            else
+                error(errorstr)
+            end
+        end
+    else
+
+    end
+
+    % split up the flags
+    flagsSplit = strsplit(flags,'-');
 
     % only if parallel computing is desired
-    if (opts.parallel > 0)
-        % split up the flags
-        flagsSplit = strsplit(flags,'-');
-
+    if nworkers
         % check if we want to delete the parallel pool
         if all(ismember({'delete'},flagsSplit))
             % shutdown exist parallel pool
@@ -24,31 +62,42 @@ function PMA_ParallelToggle(opts,flags)
             cpool = gcp('nocreate');
 
             % determine if we need to start a parallel pool
-            startflag = 0;
+            startflag = false;
             if all(ismember({'start'},flagsSplit))
                 if isempty(cpool)
                     % start a new parallel pool since none exists
-                    startflag = 1;
+                    startflag = true;
                 else
                     % check if the number of workers are correct
-                    startflag = cpool.NumWorkers ~= opts.parallel;
+                    startflag = cpool.NumWorkers ~= nworkers;
                 end
             end
-            
+
             % potentially start a new parallel pool
             if startflag
                 % delete current pool
                 O = evalc('delete(gcp(''nocreate''))');
 
-                % start a parallel pool
-                if all(ismember({'start','spmd'},flagsSplit))
-                    % start a parallel pool,
-                    O = evalc('parpool(opts.parallel,''SpmdEnabled'',true);');
-                elseif all(ismember({'start'},flagsSplit))
-                    % start a parallel pool
-                    O = evalc('parpool(opts.parallel,''SpmdEnabled'',false);');                
+                % initialize string
+                str = 'parpool(';
+
+                % check if nworkers is numeric
+                if isnumeric(nworkers)
+                    str = [str,'nworkers,'];
                 end
 
+                % check if spmd is needed
+                if all(ismember('spmd',flagsSplit))
+                    str = [str,'''SpmdEnabled'',true,'];
+                else
+                    str = [str,'''SpmdEnabled'',false,'];
+                end
+
+                % complete command
+                str = [str(1:end-1),');'];
+
+                % start a parallel pool
+                O = evalc(str);
             end
         end
 
@@ -61,10 +110,5 @@ function PMA_ParallelToggle(opts,flags)
                 % base workspace will fail if python is already loaded
             end
         end
-
-    else
-        % shutdown existing parallel pool
-        O = evalc('delete(gcp(''nocreate''))');
     end
-
 end

@@ -4,8 +4,7 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function opts = PMA_DefaultOpts(varargin)
@@ -40,7 +39,7 @@ function opts = PMA_DefaultOpts(varargin)
         % opts.algorithm = 'tree_v11BFS_mex';
         % opts.algorithm = 'tree_v11BFS_analysis';
     end
-    
+
     % control parallel computing
     if ~isfield(opts,'parallel')
         opts.parallel = 0; % no parallel computing
@@ -65,14 +64,19 @@ function opts = PMA_DefaultOpts(varargin)
     if ~isfield(opts,'subcatalogfun')
         % none by default
     end
-    
+
     % isomorphism checking method
     if ~isfield(opts,'isomethod')
-        % opts.isomethod = 'Python'; % requires setup
-        opts.isomethod = 'Matlab'; % available in 2016b or later versions
+        % opts.isomethod = 'python'; % requires setup
+        % opts.isomethod = 'py-igraph'; % requires setup
+        % opts.isomethod = 'py-networkx'; % requires setup
+        opts.isomethod = 'matlab'; % available in 2016b or later versions
         % opts.isomethod = 'None';
     end
-    
+    if strcmpi(opts.isomethod,'python')
+        opts.isomethod = 'py-igraph'; % requires setup
+    end
+
     % sorting flag
     if ~isfield(opts,'sortflag')
         opts.sortflag = true; % on
@@ -90,7 +94,7 @@ function opts = PMA_DefaultOpts(varargin)
 
     % maximum number of graphs to preallocate for
     if ~isfield(opts.algorithms,'Nmax')
-        opts.algorithms.Nmax = uint64(1e7);
+        opts.algorithms.Nmax = uint64(1e5);
     end
     opts.algorithms.Nmax = uint64(opts.algorithms.Nmax); % ensure data type
 
@@ -101,17 +105,6 @@ function opts = PMA_DefaultOpts(varargin)
         % opts.algorithms.filterflag = false; % off
     end
     opts.algorithms.filterflag = logical(opts.algorithms.filterflag); % ensure data type
-    
-    % full isomorphism check (BFS methods only)
-    if ~isfield(opts.algorithms,'isoflag')
-        if strcmpi(opts.isomethod,'none')
-            opts.algorithms.isoflag = false; % off
-        else
-            opts.algorithms.isoflag = false; % off
-            % opts.algorithms.isoflag = true; % on
-        end
-    end
-    opts.algorithms.isoflag = logical(opts.algorithms.isoflag); % ensure data type
 
     % maximum number of graphs to perform full isomorphism check (BFS methods only)
     if ~isfield(opts.algorithms,'isoNmax')
@@ -119,23 +112,37 @@ function opts = PMA_DefaultOpts(varargin)
         opts.algorithms.isoNmax = uint64(100); % 100 graph limit
     end
     opts.algorithms.isoNmax = uint64(opts.algorithms.isoNmax); % ensure data type
-    
+
+    % full isomorphism check (BFS methods only)
+    if ~isfield(opts.algorithms,'isoflag')
+        if strcmpi(opts.isomethod,'none')
+            opts.algorithms.isoflag = false; % off
+        elseif opts.algorithms.isoNmax == 0
+            opts.algorithms.isoflag = false; % off
+        else
+            opts.algorithms.isoflag = true; % on
+        end
+    end
+    opts.algorithms.isoflag = logical(opts.algorithms.isoflag); % ensure data type
+
     % isomorphism checking option (BFS methods only)
     if ~isfield(opts.algorithms,'isomethod')
         switch lower(opts.isomethod)
             case 'matlab'
                 opts.algorithms.isomethod = uint8(1); % matlab
-            case 'python'
-                opts.algorithms.isomethod = uint8(2); % python
+            case 'py-igraph'
+                opts.algorithms.isomethod = uint8(2); % python igraph
+            case 'py-networkx'
+                opts.algorithms.isomethod = uint8(3); % python networkx
             otherwise
                 opts.algorithms.isomethod = uint8(0); % none
         end
-    end        
+    end
     opts.algorithms.isomethod = uint8(opts.algorithms.isomethod); % ensure data type
     %----------------------------------------------------------------------
     % END: algorithm options
     %----------------------------------------------------------------------
-    
+
     %----------------------------------------------------------------------
     % START: plot options
     %----------------------------------------------------------------------
@@ -143,7 +150,7 @@ function opts = PMA_DefaultOpts(varargin)
     if ~isfield(opts,'plots')
         opts.plots = [];
     end
-    
+
     % plot function type
     if ~isfield(opts.plots,'plotfun')
         % opts.plots.plotfun = 'circle';
@@ -152,12 +159,12 @@ function opts = PMA_DefaultOpts(varargin)
         opts.plots.plotfun = 'matlab';
         % opts.plots.plotfun = 'matlab2018b';
     end
-    
+
     % maximum number of graphs to display/save
     if ~isfield(opts.plots,'plotmax')
         opts.plots.plotmax = 10;
     end
-    
+
     % save the graphs to disk?
     if ~isfield(opts.plots,'saveflag')
         % opts.plots.saveflag = true; % save the graphs
@@ -167,18 +174,18 @@ function opts = PMA_DefaultOpts(varargin)
 
     % name of the example
     if ~isfield(opts.plots,'name')
-        opts.plots.name = mfilename; 
+        opts.plots.name = mfilename;
     end
 
     % path for saving figures
     if ~isfield(opts.plots,'path')
-        opts.plots.path = mfoldername(mfilename('fullpath'),[]); 
+        opts.plots.path = mfoldername(mfilename('fullpath'),[]);
     end
-    
+
     % file type for exported figures
     if ~isfield(opts.plots,'outputtype')
-        % opts.plots.outputtype = 'pdf'; 
-        opts.plots.outputtype = 'png'; 
+        % opts.plots.outputtype = 'pdf';
+        opts.plots.outputtype = 'png';
     end
 
     % add replicate numbers when plotting
@@ -192,7 +199,7 @@ function opts = PMA_DefaultOpts(varargin)
     if ~isfield(opts.plots,'colorlib')
         opts.plots.colorlib = 1; % ColorLibrary1
         % opts.plots.colorlib = 2; % ColorLibrary2
-    end    
+    end
     %----------------------------------------------------------------------
     % END: plot options
     %----------------------------------------------------------------------
@@ -208,14 +215,14 @@ function opts = PMA_DefaultOpts(varargin)
 
     % start the parallel pool
     if strcmpi(opts.isomethod,'python')
-        PMA_ParallelToggle(opts,'start-py')
+        PMA_ParallelToggle('start-py',opts)
     else
-        PMA_ParallelToggle(opts,'start')
+        PMA_ParallelToggle('start',opts)
     end
-    
+
     % structured components default options
     opts = Structured_DefaultOpts(opts);
-    
+
     % reorder fields
     opts = orderfields(opts);
 
