@@ -4,11 +4,13 @@
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function  [A,L,Ln,rmphi,Am,feasibleFlag] = PMA_CheckNSCFeasibility(PM,Nc,phi,Iunsort,ports,Cflag,Bflag,Bm,customfunFlag,CustFeasChecks)
+function [A,L,Ln,rmphi,Amout,feasibleFlag] = PMA_CheckNSCFeasibility(PM,Nc,phi,Iunsort,ports,Sflag,Bflag,Bm,customfunFlag,CustFeasChecks)
+
+    % dummy outputs
+    A = []; L = []; Ln = []; rmphi = []; Amout = [];
 
     % graph is initially feasible
     feasibleFlag = true;
@@ -25,56 +27,60 @@ function  [A,L,Ln,rmphi,Am,feasibleFlag] = PMA_CheckNSCFeasibility(PM,Nc,phi,Iun
     % connected components graph adjacency matrix (multiedge)
     Am = sparse([Icc,Jcc],[Jcc,Icc],[Vcc,Vcc],Nc,Nc); % symmetric matrix
     iDiag = 1:Nc+1:Nc^2; % diagonal entry linear indices
-    Am(iDiag) = Am(iDiag)/2; % half 
+    Am(iDiag) = Am(iDiag)/2; % half
 
     % unsort
     Am = Am(Iunsort,:);
     Am = Am(:,Iunsort);
 
+    % make full and correct data type
+    Am = uint8(full(Am));
+
     % remove stranded components using NSC.M
-    if feasibleFlag % only if the graph is currently feasible
-        [Am,ports,feasibleFlag] = PMA_RemovedStranded(ports,Am,feasibleFlag);
+    [Am,ports,feasibleFlag] = PMA_RemovedStranded(ports,Am,feasibleFlag);
+    if ~feasibleFlag
+        return; % graph infeasible
     end
 
-    % check if the number of connections is correct
-    if feasibleFlag % only if the graph is currently feasible
-        if Cflag % check if this nsc is present
-            % remove self loops and multi-edges
-            A = sign(Am + Am' + eye(length(Am))) - eye(length(Am));
-            % compare number of connections to port counts
-            check = full(sum(A)) == ports.NSC.Vfull;
-            % declare infeasible if any components with required
-            % unique connections does not have this property
-            if ~all(check(ports.NSC.counts==1))
-                feasibleFlag = false; % declare graph infeasible
-            end
+    % check if the number of loops (diagonal) connections is correct
+    Adiag = diag(Am)'; % loops
+    feasibleFlag = all(ports.NSC.loops >= Adiag); % check loops NSC
+    if ~feasibleFlag
+        return; % graph infeasible
+    end
+
+    % check if the number of (off-diagonal) connections is correct
+    if Sflag % check if this nsc is present
+        Aports = Am-diag(diag(Am)); % remove loops
+        Aports = logical(Aports); % remove multiedges
+        simpleCheck = ports.NSC.Vfull==sum(Aports,1);
+        feasibleFlag = all(simpleCheck(logical(ports.NSC.simple))); % check simple NSC
+        if ~feasibleFlag
+            return; % graph infeasible
         end
     end
 
     % check line-connectivity constraints
-    if feasibleFlag % only if the graph is currently feasible
-        if Bflag % check if this nsc is present
-            feasibleFlag = PMA_CheckLineConstraints(Am,Bm,feasibleFlag);
+    if Bflag % check if this nsc is present
+        feasibleFlag = PMA_CheckLineConstraints(Am,Bm,feasibleFlag);
+        if ~feasibleFlag
+            return; % graph infeasible
         end
     end
 
     % run custom infeasibility check function
-    if feasibleFlag % only if the graph is currently feasible
-        if customfunFlag
-            [ports,Am,feasibleFlag] = CustFeasChecks(ports,Am,feasibleFlag);
+    if customfunFlag % check if this nsc is present
+        [ports,Am,feasibleFlag] = CustFeasChecks(ports,Am,feasibleFlag);
+        if ~feasibleFlag
+            return; % graph infeasible
         end
     end
 
     % if the graph is feasible, save it
-    if feasibleFlag
-        A = full(Am);
-        L = ports.labels.C;
-        Ln = ports.labels.N;
-        rmphi = ports.removephi;
-        Am = A; % get multiedge adjacency matrix
-    else % infeasible
-        % dummy outputs
-        A = []; L = []; Ln = []; rmphi = []; Am = [];
-    end
+    A = double(Am);
+    L = ports.labels.C;
+    Ln = ports.labels.N;
+    rmphi = ports.removephi;
+    Amout = A; % get multiedge adjacency matrix
 
 end

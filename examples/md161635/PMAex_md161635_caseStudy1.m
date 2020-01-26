@@ -6,20 +6,19 @@
 % Matchings. ASME. J. Mech. Des. 2017; 139(5):051403. doi:10.1115/1.4036132
 % FIGURE 10: All 16 unique graphs with no additional NSCs for Case Study 1.
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
 % test number
-num = 1; 
+num = 1;
 
 % use the newer algorithm with enhancements? see tech. report on README
 newalgo = 0; % 0:no, 1:yes
 
 % problem specification
-P = [1 2 3]; % ports vector 
+P = [1 2 3]; % ports vector
 R = [3 2 1]; % replicates vector
 C = {'R','G','B'}; % label vector
 
@@ -30,16 +29,16 @@ switch num
     case 2 % Case Study 1, #2 constraints
         NSC.M = [0 0 1];
         % NSC.M = [1 1 1];
-        NSC.counts = 1;
+        NSC.simple = 1;
 end
 
 % options
 if newalgo
-    opts.algorithm = 'tree_v8'; % new
+    opts.algorithm = 'tree_v11DFS'; % new
 else
     opts.algorithm = 'tree_v1'; % old
 end
-opts.Nmax = 1e7; % maximum number of graphs to preallocate for
+opts.algorithms.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example1_Extra_Constraints(pp,A,infeasibleFlag);

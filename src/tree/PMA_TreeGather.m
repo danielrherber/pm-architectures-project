@@ -2,10 +2,9 @@
 % PMA_TreeGather.m
 % Complete problem set up and use a particular method to generate graphs
 %--------------------------------------------------------------------------
-% 
+%
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
@@ -50,21 +49,21 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     % initialize empty edge set
     E = uint8([]);
 
-    % vertex number + 1 in the connected ports graph of the first element of 
+    % vertex number + 1 in the connected ports graph of the first element of
     % each component
     cVf = uint8(cumsum(Vf)+1);
 
     % vertex number in the connected component graph of the first components of
     % a particular component type
     iInitRep = uint8(cumsum(R)-R+1);
-    
+
     % update data type
     phi = uint16(phi);
-    
+
     % extract
     Bf = NSC.flag.Bflag;
     Mf = NSC.flag.Mflag;
-    counts = NSC.counts;
+    simple = NSC.simple;
     M = NSC.M;
     displevel = uint8(opts.displevel);
     algorithm = opts.algorithm;
@@ -72,17 +71,18 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     If = opts.algorithms.isoflag;
     IN = opts.algorithms.isoNmax;
     Im = opts.algorithms.isomethod;
-    
+
     % default option to use PMA_SortAsPerfectMatching
     % [change in the algorithm structure below if necessary]
     sortFlag = 1;
 
     % global variable used to save the tree structure (optional addition)
     if contains(algorithm,'analysis')
-        global node nodelist labellist %#ok
+        global node nodelist labellist feasiblelist %#ok
         node = 1; % first node
         nodelist = []; % list of nodes
-        labellist = []; % list of labels 
+        labellist = []; % list of labels
+        feasiblelist = []; % list of node feasibility
         prenode = 0; % root node
     end
 
@@ -95,15 +95,15 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
             [G,~] = PMA_EnumerationAlg_v1(Vf,E,G,id,cVf,A,displevel);
         case 'tree_v8'
             [G,~] = PMA_EnumerationAlg_v8(Vf,E,G,id,cVf,Vf,iInitRep,...
-                counts,A,Bf,B,Mf,M,displevel);
+                simple,A,Bf,B,Mf,M,displevel);
         case 'tree_v10'
-            G = PMA_EnumerationAlg_v10(cVf,Vf,iInitRep,phi,counts,...
+            G = PMA_EnumerationAlg_v10(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         case 'tree_v11DFS'
             [G,~] = PMA_EnumerationAlg_v11DFS(Vf,E,G,id,cVf,Vf,iInitRep,...
-                counts,A,Bf,B,Mf,M,displevel);
+                simple,A,Bf,B,Mf,M,displevel);
         case 'tree_v11BFS'
-            G = PMA_EnumerationAlg_v11BFS(cVf,Vf,iInitRep,phi,counts,...
+            G = PMA_EnumerationAlg_v11BFS(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         %------------------------------------------------------------------
         % mex
@@ -112,15 +112,15 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
             [G,~] = PMA_EnumerationAlg_v1_mex(Vf,E,G,id,cVf,A,displevel);
         case 'tree_v8_mex'
             [G,~] = PMA_EnumerationAlg_v8_mex(Vf,E,G,id,cVf,Vf,iInitRep,...
-                counts,A,Bf,B,Mf,M,displevel);
+                simple,A,Bf,B,Mf,M,displevel);
         case 'tree_v10_mex'
-            G = PMA_EnumerationAlg_v10_mex(cVf,Vf,iInitRep,phi,counts,...
+            G = PMA_EnumerationAlg_v10_mex(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         case 'tree_v11DFS_mex'
             [G,~] = PMA_EnumerationAlg_v11DFS_mex(Vf,E,G,id,cVf,Vf,iInitRep,...
-                counts,A,Bf,B,Mf,M,displevel);
+                simple,A,Bf,B,Mf,M,displevel);
         case 'tree_v11BFS_mex'
-            G = PMA_EnumerationAlg_v11BFS_mex(cVf,Vf,iInitRep,phi,counts,...
+            G = PMA_EnumerationAlg_v11BFS_mex(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         %------------------------------------------------------------------
         % analysis
@@ -129,15 +129,15 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
             [G,~] = PMA_EnumerationAlg_v1_analysis(Vf,E,G,id,cVf,A,displevel,prenode);
         case 'tree_v8_analysis'
             [G,~] = PMA_EnumerationAlg_v8_analysis(Vf,E,G,id,cVf,Vf,iInitRep,...
-                counts,A,Bf,B,Mf,M,displevel,prenode);
+                simple,A,Bf,B,Mf,M,displevel,prenode);
         case 'tree_v10_analysis'
-            G = PMA_EnumerationAlg_v10_analysis(cVf,Vf,iInitRep,phi,counts,...
+            G = PMA_EnumerationAlg_v10_analysis(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         case 'tree_v11DFS_analysis'
             [G,~] = PMA_EnumerationAlg_v11DFS_analysis(Vf,E,G,id,cVf,Vf,iInitRep,...
-                counts,A,Bf,B,Mf,M,displevel,prenode);
+                simple,A,Bf,B,Mf,M,displevel,prenode);
         case 'tree_v11BFS_analysis'
-            G = PMA_EnumerationAlg_v11BFS_analysis(cVf,Vf,iInitRep,phi,counts,...
+            G = PMA_EnumerationAlg_v11BFS_analysis(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
         %------------------------------------------------------------------
         % stochastic
@@ -151,11 +151,11 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
             M0 = zeros(1,sum(Vf),'uint8');
             for idx = 1:Nmax
                 [G(idx,:),~] = PMA_StochasticAlg_v8(Vf,E,M0,id,A,B,iInitRep,...
-                    cVf,Vf,counts,M,Mf,Bf,displevel);
+                    cVf,Vf,simple,M,Mf,Bf,displevel);
             end
         case 'tree_v10_stochastic'
             for idx = 1:Nmax
-                G(idx,:) = PMA_StochasticAlg_v10(cVf,Vf,iInitRep,counts,...
+                G(idx,:) = PMA_StochasticAlg_v10(cVf,Vf,iInitRep,simple,...
                     phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
             end
         case 'tree_v11DFS_stochastic'
@@ -184,7 +184,7 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
 
         % extract the nonzero rows of G
         if ~isempty(k)
-            G = G(1:k-1,:); 
+            G = G(1:k-1,:);
         end
     end
 
@@ -195,7 +195,7 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     if sortFlag
         G = PMA_SortAsPerfectMatching(G);
     end
-    
+
     % obtain perfect matching numbers
     I = PM_pm2index(G);
 
@@ -209,12 +209,17 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
         nodelist = [0,nodelist];
 
         % fix order of parent vector
-        [nodelist,pv] = fixparent(nodelist);
-                
+        [nodelist,pv] = PMA_FixParentPointers(nodelist);
+
         % sort label list
         labellist = [[0;0],labellist];
         labellist = labellist(:,pv);
         labellist(:,pv==1) = [];
+
+        % sort feasible list
+        feasiblelist = [0,feasiblelist];
+        feasiblelist = feasiblelist(pv);
+        feasiblelist(:,pv==1) = [];
 
         % create plot
         PMA_PlotTreeEnumerate

@@ -2,20 +2,19 @@
 % PMA_EnumerationAlg_v10.m
 % Breadth-first search implementation of v8
 % This new method should be considered under development
-% At each level, you can optionally perform for port-type and/or full 
+% At each level, you can optionally perform for port-type and/or full
 % isomorphism checking (the primary motivation for using BFS)
-% Port-type checking is enabled by default as it is faster, while the 
+% Port-type checking is enabled by default as it is faster, while the
 % full checks are disabled as they are generally quite slow
 % No mex version is included as it was currently found to be slower
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function SavedGraphs = PMA_EnumerationAlg_v10(cVf,Vf,iInitRep,phi,counts,...
-    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,IN,Ln,Nmax,displevel)
+    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,isoNmax,Ln,Nmax,displevel)
 
 % determine some problem properties
 Np = sum(Vf); % number of ports
@@ -50,7 +49,7 @@ for iter = 1:Ne
 
     % go through the current queue and add one edge
     for node = 1:length(Queue)% must be row vector
-        
+
         % extract current node inputs from storage
         V = Vstorage(node,:);
         E = Estorage(node,:);
@@ -59,7 +58,7 @@ for iter = 1:Ne
 
         % remove the first remaining port
         iL = find(V,1); % find nonzero entries (ports remaining)
-        L = cVf(iL)-V(iL); % left port 
+        L = cVf(iL)-V(iL); % left port
         V(iL) = V(iL)-1; % remove left port
 
         % START ENHANCEMENT: replicate ordering
@@ -71,15 +70,15 @@ for iter = 1:Ne
         Vallow = V.*Vordering.*A(iL,:);
 
         % find remaining nonzero entries
-        I = find(Vallow);  
+        I = find(Vallow);
 
         % loop through all nonzero entries
         for iRidx = 1:length(I)
-            
+
             % get right edge
             iR = I(iRidx);
-            
-            % increment 
+
+            % increment
             ind = ind + 1;
 
             % update elements by adding one edge
@@ -92,7 +91,7 @@ for iter = 1:Ne
                     if displevel > 2 % very verbose
                         disp('adding more storage')
                     end
-                    
+
                     % add storage
                     Vstorage = [Vstorage;zeros(Nmax,Nc,'uint8')];  %#ok<AGROW>
                     Estorage = [Estorage;zeros(Nmax,Np,'uint8')];  %#ok<AGROW>
@@ -101,7 +100,7 @@ for iter = 1:Ne
                     Rstorage = [Rstorage;zeros(Nmax,1,'logical')];  %#ok<AGROW>
                     NmaxQueue = uint64(size(Vstorage,1));
                 end
-                
+
                 Vstorage(indshift,:) = V2;
                 Estorage(indshift,:) = E2;
                 Astorage(:,:,indshift) = A2;
@@ -111,37 +110,37 @@ for iter = 1:Ne
             end
 
         end % for iR = I
-            
+
     end % end for
-    
+
     %----------------------------------------------------------------------
     % create the indices for the next queue
     %----------------------------------------------------------------------
     % initialize next queue indices
     Queue = 1:ind;
-    
+
     % remove rows marked for deletion
     if ~isempty(Queue)
         Queue(Rstorage) = [];
     end
-    
+
     % shift queue indices based on final row of the previous iteration
     Queue = Queue + indLast;
-    
-    % update coutner for the number of enteries in current storage elements
+
+    % update counter for the number of entries in current storage elements
     indMax = indLast + ind;
-    
+
     % total number of entries in the queue
     NQueue = length(Queue);
-    
+
     % print
     if displevel > 2 % very verbose
-        fprintf('---\n')    
+        fprintf('---\n')
         fprintf('Iteration: %2i\n',iter)
         fprintf('       Current Queue Length: %8d\n',int64(length(Queue)))
     end
     %----------------------------------------------------------------------
-    
+
     %----------------------------------------------------------------------
     % simple port-type isomorphism check
     %----------------------------------------------------------------------
@@ -150,7 +149,7 @@ for iter = 1:Ne
         Tsort = sort(Tstorage(Queue,:),2,'ascend'); % ascending is a bit faster here
 
         % obtain the unique connected component adjacency matrices
-        [~,IA] = unique(Tsort,'rows');
+        [Tsort,IA] = unique(Tsort,'rows');
 
         % assign current queue to the next queue
         Queue = Queue(IA);
@@ -158,6 +157,7 @@ for iter = 1:Ne
         % print
         if displevel > 2 % very verbose
             fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-int64(length(Queue)))
+            NQueue = length(Queue);
         end
     end
     %----------------------------------------------------------------------
@@ -165,14 +165,22 @@ for iter = 1:Ne
     %----------------------------------------------------------------------
     % full isomorphism check
     %----------------------------------------------------------------------
-    if coder.target('MATLAB')
+    if coder.target('MATLAB') % does not work with matlab coder
         if Iflag
-            % extract using current queue
-            Tsort = sort(Tstorage(Queue,:),2,'ascend'); 
-            Vsort = Vstorage(Queue,:);
+            % only perform full isomorphism check if below threshold
+            if ~(length(Queue) > isoNmax)
+                % extract using current queue
+                Tsort = Tsort(:,end-iter+1:end);
+                Vsort = Vstorage(Queue,:);
 
-            % determine new queue with only unique graphs
-            Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,displevel,IN,Imethod);
+                % determine new queue comprised of only unique graph
+                Queue = PMA_RemoveIsoLabeledGraphs(Queue,Tsort,Vsort,Ln,displevel,Imethod);
+
+                % print
+                if displevel > 2 % very verbose
+                    fprintf('Removed Graphs (Full ISO): %8d\n',NQueue-int64(length(Queue)))
+                end
+            end
         end
     end
     %----------------------------------------------------------------------
@@ -212,12 +220,12 @@ function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V2,E2,A2,T2,R2,iR,cVf,iter,
     % convert multiple subscripts to linear index
     T2(iter) = Nc*phi(L) - Nc + phi(R); % similar to sub2ind
 
-    V2(iR) = V2(iR)-1; % remove port (local copy)            
+    V2(iR) = V2(iR)-1; % remove port (local copy)
 
     % START ENHANCEMENT: saturated subgraphs
     if iter < Ne
     if Mflag
-        iNonSat = find(V2); % find the nonsaturated components 
+        iNonSat = find(V2); % find the nonsaturated components
         if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
             nUncon = sum(M(iNonSat));
             if (nUncon == 0) % define a one set of edges and stop
@@ -226,7 +234,7 @@ function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V2,E2,A2,T2,R2,iR,cVf,iter,
 %                     k = find(V2,1); % find first nonzero entry
 %                     LR = cVf(k)-V2(k);
 %                     V2(k) = V2(k)-1; % remove port
-% 
+%
 %                     %%%% needs to change
 %                     E2 = [E2,LR]; % add port
 %                 end
@@ -238,7 +246,7 @@ function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V2,E2,A2,T2,R2,iR,cVf,iter,
             else
                 R2 = true; % this graph is infeasible
                 return % stop
-            end     
+            end
         end
     end
     end
@@ -255,8 +263,8 @@ function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V2,E2,A2,T2,R2,iR,cVf,iter,
 
     % START ENHANCEMENT: line-connectivity constraints
     if Bflag
-        A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections 
-        A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections 
+        A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections
+        A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections
         A2([iR,iL],:) = A2(:,[iR,iL])'; % make symmetric
     end
     % END ENHANCEMENT: line-connectivity constraints

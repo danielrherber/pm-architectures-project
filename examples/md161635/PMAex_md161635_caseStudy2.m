@@ -4,11 +4,10 @@
 %--------------------------------------------------------------------------
 % Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
 % Matchings. ASME. J. Mech. Des. 2017; 139(5):051403. doi:10.1115/1.4036132
-% FIGURE 12: All 12 unique graphs for Case Study 2 requiring all components 
+% FIGURE 12: All 12 unique graphs for Case Study 2 requiring all components
 % to be connected and a specified number of unique edges.
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
@@ -32,29 +31,29 @@ switch num
         NSC.M = [1 0 0 0 0];
     case 3 % Case Study 2, #3 constraints
         NSC.M = [1 1 1 1 1];
-        NSC.counts = 1;
+        NSC.simple = 1;
     case 4 % Case Study 2, #4 constraints
         if newalgo % new
             clear R % remove previous
             R.min = [1 2 1 1 1]; % replicates vector, min
             R.max = [1 2 2 1 1]; % replicates vector, max
-            NSC.M = [1 1 1 1 1];
+            NSC.connected = 1;
         else % old
             P = [1 1 2 2 3 4]; % ports vector
             R = [1 2 1 1 1 1]; % replicates vector
             C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
             NSC.M = [1 1 1 0 1 1];
         end
-        NSC.counts = 1;
+        NSC.simple = 1;
 end
 
 % options
 if newalgo
-    opts.algorithm = 'tree_v8'; % new
+    opts.algorithm = 'tree_v11DFS'; % new
 else
     opts.algorithm = 'tree_v1'; % old
 end
-opts.Nmax = 1e7; % maximum number of graphs to preallocate for
+opts.algorithms.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 % opts.customfun = @(pp,A,infeasibleFlag) ex_Example2_Extra_Constraints(pp,A,infeasibleFlag);

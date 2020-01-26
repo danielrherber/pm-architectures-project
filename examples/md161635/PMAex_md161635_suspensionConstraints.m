@@ -6,8 +6,7 @@
 % Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
 % Matchings. ASME. J. Mech. Des. 2017; 139(5):051403. doi:10.1115/1.4036132
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function [pp,A,feasibleFlag] = PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag)
@@ -30,9 +29,9 @@ function [pp,A,feasibleFlag] = PMAex_md161635_suspensionConstraints(pp,A,feasibl
     %----------------------------------------------------------------------
     if feasibleFlag % only if the graph is currently feasible
         L = pp.labels.C; % extract labels
-        pIndex = find(contains(L,'p','IgnoreCase',true)); % 
+        pIndex = find(contains(L,'p','IgnoreCase',true)); %
         % for each parallel component type
-        for k = 1:length(pIndex) 
+        for k = 1:length(pIndex)
             otherIndex = pIndex; % local copy
             otherIndex(k) = []; % remove current p-type component
             At = A; % temporary adjacency matrix (connected components)
@@ -42,7 +41,7 @@ function [pp,A,feasibleFlag] = PMAex_md161635_suspensionConstraints(pp,A,feasibl
             if cycleFlag % if there are any cycles, graph is infeasible
                 feasibleFlag = false;
             end
-        end    
+        end
     end
 
     %----------------------------------------------------------------------
@@ -50,7 +49,7 @@ function [pp,A,feasibleFlag] = PMAex_md161635_suspensionConstraints(pp,A,feasibl
     %----------------------------------------------------------------------
     if feasibleFlag % only if the graph is currently feasible
         % extract
-        Vfull = pp.NSC.Vfull; 
+        Vfull = pp.NSC.Vfull;
         L = pp.labels.C;
         while 1
             I = find(Vfull==2); % find 2-port components
@@ -74,7 +73,7 @@ function [pp,A,feasibleFlag] = PMAex_md161635_suspensionConstraints(pp,A,feasibl
                 L{keep} = newlabel; % assign new label
                 L(remove) = []; % remove old label
                 % remove old counts entry
-                Vfull(remove) = []; 
+                Vfull(remove) = [];
                 % the keep entry is the same as before (2)
             end % end if isempty(J)
         end % end while 1

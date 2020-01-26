@@ -6,22 +6,22 @@
 % Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
 % Matchings. ASME. J. Mech. Des. 2017; 139(5):051403. doi:10.1115/1.4036132
 %--------------------------------------------------------------------------
-% Primary Contributor: Daniel R. Herber, Graduate Student, University of 
-% Illinois at Urbana-Champaign
+% Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 clear; clc; close all; closeallbio;
 
 % problem specification
-P = [1 1 1 2 2 2 3 4]; % ports vector 
-R.min = [1 1 0 0 0 0 0 0]; % replicate vector 
-R.max = [1 1 2 2 2 1 2 2]; % replicate vector 
-C = {'s','u','m', 'k', 'b', 'f', 'p3', 'p4'}; % label vector 
-% C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector 
+P = [1 1 1 2 2 2 3 4]; % ports vector
+R.min = [1 1 0 0 0 0 0 0]; % replicate vector
+R.max = [1 1 2 2 2 1 2 2]; % replicate vector
+C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector
 
 % constraints
-NSC.M = [1 1 0 0 0 0 0 0]; % mandatory components
-NSC.counts = 1;
+% NSC.M = [1 1 0 0 0 0 0 0]; % mandatory components
+NSC.simple = 1;
+NSC.connected = 1;
+NSC.loops = 0;
 
 % potential adjacency matrix
 A = ones(length(P)); % initialize
@@ -42,7 +42,7 @@ NSC.Bind(3,:) = [1,8,2]; % s-p-u
 NSC.Bind(4,:) = [2,8,1]; % u-p-s
 
 % options
-opts.algorithm = 'tree_v8_mex';
+opts.algorithm = 'tree_v11DFS_mex';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 12; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
