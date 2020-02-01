@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
+function Graphs = PMA_GenerateFeasibleGraphs(L,R,P,NSC,opts,Sorts)
 
     % extract
     Sflag = NSC.flag.Sflag;
@@ -20,10 +20,10 @@ function Graphs = PMA_GenerateFeasibleGraphs(C,R,P,NSC,opts,Sorts)
     Nc = sum(R);
 
     % generate ports graph
-    [ports,~] = PMA_GeneratePortsGraph(P,R,C,NSC,1);
+    [ports,~] = PMA_GeneratePortsGraph(P,R,L,NSC,1);
 
     % generate candidate graphs
-    [G,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports);
+    [G,I,N] = PMA_GenerateCandidateGraphs(L,R,P,opts,Np,Nc,ports);
 
     % return if no graphs are present
     if N == 0

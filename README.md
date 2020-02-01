@@ -21,7 +21,7 @@ Generate the set of unique useful graphs with a perfect matching-based approach.
 ```matlab
 INSTALL_PMA_project
 ```
-* See [PMA_EX_A001187.m](examples/oeis/PMA_EX_A001187.m) and  [PMAex_md161635_caseStudy1.m](examples/md161635/PMAex_md161635_caseStudy1.m) for an example with problem setup and options
+* See [PMA_EX_A001187.m](examples/oeis/PMA_EX_A001187.m) and  [PMAex_md161635_caseStudy1.m](examples/md161635/PMAex_md161635_caseStudy1.m) for examples with problem setup and options
 ```matlab
 open PMA_EX_A001187
 open PMAex_md161635_caseStudy1

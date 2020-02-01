@@ -17,7 +17,7 @@ function FinalGraphs = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts)
     [NSC,L,P,R] = PMA_DefaultNSC(NSC,L,P,R);
 
     % change current folder
-    origdir = PMA_ChangeFolder(opts,true,[]);
+    origdir = PMA_Change2PythonFolder(opts,true,[]);
 
     % potentially start the timer
     if (opts.displevel > 0)
@@ -36,6 +36,6 @@ function FinalGraphs = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts)
     PMA_PlotGraphs(FinalGraphs,NSC,opts)
 
     % change to original directory
-    PMA_ChangeFolder(opts,false,origdir);
+    PMA_Change2PythonFolder(opts,false,origdir);
 
 end

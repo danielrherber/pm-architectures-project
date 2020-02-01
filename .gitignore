@@ -12,3 +12,4 @@ __pycache__/
 # ignore specific files
 notes.txt
 oeis-notes.xlsx
+~$oeis-notes.xlsx

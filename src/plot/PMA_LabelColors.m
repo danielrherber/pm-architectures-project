@@ -7,10 +7,16 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function c = PMA_LabelColors(L,libnum)
+function c = PMA_LabelColors(L,lib)
+
+% check if a custom label function is provided
+if isa(lib,'function_handle')
+    c = lib(L);
+    return
+end
 
 % assign colors
-switch libnum
+switch lib
     case 0
         c = ColorLibrary0(L);
     case 1
@@ -22,14 +28,14 @@ switch libnum
 end
 
 end
-
+% all colors black
 function c = ColorLibrary0(L)
 
 % initialize
 c = zeros(length(L),3);
 
 end
-
+% ordered material colors
 function c = ColorLibrary1(L)
 
 % obtain unique label indices
@@ -50,14 +56,14 @@ idx = idx + 1; C(idx,:) = [76,175,80]; % green 500
 idx = idx + 1; C(idx,:) = [255,193,7]; % amber 500
 idx = idx + 1; C(idx,:) = [156,39,176]; % purple 500
 idx = idx + 1; C(idx,:) = [103,58,183]; % deepPurple 500
-idx = idx + 1; C(idx,:) = [96,125,139]; % blueGrey 500
+idx = idx + 1; C(idx,:) = [96,125,139]; % blueGray 500
 idx = idx + 1; C(idx,:) = [255,87,34]; % deepOrange 500
 idx = idx + 1; C(idx,:) = [63,81,181]; % indigo 500
 idx = idx + 1; C(idx,:) = [0,150,136]; % teal 500
 idx = idx + 1; C(idx,:) = [255,87,34]; % deepOrange 500
 idx = idx + 1; C(idx,:) = [121,85,72]; % brown 500
-idx = idx + 1; C(idx,:) = [158,158,158]; % grey 500
-idx = idx + 1; C(idx,:) = [96,125,139]; % blueGrey 500
+idx = idx + 1; C(idx,:) = [158,158,158]; % gray 500
+idx = idx + 1; C(idx,:) = [96,125,139]; % blueGray 500
 
 % only certain number of colors available
 IC = min(idx,IC);
@@ -66,7 +72,7 @@ IC = min(idx,IC);
 c = C(IC,:)/255;
 
 end
-
+% labeled material colors
 function c = ColorLibrary2(L)
 
 % initialize

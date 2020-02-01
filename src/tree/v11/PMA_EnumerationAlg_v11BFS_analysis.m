@@ -14,7 +14,7 @@
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function SavedGraphs = PMA_EnumerationAlg_v11BFS_analysis(cVf,Vf,iInitRep,phi,counts,...
-    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,IN,Ln,Nmax,displevel)
+    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,isoNmax,Ln,Nmax,displevel)
 
 global node nodelist labellist feasiblelist % modification for analysis function
 
@@ -36,7 +36,7 @@ coder.varsize('Queue',[1,inf],[0,1])
 coder.varsize('xInd',[1,inf],[0,1])
 Ne = int64(Ne);
 
-% initialize first nodes
+% initialize first node
 Vstorage(1,:) = Vf;
 Astorage(:,:,1) = A;
 Queue = 1; % one entry in initial queue
@@ -51,14 +51,14 @@ for iter = 1:Ne
     ind = 0;
 
     % go through the current queue and add one edge
-    for nodes = 1:length(Queue)% must be row vector
+    for node = 1:length(Queue)% must be row vector
 
-        % extract current nodes inputs from storage
-        V = Vstorage(nodes,:);
-        E = Estorage(nodes,:);
-        A = Astorage(:,:,nodes);
-        T = Tstorage(nodes,:);
-        prenode = Prenodestorage(nodes,:);
+        % extract current node inputs from storage
+        V = Vstorage(node,:);
+        E = Estorage(node,:);
+        A = Astorage(:,:,node);
+        T = Tstorage(node,:);
+        prenode = Prenodestorage(node,:);
 
         % START ENHANCEMENT: touched vertex promotion
         istouched = logical(Vf-V); % vertices that have been touched
@@ -178,7 +178,7 @@ for iter = 1:Ne
         Tsort = sort(Tstorage(Queue,:),2,'ascend'); % ascending is a bit faster here
 
         % obtain the unique connected component adjacency matrices
-        [~,IA] = unique(Tsort,'rows');
+        [Tsort,IA] = unique(Tsort,'rows');
 
         % assign current queue to the next queue
         Queue = Queue(IA);
@@ -186,6 +186,7 @@ for iter = 1:Ne
         % print
         if displevel > 2 % very verbose
             fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-int64(length(Queue)))
+            NQueue = length(Queue);
         end
     end
     %----------------------------------------------------------------------
@@ -193,14 +194,22 @@ for iter = 1:Ne
     %----------------------------------------------------------------------
     % full isomorphism check
     %----------------------------------------------------------------------
-    if coder.target('MATLAB')
+    if coder.target('MATLAB') % does not work with matlab coder
         if Iflag
-            % extract using current queue
-            Tsort = sort(Tstorage(Queue,:),2,'ascend');
-            Vsort = Vstorage(Queue,:);
+            % only perform full isomorphism check if below threshold
+            if ~(length(Queue) > isoNmax)
+                % extract using current queue
+                Tsort = Tsort(:,end-iter+1:end);
+                Vsort = Vstorage(Queue,:);
 
-            % determine new queue with only unique graphs
-            Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,displevel,IN,Imethod);
+                % determine new queue comprised of only unique graph
+                Queue = PMA_RemoveIsoLabeledGraphs(Queue,Tsort,Vsort,Ln,displevel,Imethod);
+
+                % print
+                if displevel > 2 % very verbose
+                    fprintf('Removed Graphs (Full ISO): %8d\n',NQueue-int64(length(Queue)))
+                end
+            end
         end
     end
     %----------------------------------------------------------------------
@@ -231,31 +240,31 @@ SavedGraphs = Estorage(xInd,:);
 end % function PMA_EnumerationAlg_v11BFS
 function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v11BFS(V2,E2,A2,T2,R2,iR,cVf,iter,L,Nc,phi,Ne,Mflag,Vf,Bflag,iL,counts,B,M)
 
-    % remove another port creating an edge
-    R = cVf(iR)-V2(iR); % right port
+% remove another port creating an edge
+R = cVf(iR)-V2(iR); % right port
 
-    % combine left, right ports for an edge
-    if R > L % left should be larger
-        E2(2*iter-1) = R;
-        E2(2*iter) = L;
-    else
-        E2(2*iter-1) = L;
-        E2(2*iter) = R;
-    end
+% combine left, right ports for an edge
+if R > L % left should be larger
+    E2(2*iter-1) = R;
+    E2(2*iter) = L;
+else
+    E2(2*iter-1) = L;
+    E2(2*iter) = R;
+end
 
-    % convert multiple subscripts to linear index
-    T2(iter) = Nc*phi(L) - Nc + phi(R); % similar to sub2ind
+% convert multiple subscripts to linear index
+T2(iter) = Nc*phi(L) - Nc + phi(R); % similar to sub2ind
 
-    V2(iR) = V2(iR)-1; % remove port (local copy)
+V2(iR) = V2(iR)-1; % remove port (local copy)
 
-    % START ENHANCEMENT: saturated subgraphs
-    if iter < Ne
-    if Mflag
-        iNonSat = find(V2); % find the nonsaturated components
-        if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
-            nUncon = sum(M(iNonSat));
-            if (nUncon == 0) % define a one set of edges and stop
-                % NEED: implement this for v11BFS, currently just continues
+% START ENHANCEMENT: saturated subgraphs
+if iter < Ne
+if Mflag
+    iNonSat = find(V2); % find the nonsaturated components
+    if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
+        nUncon = sum(M(iNonSat));
+        if (nUncon == 0) % define a one set of edges and stop
+            % NEED: implement this for v11BFS, currently just continues
 %                 for j = 1:sum(V2) % add remaining edges in default order
 %                     k = find(V2,1); % find first nonzero entry
 %                     LR = cVf(k)-V2(k);
@@ -266,32 +275,32 @@ function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v11BFS(V2,E2,A2,T2,R2,iR,cVf,it
 %                 end
 % %                         [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
 %                 continue
-                return
-            elseif (nUncon == sum(M))
-                % continue iterating
-            else
-                R2 = true; % this graph is infeasible
-                return % stop
-            end
+            return
+        elseif (nUncon == sum(M))
+            % continue iterating
+        else
+            R2 = true; % this graph is infeasible
+            return % stop
         end
     end
-    end
-    % END ENHANCEMENT: saturated subgraphs
+end
+end
+% END ENHANCEMENT: saturated subgraphs
 
-    % START ENHANCEMENT: multi-edges
-    if any(counts(iL)) || any(counts(iR)) % if either component needs unique connections
-        if (iR ~= iL) % don't do for self loops
-            A2(iR,iL) = uint8(0); % limit this connection
-            A2(iL,iR) = uint8(0); % limit this connection
-        end
+% START ENHANCEMENT: multi-edges
+if any(counts(iL)) || any(counts(iR)) % if either component needs unique connections
+    if (iR ~= iL) % don't do for self loops
+        A2(iR,iL) = uint8(0); % limit this connection
+        A2(iL,iR) = uint8(0); % limit this connection
     end
-    % END ENHANCEMENT: multi-edges
+end
+% END ENHANCEMENT: multi-edges
 
-    % START ENHANCEMENT: line-connectivity constraints
-    if Bflag
-        A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections
-        A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections
-        A2([iR,iL],:) = A2(:,[iR,iL])'; % make symmetric
-    end
-    % END ENHANCEMENT: line-connectivity constraints
+% START ENHANCEMENT: line-connectivity constraints
+if Bflag
+    A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections
+    A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections
+    A2([iR,iL],:) = A2(:,[iR,iL])'; % make symmetric
+end
+% END ENHANCEMENT: line-connectivity constraints
 end

@@ -10,7 +10,7 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 29; % number of nodes (currently completed for n = 17)
+n = 15; % number of nodes (currently completed for n = 29)
 catalognum = 1;
 switch catalognum
     case 1
@@ -31,7 +31,7 @@ switch catalognum
 end
 
 % options
-opts.plots.plotmax = 10;
+opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11BFS';
 opts.isomethod = 'py-igraph';

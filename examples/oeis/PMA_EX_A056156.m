@@ -11,7 +11,7 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 11; % number of nodes (currently completed for n = )
+n = 7; % number of nodes (currently completed for n = 11)
 L = {'A';'B'}; % labels
 R.min = [1;1]; R.max = [n;n]; % replicate vector
 P.min = [1;1]; P.max = [n;n]; % ports vector
@@ -24,7 +24,7 @@ NSC.bounds.Np = [2*n 2*n]; % edge bounds
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v11BFS';
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'python';
 opts.parallel = 12;

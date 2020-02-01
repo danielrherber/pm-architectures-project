@@ -133,13 +133,12 @@ for i = 1:n
     spectrum = svd(At)'; % eig(At)'
     dspectrum{i} = single(spectrum/max(spectrum));
 
-    cc = PMA_ConnCompBins(At); % determine connected components
-    ncc = max(cc); % number of connected components
+    [ncc,cc] = PMA_ConnCompBins(At); % determine connected components
     bins = cell(1,ncc); % initialize
     for j = 1:ncc % go through each connected component
         bins{j} = [Ln(cc==j),-1]; % create bin and add spacer
     end
-    [~,I] = sortrows(Cell2MatrixwithPadding(bins)); % sort bins
+    [~,I] = sortrows(PMA_PadCatRowVectors(bins{:})); % sort bins
     bins = bins(I); % sort bins
     dconnected{i} = horzcat(bins{:}); % catenate sorted cc bins
 
@@ -168,15 +167,15 @@ switch method
 end
 
 % convert cell arrays into matrices
-dedges = Cell2MatrixwithPadding(dedges);
-dlabels = Cell2MatrixwithPadding(dlabels); % already sorted
-dtriangles = Cell2MatrixwithPadding(dtriangles);
-ddegrees = Cell2MatrixwithPadding(ddegrees);
-dloops = Cell2MatrixwithPadding(dloops);
-dconnected = Cell2MatrixwithPadding(dconnected);
-dspectrum = Cell2MatrixwithPadding(dspectrum); % already sorted
+dedges = PMA_PadCatRowVectors(dedges{:});
+dlabels = PMA_PadCatRowVectors(dlabels{:}); % already sorted
+dtriangles = PMA_PadCatRowVectors(dtriangles{:});
+ddegrees = PMA_PadCatRowVectors(ddegrees{:});
+dloops = PMA_PadCatRowVectors(dloops{:});
+dconnected = PMA_PadCatRowVectors(dconnected{:});
+dspectrum = PMA_PadCatRowVectors(dspectrum{:}); % already sorted
 if inputtype == 2
-    dports = Cell2MatrixwithPadding(dports);
+    dports = PMA_PadCatRowVectors(dports{:});
 end
 
 % sort various metrics
@@ -189,10 +188,10 @@ switch inputtype
         dloops = sort(dloops,2);
     %----------------------------------------------------------------------
     case 2 % called within the BFS graph generation algorithm
-        dtriangles = PMA_ColorBasedSorting(dtriangles,Ln);
-        ddegrees = PMA_ColorBasedSorting(ddegrees,Ln);
-        dloops = PMA_ColorBasedSorting(dloops,Ln);
-        dports = PMA_ColorBasedSorting(dports,Ln);
+        dtriangles = PMA_BinBasedSorting(dtriangles,Ln);
+        ddegrees = PMA_BinBasedSorting(ddegrees,Ln);
+        dloops = PMA_BinBasedSorting(dloops,Ln);
+        dports = PMA_BinBasedSorting(dports,Ln);
 %         dtriangles = sort(dtriangles,2);
 %         ddegrees = sort(ddegrees,2);
 %         dloops = sort(dloops,2);

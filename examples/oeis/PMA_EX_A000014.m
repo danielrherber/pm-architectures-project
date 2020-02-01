@@ -10,18 +10,17 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 15; % number of nodes (currently completed for n = 15) % still not working
+n = 10; % number of nodes (currently completed for n = 15) % still not working
 L = {'B','B'};
 R.min = [2 0];
 R.max = [n-1 n];
 P.min = [1 3];
 P.max = [1 n-1];
 NSC.bounds.Nr = [n n];
-NSC.bounds.Np = [2 2*(n-1)]; % tree condition upper bound
+NSC.bounds.Np = [2*(n-1) 2*(n-1)]; % tree condition upper bound
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-opts.subcatalogfun = @(Sub,C,R,P,NSC,opts) subcatfunc(Sub,C,R,P,NSC,opts);
 
 % options
 opts.plots.plotfun = 'bgl';
@@ -47,25 +46,3 @@ n2 = N(n);
 % compare number of graphs
 disp("correct?")
 disp(string(isequal(length(G1),n2)))
-
-function [Ls,Rs,Ps] = subcatfunc(L,Ls,Rs,Ps,NSC,opts)
-    % initialize
-    failed = false(size(Ps,1),1);
-
-    % check tree graph condition
-    for idx = 1:size(Ps,1)
-        Pst = repelem(Ps(idx,:),Rs(idx,:));
-        n = length(Pst);
-        c1 = sum(Pst);
-        c2 = 2*(n-1);
-        if c1 ~= c2
-            failed(idx) = true;
-            continue
-        end
-    end
-
-    % remove failed subcatalogs
-    Ls(failed,:) = [];
-    Ps(failed,:) = [];
-    Rs(failed,:) = [];
-end

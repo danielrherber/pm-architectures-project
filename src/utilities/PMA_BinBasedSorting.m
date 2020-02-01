@@ -1,22 +1,24 @@
 %--------------------------------------------------------------------------
-% PMA_ColorBasedHistcounts.m
-%
+% PMA_BinBasedSorting.m
+% sort input vector based on bins
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function V = PMA_ColorBasedHistcounts(V,Ln)
-    % sort degrees lists with respect to labels
-    [VC,VIA,VIC] = unique(Ln);
+function V = PMA_BinBasedSorting(V,B)
 
-    % go through each component type
-    for i = 1:length(VC)
-        % find all components of the current type
-        Ncomp = sum(VIC==i);
+% obtain unique bins and locations
+[~,IA,IC] = unique(B);
 
-        % sort
-        V(:,VIA(i):VIA(i)+Ncomp-1) = sort(V(:,VIA(i):VIA(i)+Ncomp-1),2);
-    end
+% go through each type
+for k = 1:length(IA)
+    % current bin indices
+    b = IA(k) == IC;
+
+    % sort current bin
+    V(:,b) = sort(V(:,b),2);
+end
+
 end

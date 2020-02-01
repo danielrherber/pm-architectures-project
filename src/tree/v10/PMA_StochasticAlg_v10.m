@@ -13,7 +13,8 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function SavedGraphs = PMA_StochasticAlg_v10(cVf,Vf,iInitRep,counts,phi,Ln,A,B,M,Nmax,Mflag,Bflag,dispflag)
+function SavedGraphs = PMA_StochasticAlg_v10(cVf,Vf,iInitRep,phi,counts,...
+    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,isoNmax,Ln,Nmax,displevel)
 
 % determine some problem properties
 Np = sum(Vf); % number of ports
@@ -27,17 +28,18 @@ Astorage = zeros(Nc,Nc,Nmax,'uint8'); % potential adjacency matrix
 Tstorage = zeros(Nmax,Ne,'uint16'); % linear index in adjacency matrix
 Rstorage = zeros(Nmax,1,'logical');
 
+% for codegen
+coder.varsize('Queue',[1,inf],[0,1])
+coder.varsize('xInd',[1,inf],[0,1])
+Ne = int64(Ne);
+
 % initialize first node
 Vstorage(1,:) = Vf;
 Astorage(:,:,1) = A;
 Queue = 1; % one entry in initial queue
 indLast = 1;
-xInd = [];
+xInd = zeros(1,0);
 NmaxQueue = Nmax;
-
-% for codegen
-% coder.varsize('Queue',[1,inf],[0,1])
-% coder.varsize('xInd',[1,inf],[0,1])
 
 % each iteration adds one edge
 for iter = 1:Ne
@@ -72,6 +74,7 @@ for iter = 1:Ne
 
         % randomly select an available edge
         if isempty(I)
+            SavedGraphs = 0*Estorage(1,:);
             return
         else
             iR = I(randi(length(I)));
@@ -87,17 +90,17 @@ for iter = 1:Ne
         if ~R2
             indshift = ind + indLast;
             if indshift > NmaxQueue
-                % error(['need larger Nmax: ',num2str(Vf)])
-                % maybe add more?
-                disp('adding more storage')
+                if displevel > 2 % very verbose
+                    disp('adding more storage')
+                end
 
-
-                Vstorage = [Vstorage;zeros(Nmax,Nc,'uint8')];
-                Estorage = [Estorage;zeros(Nmax,Np,'uint8')];
+                % add storage
+                Vstorage = [Vstorage;zeros(Nmax,Nc,'uint8')];  %#ok<AGROW>
+                Estorage = [Estorage;zeros(Nmax,Np,'uint8')];  %#ok<AGROW>
                 Astorage = cat(3, Astorage, zeros(Nc,Nc,Nmax,'uint8'));
-                Tstorage = [Tstorage;zeros(Nmax,Ne,'uint16')];
-                Rstorage = [Rstorage;zeros(Nmax,1,'logical')];
-                NmaxQueue = size(Vstorage,1);
+                Tstorage = [Tstorage;zeros(Nmax,Ne,'uint16')];  %#ok<AGROW>
+                Rstorage = [Rstorage;zeros(Nmax,1,'logical')];  %#ok<AGROW>
+                NmaxQueue = uint64(size(Vstorage,1));
             end
 
             Vstorage(indshift,:) = V2;
@@ -131,30 +134,30 @@ for iter = 1:Ne
     NQueue = length(Queue);
 
     % print
-    if dispflag > 2 % very verbose
+    if displevel > 2 % very verbose
         fprintf('---\n')
         fprintf('Iteration: %2i\n',iter)
-        fprintf('       Current Queue Length: %8d\n',length(Queue))
+        fprintf('       Current Queue Length: %8d\n',int64(length(Queue)))
     end
     %----------------------------------------------------------------------
 
     %----------------------------------------------------------------------
     % simple port-type isomorphism check
     %----------------------------------------------------------------------
-    Pflag = 1; % NEED: bring outside this function
     if Pflag
         % sort the elements in each row
         Tsort = sort(Tstorage(Queue,:),2,'ascend'); % ascending is a bit faster here
 
         % obtain the unique connected component adjacency matrices
-        [~,IA] = unique(Tsort,'rows');
+        [Tsort,IA] = unique(Tsort,'rows');
 
         % assign current queue to the next queue
         Queue = Queue(IA);
 
         % print
-        if dispflag > 2 % very verbose
-            fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-length(Queue))
+        if displevel > 2 % very verbose
+            fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-int64(length(Queue)))
+            NQueue = length(Queue);
         end
     end
     %----------------------------------------------------------------------
@@ -162,19 +165,34 @@ for iter = 1:Ne
     %----------------------------------------------------------------------
     % full isomorphism check
     %----------------------------------------------------------------------
-    Iflag = 0; % NEED: bring outside this function
-    if Iflag
-        % extract using current queue
-        Tsort = sort(Tstorage(Queue,:),2,'ascend');
-        Vsort = Vstorage(Queue,:);
+    if coder.target('MATLAB') % does not work with matlab coder
+        if Iflag
+            % only perform full isomorphism check if below threshold
+            if ~(length(Queue) > isoNmax)
+                % extract using current queue
+                Tsort = Tsort(:,end-iter+1:end);
+                Vsort = Vstorage(Queue,:);
 
-        % determine new queue with only unique graphs
-        Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,dispflag);
+                % determine new queue comprised of only unique graph
+                Queue = PMA_RemoveIsoLabeledGraphs(Queue,Tsort,Vsort,Ln,displevel,Imethod);
+
+                % print
+                if displevel > 2 % very verbose
+                    fprintf('Removed Graphs (Full ISO): %8d\n',NQueue-int64(length(Queue)))
+                end
+            end
+        end
     end
     %----------------------------------------------------------------------
 
     % determine the number of rows for the next queue
     indLast = length(Queue);
+
+    % check if there is anything in the queue
+    if indLast == 0
+        SavedGraphs = 0*Estorage(1,:);
+        return
+    end
 
     % shift up rows for the next queue
     xInd = 1:indLast;

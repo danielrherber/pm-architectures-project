@@ -1,7 +1,7 @@
 %--------------------------------------------------------------------------
 % PMA_GenerateWithSubcatalogs.m
 % Generate the set of unique, feasible graphs using subcatalogs of the
-% original (L,R,P)
+% original (L,P,R)
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -128,7 +128,7 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
         l = L(ln); l = l(:)';
 
         % append port numbers to labels
-        l = cellstr(strcat(l,string(p))); % *****
+        l = cellstr(strcat(l,string(p)));
 
         % extract reduced potential adjacency matrix
         nsc.A = localA(ln,ln);

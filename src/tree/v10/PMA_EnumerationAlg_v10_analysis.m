@@ -14,7 +14,7 @@
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
 function SavedGraphs = PMA_EnumerationAlg_v10_analysis(cVf,Vf,iInitRep,phi,counts,...
-    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,IN,Ln,Nmax,displevel)
+    A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,isoNmax,Ln,Nmax,displevel)
 
 global node nodelist labellist feasiblelist % modification for analysis function
 
@@ -36,7 +36,7 @@ coder.varsize('Queue',[1,inf],[0,1])
 coder.varsize('xInd',[1,inf],[0,1])
 Ne = int64(Ne);
 
-% initialize first nodes
+% initialize first node
 Vstorage(1,:) = Vf;
 Astorage(:,:,1) = A;
 Queue = 1; % one entry in initial queue
@@ -51,14 +51,14 @@ for iter = 1:Ne
     ind = 0;
 
     % go through the current queue and add one edge
-    for nodes = 1:length(Queue)% must be row vector
+    for node = 1:length(Queue)% must be row vector
 
-        % extract current nodes inputs from storage
-        V = Vstorage(nodes,:);
-        E = Estorage(nodes,:);
-        A = Astorage(:,:,nodes);
-        T = Tstorage(nodes,:);
-        prenode = Prenodestorage(nodes,:);
+        % extract current node inputs from storage
+        V = Vstorage(node,:);
+        E = Estorage(node,:);
+        A = Astorage(:,:,node);
+        T = Tstorage(node,:);
+        prenode = Prenodestorage(node,:);
 
         % remove the first remaining port
         iL = find(V,1); % find nonzero entries (ports remaining)
@@ -166,7 +166,7 @@ for iter = 1:Ne
         Tsort = sort(Tstorage(Queue,:),2,'ascend'); % ascending is a bit faster here
 
         % obtain the unique connected component adjacency matrices
-        [~,IA] = unique(Tsort,'rows');
+        [Tsort,IA] = unique(Tsort,'rows');
 
         % assign current queue to the next queue
         Queue = Queue(IA);
@@ -174,6 +174,7 @@ for iter = 1:Ne
         % print
         if displevel > 2 % very verbose
             fprintf('Removed Graphs (Simple ISO): %8d\n',NQueue-int64(length(Queue)))
+            NQueue = length(Queue);
         end
     end
     %----------------------------------------------------------------------
@@ -181,14 +182,22 @@ for iter = 1:Ne
     %----------------------------------------------------------------------
     % full isomorphism check
     %----------------------------------------------------------------------
-    if coder.target('MATLAB')
+    if coder.target('MATLAB') % does not work with matlab coder
         if Iflag
-            % extract using current queue
-            Tsort = sort(Tstorage(Queue,:),2,'ascend');
-            Vsort = Vstorage(Queue,:);
+            % only perform full isomorphism check if below threshold
+            if ~(length(Queue) > isoNmax)
+                % extract using current queue
+                Tsort = Tsort(:,end-iter+1:end);
+                Vsort = Vstorage(Queue,:);
 
-            % determine new queue with only unique graphs
-            Queue = PMA_IsoBFS(Queue,Tsort,Ln,Nc,iter,Vsort,displevel,IN,Imethod);
+                % determine new queue comprised of only unique graph
+                Queue = PMA_RemoveIsoLabeledGraphs(Queue,Tsort,Vsort,Ln,displevel,Imethod);
+
+                % print
+                if displevel > 2 % very verbose
+                    fprintf('Removed Graphs (Full ISO): %8d\n',NQueue-int64(length(Queue)))
+                end
+            end
         end
     end
     %----------------------------------------------------------------------

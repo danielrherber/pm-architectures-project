@@ -1,42 +1,58 @@
 %--------------------------------------------------------------------------
 % PMA_GenerateCandidateGraphs.m
-% Generate candidate graphs with the specific algorithm
+% Generate candidate graphs with the specific approach
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(C,R,P,opts,Np,Nc,ports)
+function [CandidateGraphs,I,N] = PMA_GenerateCandidateGraphs(L,R,P,opts,Np,Nc,ports)
 
-    % output some stats to the command window
-    if (opts.displevel > 1) % verbose
-        disp([num2str(2^(Nc*(Nc-1)/2)),' adjacency matrices using 2^(Nc*(Nc-1)/2)'])
-        disp([num2str(prod(1:2:Np-1)), ' perfect matchings using (Np-1)!! method'])
-        [L,~] = PMA_CalcUniqueGraphBnds(P,R);
-        disp(['At least ',num2str(floor(L)),' unique graphs for (C,R,P) using Eqn. (12)'])
-    end
+% extract
+displevel = opts.displevel;
 
-    % select the desired algorithm to generate candidate graphs
-    switch opts.algorithm
+% output some stats to the command window
+if (displevel > 1) % verbose
+    disp([num2str(2^(Nc*(Nc-1)/2)),' adjacency matrices using 2^(Nc*(Nc-1)/2)'])
+    disp([num2str(prod(1:2:Np-1)), ' perfect matchings using (Np-1)!! method'])
+    [L,~] = PMA_CalcUniqueGraphBnds(P,R);
+    disp(['At least ',num2str(floor(L)),' unique graphs for (L,R,P) using Eqn. (12)'])
+end
 
-        case 'pm_incomplete'
-            I = randi(prod(1:2:Np-1),opts.Nmax,1);
-            CandidateGraphs = PM_index2pm(I,Np); % some of the perfect matchings
+% select the desired algorithm to generate candidate graphs
+switch opts.algorithm
+    %------------------------------------------------------------------
+    case 'pm_incomplete'
+        % random perfect matching numbers
+        I = randi(prod(1:2:Np-1),opts.Nmax,1);
 
-        case 'pm_full'
-            N = prod(1:2:Np-1); % (N-1)!! architectures
-            I = 1:N;
-            CandidateGraphs = PM_perfectMatchings(Np); % generate all perfect matchings
+        % generate candidate graphs for some perfect matchings
+        CandidateGraphs = PM_index2pm(I,Np);
 
-        otherwise
-            [CandidateGraphs,I,N] = PMA_TreeGather(ports.labels.N,P,R,ports.NSC,opts,ports.phi);
-    end
+        % number of graphs
+        N = length(I);
+    %------------------------------------------------------------------
+    case 'pm_full'
+        % generate all perfect matchings
+        CandidateGraphs = PM_perfectMatchings(Np);
 
-    % output some stats to the command window
-    if (opts.displevel > 0) % minimal
-        ttime = toc; % stop timer
-        disp(['Generated ',num2str(N), ' candidate matchings with ',opts.algorithm,' option in ', num2str(ttime),' s'])
-    end
+        % number of graphs
+        N = prod(1:2:Np-1); % (N-1)!!
+
+        % perfect matching numbers
+        I = 1:N;
+    %------------------------------------------------------------------
+    otherwise
+        % generate all candidate graphs using a tree algorithm
+        [CandidateGraphs,I,N] = PMA_TreeGather(ports.labels.N,P,R,ports.NSC,opts,ports.phi);
+end
+
+% output some stats to the command window
+if (displevel > 0) % minimal
+    ttime = toc; % stop timer
+    disp(['Generated ',num2str(N), ' candidate matchings with ',...
+        opts.algorithm,' option in ', num2str(ttime),' s'])
+end
 
 end

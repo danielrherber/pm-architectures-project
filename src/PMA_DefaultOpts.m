@@ -199,6 +199,7 @@ function opts = PMA_DefaultOpts(varargin)
     if ~isfield(opts.plots,'colorlib')
         opts.plots.colorlib = 1; % ColorLibrary1
         % opts.plots.colorlib = 2; % ColorLibrary2
+        % opts.plots.colorlib = @(L) customLib(L); % custom color library
     end
     %----------------------------------------------------------------------
     % END: plot options

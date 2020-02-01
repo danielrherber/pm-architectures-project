@@ -155,8 +155,8 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
             end
         case 'tree_v10_stochastic'
             for idx = 1:Nmax
-                G(idx,:) = PMA_StochasticAlg_v10(cVf,Vf,iInitRep,simple,...
-                    phi,Ln,A,B,M,Nmax,Mf,Bf,displevel);
+                G(idx,:) = PMA_StochasticAlg_v10(cVf,Vf,iInitRep,phi,simple,...
+                A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
             end
         case 'tree_v11DFS_stochastic'
             error('need to implement')

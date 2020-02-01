@@ -1,20 +1,23 @@
 %--------------------------------------------------------------------------
-% PMA_ConnCompBins.m
-%
+% PMA_ConnectivityMatrix.m
+% Create connectivity matrix for a given adjacency matrix
 %--------------------------------------------------------------------------
-% Based on the code by Alec Jacobson
-% http://www.alecjacobson.com/weblog/?p=4203
+%
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [BINS,p] = PMA_ConnCompBins(A)
-    %
-    [p,~,r] = dmperm(A'+speye(size(A)));
+function W = PMA_ConnectivityMatrix(A,np)
 
-    %
-    BINS = cumsum(full(sparse(1,r(1:end-1),1,1,size(A,1))));
+% convert data type
+A = uint64(A);
 
-    %
-    BINS(p) = BINS;
+% create directed matrix
+W = logical(A + A' + eye(size(A),'uint64'));
+
+% connected network
+W = logical(W^np); % np is number of steps for connectivity
+
 end
+
+% NOTE: check data type things

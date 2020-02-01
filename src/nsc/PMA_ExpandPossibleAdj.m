@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
 % PMA_ExpandPossibleAdj.m
-% Expand the reduced adjacency matrix to the full possible adjacency matrix
+% Expand the reduced potential adjacency matrix to the full potential
+% adjacency matrix
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,10 +10,11 @@
 %--------------------------------------------------------------------------
 function A = PMA_ExpandPossibleAdj(A,R,NSC,varargin)
 
+% parse inputs
 if ~isempty(varargin)
     symflag = varargin{1};
 else
-    symflag = 1;
+    symflag = 1; % make matrix symmetric
 end
 
 % ensure data type

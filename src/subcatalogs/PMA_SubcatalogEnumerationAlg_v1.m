@@ -1,5 +1,7 @@
 %--------------------------------------------------------------------------
 % PMA_SubcatalogEnumerationAlg_v1.m
+% Generate all subcatalogs for a provided (P,R) under some additional
+% network structure constraints
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------

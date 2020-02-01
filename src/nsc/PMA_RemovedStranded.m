@@ -1,6 +1,7 @@
 %--------------------------------------------------------------------------
 % PMA_RemovedStranded.m
-% Find stranded components not connected to mandatory components and remove
+% Find stranded components that are not connected to the specified
+% mandatory components and remove them from the graph
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -9,15 +10,24 @@
 %--------------------------------------------------------------------------
 function [A,pp,feasibleFlag] = PMA_RemovedStranded(pp,A,feasibleFlag)
 
-% obtain connectivity matrix
-W = PMA_ConnectivityMatrix(A,length(A));
+% extract
+M = pp.NSC.M;
 
-% check if the graph have no stranded components
-if all(W,'all')
-    pp.removephi = []; % no vertices removed
-else
+% initialize with no vertices removed
+pp.removephi = [];
+
+% check if no components are mandatory (so do not remove any)
+if ~any(M)
+    return % do nothing
+end
+
+% obtain connectivity matrix
+[n,~,W] = PMA_ConnCompBins(A);
+
+% check if we have a connected graph
+if n ~= 1
     % find stranded components
-    R = ~all(W(:,logical(pp.NSC.M)),2);
+    R = ~all(W(:,logical(M)),2);
 
     % removed stranded components
     if any(R)

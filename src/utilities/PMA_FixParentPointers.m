@@ -2,8 +2,8 @@
 % PMA_FixParentPointers.m
 % Fix order of parent pointers vector in representing a tree graph
 %--------------------------------------------------------------------------
-% Takes a vector of parent nodes for an elimination tree, and re-orders it 
-% to produce an equivalent vector A in which parent nodes are always 
+% Takes a vector of parent nodes for an elimination tree, and re-orders it
+% to produce an equivalent vector A in which parent nodes are always
 % higher-numbered than child nodes
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
