@@ -67,6 +67,9 @@ function PMA_ParallelToggle(flags,varargin)
                 if isempty(cpool)
                     % start a new parallel pool since none exists
                     startflag = true;
+                elseif islogical(nworkers)
+                    % do not start a new pool because this one is fine
+                    startflag = false;
                 else
                     % check if the number of workers are correct
                     startflag = cpool.NumWorkers ~= nworkers;

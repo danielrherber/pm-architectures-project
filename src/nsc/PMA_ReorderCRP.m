@@ -53,9 +53,11 @@ function [P,R,C,NSC,Sorts] = PMA_ReorderCRP(P,R,C,NSC,opts)
     NSC.M = NSC.M(I);
     NSC.simple = NSC.simple(I);
     NSC.loops = NSC.loops(I);
-    NSC.A = NSC.A(I,:);
-    NSC.A = NSC.A(:,I);
-    NSC.Bind = PMA_changem(NSC.Bind,1:length(P),I);
+    NSC.directA = NSC.directA(I,:);
+    NSC.directA = NSC.directA(:,I);
+    NSC.multiedgeA = NSC.multiedgeA(I,:);
+    NSC.multiedgeA = NSC.multiedgeA(:,I);
+    NSC.lineTriple = PMA_changem(NSC.lineTriple,1:length(P),I);
 
 end
 % notes on the formula

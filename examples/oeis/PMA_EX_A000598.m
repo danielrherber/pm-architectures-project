@@ -18,7 +18,7 @@ P.min = [1 1]; P.max = [3 4]; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-NSC.bounds.Np = [2*(n-1) 2*(n-1)]; % tree condition
+NSC.Np = [2*(n-1) 2*(n-1)]; % tree condition
 
 % options
 opts.plots.plotmax = 5;

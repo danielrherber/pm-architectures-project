@@ -20,11 +20,6 @@ end
 % ensure data type
 A = uint8(A);
 
-% ensure that A is symmetric
-if symflag
-    A = A + A' - ones(size(A),'uint8');
-end
-
 % expand elements of A based on R
 A = repelem(A,R,R);
 
@@ -35,7 +30,8 @@ if symflag
 %     if NSC.flag.Sflag % if there are any required unique connections
 %         A(iDiag) = A(iDiag) & ~(NSC.M & NSC.simple); % assign negated mandatory vector to the diagonal
 %     end
-    A(iDiag) = A(iDiag) & NSC.loops; % assign allowed self loops
+%     A(iDiag) = A(iDiag) & NSC.loops; % assign allowed self loops
+    A(iDiag) = 2*NSC.loops; % assign allowed loops count (doubled)
 end
 % END ENHANCEMENT: loops
 

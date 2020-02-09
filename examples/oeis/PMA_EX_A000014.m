@@ -16,15 +16,15 @@ R.min = [2 0];
 R.max = [n-1 n];
 P.min = [1 3];
 P.max = [1 n-1];
-NSC.bounds.Nr = [n n];
-NSC.bounds.Np = [2*(n-1) 2*(n-1)]; % tree condition upper bound
+NSC.Nr = [n n];
+NSC.Np = [2*(n-1) 2*(n-1)]; % tree condition upper bound
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
 
 % options
 opts.plots.plotfun = 'bgl';
-opts.plots.plotmax = 0;
+opts.plots.plotmax = 5;
 opts.plots.saveflag = false;
 opts.plots.labelnumflag = false;
 opts.plots.colorlib = 0;
@@ -34,7 +34,7 @@ opts.algorithm = 'tree_v11DFS_mex';
 opts.algorithms.isoNmax = inf;
 opts.algorithms.Nmax = uint64(1e6);
 opts.isomethod = 'py-igraph';
-opts.parallel = 12;
+opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

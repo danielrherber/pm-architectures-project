@@ -13,8 +13,8 @@ function [L,R,P] = PMA_SubcatalogEnumerationAlg_v1(Rin,Pin,NSC,opts)
 % extract
 Rmin = Rin.min; Rmax = Rin.max;
 Pmin = Pin.min; Pmax = Pin.max;
-nscNrmin = NSC.bounds.Nr(1); nscNrmax = NSC.bounds.Nr(2);
-nscNpmin = NSC.bounds.Np(1); nscNpmax = NSC.bounds.Np(2);
+nscNrmin = NSC.Nr(1); nscNrmax = NSC.Nr(2);
+nscNpmin = NSC.Np(1); nscNpmax = NSC.Np(2);
 
 % set flags
 if nscNrmax == uint64(inf)

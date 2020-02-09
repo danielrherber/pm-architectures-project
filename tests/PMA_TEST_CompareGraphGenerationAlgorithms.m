@@ -48,7 +48,7 @@ switch testnum
         A(2,1) = 0; % G-R
         A(3,3) = 0; % B-B
         A = round((A+A')/3);
-        NSC.A = A;
+        NSC.directA = A;
         NSC.simple = 1; % simple components
         NSC.connected = 1; % connected graph
         % currently pm_full does not work because Ar check not implemented

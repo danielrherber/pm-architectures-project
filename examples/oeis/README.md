@@ -33,8 +33,10 @@ This folder contains a number of graph enumeration problems that are described i
 | [A053419](https://oeis.org/A053419) | number of graphs with loops (symmetric relations) with n edges | 11 | MS |
 | [A054921](https://oeis.org/A054921) | number of connected unlabeled symmetric relations (graphs with loops) having n nodes | 6 | EGE |
 | [A056156](https://oeis.org/A056156) | number of connected bipartite graphs with n edges, no isolated vertices and a distinguished bipartite block, up to isomorphism | 11 | MS, ESE |
-| [A191970](https://oeis.org/A191970) | number of connected graphs with n edges with loops allowed| 11 | MS |
+| [A134818](https://oeis.org/A134818) | number of connected multigraphs with n nodes of degree at most 4 and with at most triple edges | 8 |  |
+| [A191970](https://oeis.org/A191970) | number of connected graphs with n edges with loops allowed | 11 | MS |
 | [A261919](https://oeis.org/A261919) | number of n-node unlabeled graphs without isolated nodes or endpoints (i.e., no nodes of degree 0 or 1) | 8 | MS |
+| [A289158](https://oeis.org/A289158) | number of connected multigraphs with n nodes of degree at most 4 and with at most double edges |  | EGE, EIE |
 
 Abbreviations
 - ESE - Expensive Subcatalog Enumeration

@@ -38,7 +38,10 @@ function INSTALL_PMA_project(varargin)
     listing = dir(which(mfilename));
     delete(fullfile(listing.folder,'include','MFX 10922','matlab_bgl','test','assert.m'));
     disp(' ')
-    
+
+    % add contents to path (because of assert.m deletion above)
+    RunSilent('AddSubmissionContents(mfilename)',silentflag)
+
     % Matlab isomorphism function check
     RunSilent('CheckMatlabIsomorphismFunction',silentflag)
 

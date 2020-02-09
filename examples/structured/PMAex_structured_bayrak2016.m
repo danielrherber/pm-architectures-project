@@ -24,10 +24,10 @@ C = {'M','E','V','G','P','A','B'}; % label vector
 P = [1 1 1 1 3 3 4]; % ports vector
 NSC.simple = 1; % unique edges
 NSC.connected = 1;
-NSC.A = ones(length(P)); % limit connections, initialize
-NSC.A(6,6) = 0; % no A-A
-NSC.A(7,7) = 0; % no B-B
-NSC.A(7,6) = 0; % no B-A
+NSC.directA = ones(length(P)); % limit connections, initialize
+NSC.directA(6,6) = 0; % no A-A
+NSC.directA(7,7) = 0; % no B-B
+NSC.directA(7,6) = 0; % no B-A
 NSC.S = [0 0 0 0 1 0 0]; % structured components
 
 % test number

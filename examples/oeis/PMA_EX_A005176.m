@@ -17,15 +17,14 @@ P.min = 0; P.max = n-1; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 0; % connected graph not required
 NSC.loops = 0; % no loops
-opts.subcatalogfun = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.userCatalogNSC = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
 
 % options
-opts.algorithms.Nmax = uint64(1e5);
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11BFS';
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = inf;
 

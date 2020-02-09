@@ -26,7 +26,7 @@ opts.algorithm = 'tree_v11BFS';
 opts.algorithms.Nmax = 1e7;
 opts.algorithms.isoNmax = 0;
 opts.isomethod = 'py-igraph';
-opts.parallel = 0;
+opts.parallel = false;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

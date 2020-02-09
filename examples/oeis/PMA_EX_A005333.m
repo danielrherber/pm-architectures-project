@@ -11,7 +11,7 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 4; % number of nodes (currently completed for n = 4)
+n = 2; % number of nodes (currently completed for n = 4)
 L = vertcat(cellstr(strcat('A',dec2base((1:n)+9,36))),...
     cellstr(strcat('B',dec2base((1:n)+9,36))))'; % labels
 R.min = ones(2*n,1);
@@ -21,14 +21,14 @@ P.max = repmat(n,2*n,1);
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-NSC.A = double(~blkdiag(ones(n),ones(n)));
+NSC.directA = double(~blkdiag(ones(n),ones(n)));
 
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11DFS_mex';
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = inf;
 

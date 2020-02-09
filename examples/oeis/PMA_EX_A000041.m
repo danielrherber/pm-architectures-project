@@ -27,7 +27,7 @@ switch catalognum
         NSC.simple = 1; % simple components
         NSC.connected = 1; % connected graph
         NSC.loops = 0; % no loops
-        opts.subcatalogfun = @(Sub,C,R,P,NSC,opts) subcatfunc(Sub,C,R,P,NSC,opts);
+        NSC.userCatalogNSC = @(Sub,C,R,P,NSC,opts) subcatfunc(Sub,C,R,P,NSC,opts);
 end
 
 % options
@@ -35,7 +35,7 @@ opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11BFS';
 opts.isomethod = 'py-igraph';
-opts.parallel = 0;
+opts.parallel = false;
 opts.algorithms.Nmax = 1e7;
 opts.algorithms.isoNmax = inf;
 opts.displevel = 1;

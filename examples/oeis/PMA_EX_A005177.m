@@ -17,7 +17,7 @@ P.min = 0; P.max = n-1; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-opts.subcatalogfun = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.userCatalogNSC = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
 
 % options
 opts.plots.plotmax = 5;

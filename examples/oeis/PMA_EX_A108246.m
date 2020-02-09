@@ -1,8 +1,9 @@
 %--------------------------------------------------------------------------
-% PMA_EX_A002851
-% A002851, number of unlabeled trivalent (or cubic) connected graphs with
-% 2n nodes
-% 0, 1, 2, 5, 19, 85, 509, 4060, 41301, 510489, 7319447, 117940535, ...
+% PMA_EX_A108246
+% A108246, number of labeled 2-regular graphs with no multiple edges, but
+% loops are allowed (i.e., each vertex is endpoint of two (usual) edges or 
+% one loop)
+% 1, 1, 2, 8, 38, 208, 1348, 10126, 86174, 819134, 8604404, 98981944, ...
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -12,18 +13,18 @@
 clear; clc; close all
 
 n = 6; % number of nodes (currently completed for n = 8)
-L = {'A'}; % labels
-R.min = 2*n; R.max = 2*n; % replicate vector
-P.min = 3; P.max = 3; % ports vector
-NSC.simple = 1; % simple components
-NSC.connected = 1; % connected graph required
-NSC.loops = 0; % no loops
+L = cellstr(strcat(dec2base((1:n)+9,36))); % labels
+R.min = ones(n,1); R.max = ones(n,1); % replicate vector
+P.min = repelem(2,n,1); P.max = repelem(2,n,1); % ports vector
+% NSC.multiedgeA = ones(n); % no multiedges
+NSC.simple = 1; % no multiedges
+NSC.loops = 1; % single loop allowed
 
 % options
-opts.plots.plotmax = 5;
+opts.plots.plotmax = 0;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11BFS';
-opts.algorithms.Nmax = 1e7;
+opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'python';
 opts.parallel = false;
@@ -31,8 +32,8 @@ opts.parallel = false;
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
-% number of graphs based on OEIS A002851
-N = [0,1,2,5,19,85,509,4060,41301,510489,7319447,117940535,2094480864];
+% number of graphs based on OEIS A108246
+N = [1,1,2,8,38,208,1348,10126,86174,819134,8604404,98981944,1237575268];
 n2 = N(n);
 
 % compare number of graphs

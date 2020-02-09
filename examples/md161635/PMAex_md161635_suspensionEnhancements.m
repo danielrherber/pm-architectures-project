@@ -33,20 +33,22 @@ A(5,5) = 0; % b-b
 A(7,7) = 0; % p-p
 A(8,7) = 0; % p-p
 A(8,8) = 0; % p-p
-NSC.A = A;
+NSC.directA = A;
 
 % line-connectivity constraints
-NSC.Bind(1,:) = [1,7,2]; % s-p-u
-NSC.Bind(2,:) = [2,7,1]; % u-p-s
-NSC.Bind(3,:) = [1,8,2]; % s-p-u
-NSC.Bind(4,:) = [2,8,1]; % u-p-s
+NSC.lineTriple(1,:) = [1,7,2]; % s-p-u
+NSC.lineTriple(2,:) = [2,7,1]; % u-p-s
+NSC.lineTriple(3,:) = [1,8,2]; % s-p-u
+NSC.lineTriple(4,:) = [2,8,1]; % u-p-s
+
+% custom graph NSC function
+NSC.userGraphNSC = @(pp,A,feasibleFlag) PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag);
 
 % options
 opts.algorithm = 'tree_v11DFS_mex';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
-opts.parallel = 12; % 12 threads for parallel computing, 0 to disable it
+opts.parallel = true; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
-opts.customfun = @(pp,A,feasibleFlag) PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag);
 opts.isomethod = 'python'; % option 'matlab' is available in 2016b or later versions
 
 opts.plots.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio' % 'matlab'

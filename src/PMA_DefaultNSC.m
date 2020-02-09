@@ -100,17 +100,49 @@ NSC.flag.Lflag = logical(any(NSC.loops)); % ensure data type
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
+% reduced potential multiedge adjacency matrix
+if isfield(NSC,'multiedgeA')
+    % check if the matrix is symmetric
+    if ~all(NSC.multiedgeA==NSC.multiedgeA') % not symmetric
+        error('NSC.multiedgeA should be symmetric, fix?')
+    end
+    if length(NSC.multiedgeA) == 1
+        NSC.multiedgeA = repelem(NSC.multiedgeA,Nt,Nt);
+    end
+else
+    % NSC.multiedgeA = zero(Nt); % no connections allowed
+    % NSC.multiedgeA = ones(Nt); % no multiedges, all connections allowed
+    NSC.multiedgeA = inf(Nt); % multiedges and all connections allowed
+end
+NSC.multiedgeA = uint8(NSC.multiedgeA); % ensure data type
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
 % require simple components but maybe loops (replicate-wise vector)
 if isfield(NSC,'simple')
     if length(NSC.simple) == 1
-        NSC.simple = NSC.simple*ones(Nt,1);
+        NSC.simple = repelem(NSC.simple,Nt,1);
     end
 else
-    NSC.simple = uint8(zeros(Nt,1)); % multiedges allowed
-    % NSC.simple = uint8(ones(Nt,1)); % no multiedges (but maybe loops)
+    NSC.simple = zeros(Nt,1); % multiedges allowed
+    % NSC.simple = ones(Nt,1); % no multiedges (but maybe loops)
 end
-NSC.simple = uint8(NSC.simple); % ensure data type
+NSC.simple = uint8(NSC.simple(:)); % ensure data type
 NSC.flag.Sflag = logical(any(NSC.simple)); % ensure data type
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% reduced potential adjacency matrix
+if isfield(NSC,'directA')
+    % check if the matrix is symmetric
+    if ~all(NSC.directA==NSC.directA') % not symmetric
+        error('NSC.directA should be symmetric, fix?')
+    end
+else
+    % NSC.directA = zero(Nt); % no connections allowed
+    NSC.directA = ones(Nt); % all connections allowed
+end
+NSC.directA = uint8(NSC.directA); % ensure data type
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
@@ -131,53 +163,68 @@ NSC.flag.Mflag = logical(any(NSC.M)); % ensure data type
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
-% reduced potential adjacency matrix
-if isfield(NSC,'A')
-    NSC.A = uint8(NSC.A); % change data type
-else
-    % NSC.A = zero(Nt,'uint8'); % no connections are allowed
-    NSC.A = ones(Nt,'uint8'); % all connections are allowed
-end
-NSC.A = uint8(NSC.A); % ensure data type
-%--------------------------------------------------------------------------
-
-%--------------------------------------------------------------------------
 % n x 3 vector of indices for pair constraints
-if ~isfield(NSC,'Bind')
-NSC.Bind = []; % no pair constraints
+if ~isfield(NSC,'lineTriple')
+    NSC.lineTriple = []; % no pair constraints
 end
-NSC.flag.Bflag = logical(~isempty(NSC.Bind)); % ensure data type
+NSC.flag.Bflag = logical(~isempty(NSC.lineTriple)); % ensure data type
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
-% bounds on the graph properties
-if ~isfield(NSC,'bounds')
-    % maximum total number of replicates
-    NSC.bounds.Nr = [0 inf]; % no constraints
-    % NSC.bounds.Nr = [2 4]; % between 2 and 4 replicates
-
-    % maximum total number of ports
-    NSC.bounds.Np = [0 inf]; % no constraints
-    % NSC.bounds.Np = [6 14]; % between 6 and 14 ports
-else
-    % maximum total number of replicates
-    if ~isfield(NSC.bounds,'Nr')
-        NSC.bounds.Nr = [0 inf]; % no constraints
-        % NSC.bounds.Nr = [2 4]; % between 2 and 4 replicates
-    end
-    % maximum total number of ports
-    if ~isfield(NSC.bounds,'Np')
-        NSC.bounds.Np = [0 inf]; % no constraints
-        % NSC.bounds.Np = [6 14]; % between 6 and 14 ports
-    end
+% minimum and maximum total number of replicates
+if ~isfield(NSC,'Nr')
+    NSC.Nr = [0 inf]; % no constraints
+    % NSC.Nr = [2 4]; % between 2 and 4 replicates
 end
-NSC.bounds.Nr = uint64(NSC.bounds.Nr); % ensure data type
-NSC.bounds.Np = uint64(NSC.bounds.Np); % ensure data type
+NSC.Nr = uint64(NSC.Nr); % ensure data type
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% minimum and maximum total number of ports
+if ~isfield(NSC,'Np')
+    NSC.Np = [0 inf]; % no constraints
+    % NSC.Np = [6 14]; % between 6 and 14 ports
+end
+NSC.Np = uint64(NSC.Np); % ensure data type
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
 % structured components boolean vector
 % NSC.S = [];
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% user-defined catalog-only NSC checking function
+if ~isfield(NSC,'userCatalogNSC')
+    NSC.userCatalogNSC = []; % none by default
+    % NSC.userCatalogNSC = @(L,Ls,Rs,Ps,NSC,opts) myCatalogNSCfunc(L,Ls,Rs,Ps,NSC,opts);
+end
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% user-defined NSC checking function
+if ~isfield(NSC,'userGraphNSC')
+    NSC.userGraphNSC = []; % none by default
+    % NSC.userGraphNSC = @(pp,A,feasibleFlag) myGraphNSCfunc(pp,A,feasibleFlag);
+end
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% combine NSC.simple and NSC.directA with NSC.multiedgeA
+% extract
+Am = NSC.multiedgeA; Ls = logical(NSC.simple); Ad = uint8(logical(NSC.directA));
+
+% logical matrix for simple components
+As = logical(Ls*Ls');
+
+% combine with NSC.simple
+Am(As) = min(Am(As),1);
+
+% combine with NSC.directA
+Am = Am.*Ad;
+
+% assign
+NSC.multiedgeA = Am;
 %--------------------------------------------------------------------------
 
 end

@@ -17,7 +17,7 @@ P.min = 1; P.max = 2*n-1; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 0; % connected graph not required
 NSC.loops = 0; % no loops
-NSC.bounds.Np = [2*n 2*n]; % edge bounds
+NSC.Np = [2*n 2*n]; % edge bounds
 
 % options
 opts.algorithms.Nmax = uint64(1e5);

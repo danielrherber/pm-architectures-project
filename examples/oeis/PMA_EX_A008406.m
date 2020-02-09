@@ -25,15 +25,15 @@ P.min = 0; P.max = n-1; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 0; % connected graph not required
 NSC.loops = 0; % loops
-NSC.bounds.Np = [2*k 2*k]; % edge bounds
+NSC.Np = [2*k 2*k]; % edge bounds
 
 % options
-opts.algorithms.Nmax = uint64(1e5);
+opts.algorithms.Nmax = 1e5;
 opts.plots.plotmax = 10;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11BFS';
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

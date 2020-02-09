@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Bout = PMA_CreateBMatrix(Bind,R,NSC)
+function Bout = PMA_CreateBMatrix(lineTriple,R,NSC)
 
     % number of component types
     n = numel(R);
@@ -16,8 +16,8 @@ function Bout = PMA_CreateBMatrix(Bind,R,NSC)
     Bin = ones(n,n,n);
 
     % for each triplet of indices, 0 the correct entry
-    for k = 1:size(Bind,1)
-        Bin(Bind(k,3),Bind(k,2),Bind(k,1)) = 0;
+    for k = 1:size(lineTriple,1)
+        Bin(lineTriple(k,3),lineTriple(k,2),lineTriple(k,1)) = 0;
     end
 
     % total number of components

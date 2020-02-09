@@ -33,7 +33,7 @@ opts.algorithm = 'tree_v1';
 opts.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = 0; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
-% opts.customfun = @(pp,A,infeasibleFlag) ex_Example1_Extra_Constraints(pp,A,infeasibleFlag);
+% NSC.userGraphNSC = @(pp,A,infeasibleFlag) ex_Example1_Extra_Constraints(pp,A,infeasibleFlag);
 opts.isomethod = 'matlab'; % option 'Matlab' is available in 2016b or later versions
 
 opts.plots.plotfun = 'circle'; % 'circle' % 'bgl' % 'bio' % 'matlab'

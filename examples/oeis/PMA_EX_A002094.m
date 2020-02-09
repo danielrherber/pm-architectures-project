@@ -12,14 +12,14 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 14; % number of nodes (currently completed for n = 14)
+n = 10; % number of nodes (currently completed for n = 14)
 L = {'C'}; % labels
 R.min = n; R.max = n; % replicate vector
 P.min = 1; P.max = 4; % ports vector
 NSC.simple = 0; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-NSC.bounds.Np = [2*n 2*n]; % tree + one cycle/multiedge bounds
+NSC.Np = [2*n 2*n]; % tree + one cycle/multiedge bounds
 
 % options
 opts.plots.plotmax = 5;
@@ -28,7 +28,7 @@ opts.algorithm = 'tree_v11DFS_mex';
 opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = 100;
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

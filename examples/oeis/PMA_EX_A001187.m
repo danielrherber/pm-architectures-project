@@ -24,7 +24,7 @@ opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11DFS_mex';
 opts.algorithms.Nmax = 1e7;
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

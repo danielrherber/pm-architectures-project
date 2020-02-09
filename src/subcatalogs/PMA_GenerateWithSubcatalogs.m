@@ -49,9 +49,9 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
         [Ls,Ps,Rs] = PMA_ConnectedSubcatalogFilters(Ls,Ps,Rs);
     end
 
-    % custom subcatalog filter function
-    if isfield(opts,'subcatalogfun')
-        [Ls,Rs,Ps] = opts.subcatalogfun(L,Ls,Rs,Ps,NSC,opts);
+    % custom user-defined catalog-only NSC check
+    if ~isempty(NSC.userCatalogNSC)
+        [Ls,Rs,Ps] = NSC.userCatalogNSC(L,Ls,Rs,Ps,NSC,opts);
     end
 
     % number of subcatalogs
@@ -64,8 +64,11 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
     end
 
     % local NSC variables
-    localA = NSC.A; localloops = NSC.loops; localsimple = NSC.simple;
-    localM = NSC.M; localBind = NSC.Bind;
+    localdirectA = NSC.directA; localmultiedgeA = NSC.multiedgeA;
+    localloops = NSC.loops; localsimple = NSC.simple;
+    localM = NSC.M; locallineTriple = NSC.lineTriple;
+
+    localuserGraphNSC = NSC.userGraphNSC;
     localCflag = NSC.flag.Cflag; localLflag = NSC.flag.Lflag;
     localSflag = NSC.flag.Sflag; localMflag = NSC.flag.Mflag;
     localBflag = NSC.flag.Bflag;
@@ -99,11 +102,13 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
 
         % create temporary NSC structure to avoid parfor issues
         nsc = struct();
-        nsc.A = localA;
+        nsc.directA = localdirectA;
+        nsc.multiedgeA = localmultiedgeA;
         nsc.loops = localloops;
         nsc.simple = localsimple;
         nsc.M = localM;
-        nsc.Bind = localBind;
+        nsc.lineTriple = locallineTriple;
+        nsc.userGraphNSC = localuserGraphNSC;
         nsc.flag.Cflag = localCflag;
         nsc.flag.Lflag = localLflag;
         nsc.flag.Sflag = localSflag;
@@ -131,7 +136,10 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
         l = cellstr(strcat(l,string(p)));
 
         % extract reduced potential adjacency matrix
-        nsc.A = localA(ln,ln);
+        nsc.directA = localdirectA(ln,ln);
+
+        %
+        nsc.multiedgeA = localmultiedgeA(ln,ln);
 
         % extract nsc vectors
         nsc.loops = localloops(ln);
@@ -144,22 +152,25 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
         end
 
         % extract appropriate line-connectivity triples
-        org = find(ln);
-        new = 1:numel(org);
-        for t = size(nsc.Bind,1):-1:1
-            if ~all(ismember(nsc.Bind(t,:),find(ln)))
-                nsc.Bind(t,:) = []; % remove the constraint
-            else
-                nsc.Bind(t,:) = PMA_changem(nsc.Bind(t,:),new,org);
-            end
+        if localBflag
+            nsc.lineTriple = PMA_ExtractLineConstraints(nsc.lineTriple,ln);
         end
+%         org = find(ln);
+%         new = 1:numel(org);
+%         for t = size(nsc.lineTriple,1):-1:1
+%             if ~all(ismember(nsc.lineTriple(t,:),find(ln)))
+%                 nsc.lineTriple(t,:) = []; % remove the constraint
+%             else
+%                 nsc.lineTriple(t,:) = PMA_changem(nsc.lineTriple(t,:),new,org);
+%             end
+%         end
 
         % update flags
         nsc.flag.Cflag = localCflag;
         nsc.flag.Lflag = logical(any(nsc.loops));
         nsc.flag.Sflag = logical(any(nsc.simple));
         nsc.flag.Mflag = logical(any(nsc.M));
-        nsc.flag.Bflag = logical(~isempty(nsc.Bind));
+        nsc.flag.Bflag = logical(~isempty(nsc.lineTriple));
 
         % sort (L,R,P) to be better suited for enumeration
         [p,r,l,nsc,sorts] = PMA_ReorderCRP(p,r,l,nsc,opts);

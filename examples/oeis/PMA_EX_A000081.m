@@ -17,15 +17,15 @@ P.min = [1 1]; P.max = [n-1 n-1]; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-NSC.bounds.Nr = [n n];
-NSC.bounds.Np = [2*(n-1) 2*(n-1)]; % tree condition upper bound
+NSC.Nr = [n n];
+NSC.Np = [2*(n-1) 2*(n-1)]; % tree condition
 
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11DFS_mex';
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 opts.algorithms.isoNmax = inf;
 
 % obtain all unique, feasible graphs

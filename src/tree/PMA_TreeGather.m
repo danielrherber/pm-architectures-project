@@ -27,15 +27,14 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
     Vf = uint8(NSC.Vfull);
 
     % expand reduced potential adjacency matrix
-    A = PMA_ExpandPossibleAdj(NSC.A,R,NSC);
+    A = PMA_ExpandPossibleAdj(NSC.directA,R,NSC);
+    
+    % expand reduced potential multiedge adjacency matrix
+    Am = PMA_ExpandPossibleAdj(NSC.multiedgeA,R,NSC);
 
     % check if B was provided
     if NSC.flag.Bflag
-        if ~isfield(NSC,'B')
-            B = PMA_CreateBMatrix(NSC.Bind,R,NSC);
-        else
-            error('please specify NSC.Bind, not NSC.B')
-        end
+        B = PMA_CreateBMatrix(NSC.lineTriple,R,NSC);
     else
         B = uint8([]);
     end
@@ -105,6 +104,9 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
         case 'tree_v11BFS'
             G = PMA_EnumerationAlg_v11BFS(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
+        case 'tree_v12DFS'
+            [G,~] = PMA_EnumerationAlg_v12DFS(Vf,E,G,id,cVf,Vf,iInitRep,...
+                simple,Am,Bf,B,Mf,M,displevel);
         %------------------------------------------------------------------
         % mex
         %------------------------------------------------------------------

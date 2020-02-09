@@ -29,9 +29,8 @@ end
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph not required
 NSC.loops = 0; % loops
-NSC.bounds.Nr = [n+1 n+1];
-NSC.bounds.Np = [2 2*(n-1+1)]; % tree condition upper bound
-opts.subcatalogfun = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.Nr = [n+1 n+1];
+NSC.Np = [2*n 2*n]; % tree condition
 
 % options
 opts.algorithms.Nmax = uint64(1e5);
@@ -54,25 +53,3 @@ end
 % compare number of graphs
 disp("correct?")
 disp(string(isequal(length(G1),n2)))
-
-function [Ls,Rs,Ps] = subcatfunc(L,Ls,Rs,Ps,NSC,opts)
-    % initialize
-    failed = false(size(Ps,1),1);
-
-    % check tree graph condition
-    for idx = 1:size(Ps,1)
-        Pst = repelem(Ps(idx,:),Rs(idx,:));
-        n = length(Pst);
-        c1 = sum(Pst);
-        c2 = 2*(n-1);
-        if c1 ~= c2
-            failed(idx) = true;
-            continue
-        end
-    end
-
-    % remove failed subcatalogs
-    Ls(failed,:) = [];
-    Ps(failed,:) = [];
-    Rs(failed,:) = [];
-end

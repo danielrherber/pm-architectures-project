@@ -15,7 +15,7 @@ function PMA_PlotGraphs(G,NSC,opts)
     if isfield(plots,'plotfun')
 
         % determine if matlab plots are needed
-        if (~NSC.connected) && strcmp(plots.plotfun,'bgl')
+        if (~NSC.connected) && strcmpi(plots.plotfun,'bgl')
             if (opts.displevel > 1) % verbose
                 warning('switching to ''matlab'' since there may be incomplete graphs')
             end
@@ -41,6 +41,13 @@ function PMA_PlotGraphs(G,NSC,opts)
                 PlotFun = @PMA_PlotBio;
             case 'bgl'
                 PlotFun = @PMA_PlotBGL;
+        end
+
+        % (potentially) randomize plot ordering
+        if isfield(plots,'randomize')
+            if plots.randomize
+                G = G(randperm(length(G)));
+            end
         end
 
         % plot each graph

@@ -37,17 +37,17 @@ function Graphs = PMA_GenerateFeasibleGraphs(L,R,P,NSC,opts,Sorts)
     end
 
     % set the custom function if it is present
-    customfunFlag = 0;
-    if isfield(opts,'customfun')
-        customfunFlag = 1;
-        CustFeasChecks = opts.customfun;
+    if isempty(NSC.userGraphNSC)
+        customfunFlag = false;
+        CustFeasChecks = NSC.userGraphNSC;
     else
-        CustFeasChecks = @(pp,A,feasibleFlag) [pp,A,feasibleFlag];
+        customfunFlag = true;
+        CustFeasChecks = NSC.userGraphNSC;
     end
 
     % create B matrix, if necessary
     if Bflag
-        Bm = PMA_CreateBMatrix(Sorts.NSC.Bind,Sorts.R,Sorts.NSC);
+        Bm = PMA_CreateBMatrix(Sorts.NSC.lineTriple,Sorts.R,Sorts.NSC);
     else
         Bm = [];
     end

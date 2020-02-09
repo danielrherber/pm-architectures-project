@@ -6,7 +6,7 @@
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 
-% Additional Contributor: Shangtingli, Undergraduate Student, University of 
+% Additional Contributor: Shangtingli, Undergraduate Student, University of
 
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
@@ -32,10 +32,10 @@ switch example
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 0 0];
             NSC.simple = 1; % unique edges
-            NSC.A = ones(length(P));
-            NSC.A(6,6) = 0; % no A-A
-            NSC.A(7,7) = 0; % no B-B
-            NSC.A(7,6) = 0; % no B-A
+            NSC.directA = ones(length(P));
+            NSC.directA(6,6) = 0; % no A-A
+            NSC.directA(7,7) = 0; % no B-B
+            NSC.directA(7,6) = 0; % no B-A
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -57,10 +57,10 @@ switch example
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 0 0];
             NSC.simple = 1; % unique edges
-            NSC.A = ones(length(P));
-            NSC.A(6,6) = 0; % no A-A
-            NSC.A(7,7) = 0; % no B-B
-            NSC.A(7,6) = 0; % no B-A
+            NSC.directA = ones(length(P));
+            NSC.directA(6,6) = 0; % no A-A
+            NSC.directA(7,7) = 0; % no B-B
+            NSC.directA(7,6) = 0; % no B-A
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -83,10 +83,10 @@ switch example
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 1 1];
             NSC.simple = 1; % unique edges
-            NSC.A = ones(length(P));
-            NSC.A(6,6) = 0; % no A-A
-            NSC.A(7,7) = 0; % no B-B
-            NSC.A(7,6) = 0; % no B-A
+            NSC.directA = ones(length(P));
+            NSC.directA(6,6) = 0; % no A-A
+            NSC.directA(7,7) = 0; % no B-B
+            NSC.directA(7,6) = 0; % no B-A
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -107,8 +107,8 @@ switch example
             R.max = [5 1 1 1]';
             C = {'M','P','A','B'};
             P = [1 3 3 4];
-            S = [0 1 1 1]; 
-            NSC.simple = 1;  
+            S = [0 1 1 1];
+            NSC.simple = 1;
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -131,10 +131,10 @@ switch example
             P = [1 1 1 1 3 3 4];
             S = [0 0 0 0 1 1 1];
             NSC.simple = 1; % unique edges
-            NSC.A = ones(length(P));
-            NSC.A(6,6) = 0; % no A-A
-            NSC.A(7,7) = 0; % no B-B
-            NSC.A(7,6) = 0; % no B-A
+            NSC.directA = ones(length(P));
+            NSC.directA(6,6) = 0; % no A-A
+            NSC.directA(7,7) = 0; % no B-B
+            NSC.directA(7,6) = 0; % no B-A
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -156,8 +156,8 @@ switch example
             R.max = [5 2 1 1]';
             C = {'M','P','A','B'};
             P = [1 3 3 4];
-            S = [0 1 1 1]; 
-            NSC.simple = 1;  
+            S = [0 1 1 1];
+            NSC.simple = 1;
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end
@@ -179,10 +179,10 @@ switch example
             P = [1 1 1 1 3 3 4];
             S = [1 1 1 1 1 1 1];
             NSC.simple = 1; % unique edges
-            NSC.A = ones(length(P));
-            NSC.A(6,6) = 0; % no A-A
-            NSC.A(7,7) = 0; % no B-B
-            NSC.A(7,6) = 0; % no B-A
+            NSC.directA = ones(length(P));
+            NSC.directA(6,6) = 0; % no A-A
+            NSC.directA(7,7) = 0; % no B-B
+            NSC.directA(7,6) = 0; % no B-A
             FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
             save(fullname,'C','R','P','S','FinalGraphs');
         end

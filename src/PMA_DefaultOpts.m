@@ -55,16 +55,6 @@ function opts = PMA_DefaultOpts(varargin)
     end
     opts.filterflag = logical(opts.filterflag); % ensure data type
 
-    % custom network structure constraint function
-    if ~isfield(opts,'customfun')
-        % none by default
-    end
-
-    % custom subcatalog filter function
-    if ~isfield(opts,'subcatalogfun')
-        % none by default
-    end
-
     % isomorphism checking method
     if ~isfield(opts,'isomethod')
         % opts.isomethod = 'python'; % requires setup
@@ -164,6 +154,13 @@ function opts = PMA_DefaultOpts(varargin)
     if ~isfield(opts.plots,'plotmax')
         opts.plots.plotmax = 10;
     end
+
+    % randomize the plot ordering
+    if ~isfield(opts.plots,'randomize')
+        % opts.plots.randomize = true; % randomized ordering
+        opts.plots.randomize = false; % original ordering
+    end
+    opts.plots.randomize = logical(opts.plots.randomize); % ensure data type
 
     % save the graphs to disk?
     if ~isfield(opts.plots,'saveflag')

@@ -10,14 +10,14 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 8; % number of edges (currently completed for n = )
+n = 8; % number of edges (currently completed for n = 10)
 L = {'A'}; % labels
 R.min = 1; R.max = n+1; % replicate vector
 P.min = 1; P.max = 2*n; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 1; % single loop allowed
-NSC.bounds.Np = [2*n 2*n];
+NSC.Np = [2*n 2*n];
 
 % options
 opts.plots.plotmax = 5;
@@ -26,7 +26,7 @@ opts.algorithm = 'tree_v11BFS';
 opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

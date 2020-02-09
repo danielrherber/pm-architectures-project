@@ -23,7 +23,7 @@ opts.plots.plotmax = 10;
 opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11DFS_mex';
 opts.isomethod = 'python';
-opts.parallel = 12;
+opts.parallel = true;
 opts.algorithms.isoNmax = inf;
 opts.algorithms.Nmax = 1e7;
 

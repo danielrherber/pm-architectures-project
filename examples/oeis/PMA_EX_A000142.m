@@ -25,7 +25,7 @@ end
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph not required
 NSC.loops = 0; % loops
-opts.subcatalogfun = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.userCatalogNSC = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
 
 % options
 opts.algorithms.Nmax = uint64(1e6);

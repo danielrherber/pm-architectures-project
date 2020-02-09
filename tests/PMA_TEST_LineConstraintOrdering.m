@@ -2,7 +2,7 @@
 % PMA_TEST_LineConstraintOrdering.m
 % test line-connectivity constraints when (C,R,P) is reordered
 %--------------------------------------------------------------------------
-% NOTE: this test function was used to fix a bug where NSC.Bind was not
+% NOTE: this test function was used to fix a bug where NSC.lineTriple was not
 % sorted properly in PMA_ReorderCRP.m
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
@@ -17,10 +17,10 @@ N = 2; % number of B replicates
 
 switch testnum
     case 1 % A-B\C
-        NSC.Bind(1,:) = [1,2,3];
+        NSC.lineTriple(1,:) = [1,2,3];
     case 2 % A-B\C and B-C\A
-        NSC.Bind(1,:) = [1,2,3];
-        NSC.Bind(2,:) = [2,3,1];
+        NSC.lineTriple(1,:) = [1,2,3];
+        NSC.lineTriple(2,:) = [2,3,1];
     otherwise % no constraints
         NSC = [];
 end

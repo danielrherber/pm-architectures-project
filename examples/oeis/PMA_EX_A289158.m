@@ -1,8 +1,8 @@
 %--------------------------------------------------------------------------
-% PMA_EX_A002851
-% A002851, number of unlabeled trivalent (or cubic) connected graphs with
-% 2n nodes
-% 0, 1, 2, 5, 19, 85, 509, 4060, 41301, 510489, 7319447, 117940535, ...
+% PMA_EX_A289158
+% A289158, number of connected multigraphs with n nodes of degree at most 4
+% and with at most double edges
+% 1, 2, 7, 28, 112, 590, 3419, 23453, 178599, 1516692, 14083855, ...
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -11,28 +11,28 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 6; % number of nodes (currently completed for n = 8)
+n = 6; % number of nodes (currently completed for n = 9)
 L = {'A'}; % labels
-R.min = 2*n; R.max = 2*n; % replicate vector
-P.min = 3; P.max = 3; % ports vector
-NSC.simple = 1; % simple components
-NSC.connected = 1; % connected graph required
+R.min = n; R.max = n; % replicate vector
+P.min = 1; P.max = 4; % ports vector
+NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
+NSC.multiedgeA = 2; % maximum double edges
 
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
-opts.algorithm = 'tree_v11BFS';
-opts.algorithms.Nmax = 1e7;
+opts.algorithm = 'tree_v12DFS';
+opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'python';
-opts.parallel = false;
+opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
-% number of graphs based on OEIS A002851
-N = [0,1,2,5,19,85,509,4060,41301,510489,7319447,117940535,2094480864];
+% number of graphs based on OEIS A289158
+N = [1,2,7,28,112,590,3419,23453,178599,1516692,14083855,142029043];
 n2 = N(n);
 
 % compare number of graphs

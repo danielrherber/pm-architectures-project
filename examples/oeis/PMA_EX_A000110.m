@@ -22,9 +22,8 @@ NSC.loops = 0; % no loops
 A = ones(n+1);
 A(end,end) = 0; % no p-p connections
 A(1:end-1,1:end-1) = 0; % no connections
-NSC.A = A;
-
-opts.subcatalogfun = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.directA = A;
+NSC.userCatalogNSC = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
 
 % options
 opts.plots.plotmax = 5;
