@@ -135,8 +135,9 @@ NSC.flag.Sflag = logical(any(NSC.simple)); % ensure data type
 % reduced potential adjacency matrix
 if isfield(NSC,'directA')
     % check if the matrix is symmetric
-    if ~all(NSC.directA==NSC.directA') % not symmetric
-        error('NSC.directA should be symmetric, fix?')
+    if ~all(NSC.directA==NSC.directA','all') % not symmetric
+        warning('Making NSC.directA symmetric')
+        NSC.directA = NSC.directA & NSC.directA'; % make symmetric
     end
 else
     % NSC.directA = zero(Nt); % no connections allowed
