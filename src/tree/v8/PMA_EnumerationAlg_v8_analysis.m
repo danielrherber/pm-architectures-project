@@ -11,7 +11,7 @@
 function [SavedGraphs,id] = PMA_EnumerationAlg_v8_analysis(V,E,SavedGraphs,id,...
     cVf,Vf,iInitRep,counts,A,Bflag,B,Mflag,M,displevel,prenode)
 
-    global node nodelist labellist feasiblelist % modification for analysis function
+    option = 1; PMA_TreeAnalysis; %#ok<NASGU>
 
     % remove the first remaining port
     iL = find(V,1); % find nonzero entries (ports remaining)
@@ -27,21 +27,13 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v8_analysis(V,E,SavedGraphs,id,..
     Vallow = V.*Vordering.*A(iL,:);
 
     % find remaining nonzero entries
-    % I = find(Vallow);
     I = find(V); % modification for analysis function
 
 	% loop through all nonzero entries
     for iR = I
 
-        nodelist = [nodelist,prenode];
-        labellist = [labellist,[iL;iR]];
-        feasiblelist = [feasiblelist,1];
-        node = node + 1;
-
-        if V(iR)~=Vallow(iR) % modification for analysis function
-            feasiblelist(end) = 0;
-            continue
-        end
+        option = 2; PMA_TreeAnalysis; %#ok<NASGU>
+        if continueflag; continue; end
 
         % local for loop variables
         V2 = V; A2 = A;
@@ -68,7 +60,7 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v8_analysis(V,E,SavedGraphs,id,..
                 elseif (nUncon == sum(M))
                     % continue iterating
                 else
-                    feasiblelist(end) = 0;
+                    option = 3; PMA_TreeAnalysis; %#ok<NASGU>
                     continue % stop, this graph is infeasible
                 end
             end

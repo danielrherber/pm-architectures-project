@@ -10,23 +10,24 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 9; % number of nodes (currently completed for n = 11)
+n = 9; % number of nodes (currently completed for n = 12)
 L = {'A'}; % labels
 R.min = n; R.max = n; % replicate vector
 P.min = 0; P.max = n-1; % ports vector
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-NSC.userCatalogNSC = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.userCatalogNSC = @(L,Ls,Rs,Ps,NSC,opts) subcatfunc(L,Ls,Rs,Ps,NSC,opts);
 
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
 opts.algorithm = 'tree_v11BFS';
-opts.isomethod = 'python';
-opts.parallel = 12;
 opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = inf;
+opts.isomethod = 'python';
+opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
@@ -39,6 +40,7 @@ n2 = N(n);
 disp("correct?")
 disp(string(isequal(length(G1),n2)))
 
+% regular graph condition
 function [Ls,Rs,Ps] = subcatfunc(~,Ls,Rs,Ps,~,~)
     % condition
     passed = sum(Rs~=0,2) == 1;

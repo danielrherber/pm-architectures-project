@@ -31,20 +31,23 @@ switch num
         NSC.M = [1 0 0 0 0];
     case 3 % Case Study 2, #3 constraints
         NSC.M = [1 1 1 1 1];
-        NSC.simple = 1;
+        NSC.simple = 1; % no multiedges
+        NSC.connected = 1; % connected graph
+        NSC.loops = 0; % no loops 
     case 4 % Case Study 2, #4 constraints
         if newalgo % new
             clear R % remove previous
             R.min = [1 2 1 1 1]; % replicates vector, min
             R.max = [1 2 2 1 1]; % replicates vector, max
-            NSC.connected = 1;
+            NSC.connected = 1; % connected graph
+            NSC.loops = 0; % no loops 
         else % old
             P = [1 1 2 2 3 4]; % ports vector
             R = [1 2 1 1 1 1]; % replicates vector
             C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
             NSC.M = [1 1 1 0 1 1];
         end
-        NSC.simple = 1;
+        NSC.simple = 1; % no multiedges
 end
 
 % options
@@ -56,7 +59,6 @@ end
 opts.algorithms.Nmax = 1e7; % maximum number of graphs to preallocate for
 opts.parallel = false; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
-% NSC.userGraphNSC = @(pp,A,infeasibleFlag) ex_Example2_Extra_Constraints(pp,A,infeasibleFlag);
 opts.isomethod = 'matlab'; % option 'Matlab' is available in 2016b or later versions
 
 opts.plots.plotfun = 'matlab'; % 'circle' % 'bgl' % 'bio' % 'matlab'
@@ -64,7 +66,28 @@ opts.plots.plotmax = 20; % maximum number of graphs to display/save
 opts.plots.name = mfilename; % name of the example
 opts.plots.path = mfoldername(mfilename('fullpath'),[opts.plots.name,'_figs']); % path to save figures to
 opts.plots.labelnumflag = 0; % add replicate numbers when plotting
-opts.plots.colorlib = 2; % color library
+opts.plots.colorlib = @CustomColorLib;
 
 % generate graphs
 FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
+
+% custom label color function
+function c = CustomColorLib(L)
+c = zeros(length(L),3); % initialize
+for k = 1:length(L) % go through each label and assign a color
+    if contains(L(k,:),'R')
+        ct = [244,67,54]; % red 500
+    elseif contains(L(k,:),'G')
+        ct = [139,195,74]; % lightGreen 500
+    elseif contains(L(k,:),'B')
+        ct = [3,169,244]; % lightBlue 500
+    elseif contains(L(k,:),'O')
+        ct = [255,152,0]; % orange 500
+    elseif contains(L(k,:),'P')
+        ct = [156,39,176]; % purple 500
+    else
+        ct = [0 0 0 ];
+    end
+    c(k,:) = ct/255; % assign
+end
+end

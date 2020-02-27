@@ -11,7 +11,7 @@
 function G = PMA_SortAsPerfectMatching(G)
 
     % first check that is this a perfect matching
-    dG = diff(int8(G),1,2);
+    dG = diff(int16(G),1,2);
     if all(dG(:,1:2:end)>0,'all')
         G = fliplr(G); % flip so even and odd vertices switch
     elseif all(dG(:,1:2:end)<0,'all')

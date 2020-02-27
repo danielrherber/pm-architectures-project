@@ -32,8 +32,11 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
     end
 
     % enumerate subcatalogs
-    [Ls,Rs,Ps] = PMA_SubcatalogEnumerationAlg_v1(Rs,Ps,NSC,opts);
+    [Ls,Rs,Ps] = PMA_SubcatalogEnumerationAlg_v2(Rs,Ps,NSC,opts);
 
+    %----------------------------------------------------------------------
+    % subcatalog filters
+    %----------------------------------------------------------------------
     % find and remove odd port subcatalogs
     Npsubcatalogs = sum(Rs.*Ps,2);
     passed = mod(Npsubcatalogs,2) == 0;
@@ -44,15 +47,21 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
     passed = Npsubcatalogs ~= 0;
     Ls = Ls(passed,:); Rs = Rs(passed,:); Ps = Ps(passed,:);
 
-    % simple, connected, no loops graph degree sequence filters
+    % (connected, simple, no loops) graph subcatalog filter
     if NSC.flag.Cflag && all(NSC.simple) && ~NSC.flag.Lflag
-        [Ls,Ps,Rs] = PMA_ConnectedSubcatalogFilters(Ls,Ps,Rs);
+        [Ls,Ps,Rs] = PMA_TreeFilter(Ls,Ps,Rs);
+    end
+
+    % (simple, no loops) graph subcatalog filter
+    if all(NSC.simple) && ~NSC.flag.Lflag
+    	[Ls,Ps,Rs] = PMA_SimpleGraphFilter(Ls,Ps,Rs);
     end
 
     % custom user-defined catalog-only NSC check
     if ~isempty(NSC.userCatalogNSC)
         [Ls,Rs,Ps] = NSC.userCatalogNSC(L,Ls,Rs,Ps,NSC,opts);
     end
+    %----------------------------------------------------------------------
 
     % number of subcatalogs
     Nsubcatalogs = size(Ls,1);

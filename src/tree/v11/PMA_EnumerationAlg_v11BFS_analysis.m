@@ -16,7 +16,7 @@
 function SavedGraphs = PMA_EnumerationAlg_v11BFS_analysis(cVf,Vf,iInitRep,phi,counts,...
     A,Bflag,B,Mflag,M,Pflag,Iflag,Imethod,isoNmax,Ln,Nmax,displevel)
 
-global node nodelist labellist feasiblelist % modification for analysis function
+option = 1; PMA_TreeAnalysis; %#ok<NASGU>
 
 % determine some problem properties
 Np = sum(Vf); % number of ports
@@ -51,14 +51,14 @@ for iter = 1:Ne
     ind = 0;
 
     % go through the current queue and add one edge
-    for node = 1:length(Queue)% must be row vector
+    for nodeIdx = 1:length(Queue)% must be row vector
 
         % extract current node inputs from storage
-        V = Vstorage(node,:);
-        E = Estorage(node,:);
-        A = Astorage(:,:,node);
-        T = Tstorage(node,:);
-        prenode = Prenodestorage(node,:);
+        V = Vstorage(nodeIdx,:);
+        E = Estorage(nodeIdx,:);
+        A = Astorage(:,:,nodeIdx);
+        T = Tstorage(nodeIdx,:);
+        prenode = Prenodestorage(nodeIdx,:);
 
         % START ENHANCEMENT: touched vertex promotion
         istouched = logical(Vf-V); % vertices that have been touched
@@ -86,7 +86,6 @@ for iter = 1:Ne
         Vallow = V.*Vordering.*A(iL,:);
 
         % find remaining nonzero entries
-%         I = find(Vallow);
         I = find(V); % modification for analysis function
 
         % loop through all nonzero entries
@@ -95,15 +94,8 @@ for iter = 1:Ne
             % get right edge
             iR = I(iRidx);
 
-            nodelist = [nodelist,prenode];
-            labellist = [labellist,[iL;iR]];
-            feasiblelist = [feasiblelist,1];
-            node = node + 1;
-
-            if V(iR)~=Vallow(iR) % modification for analysis function
-                feasiblelist(end) = 0;
-                continue
-            end
+            option = 2; PMA_TreeAnalysis; %#ok<NASGU>
+            if continueflag; continue; end
 
             % increment
             ind = ind + 1;
@@ -134,7 +126,7 @@ for iter = 1:Ne
                 Tstorage(indshift,:) = T2;
                 Prenodestorage(indshift,:) = node;
             else
-                feasiblelist(end) = 0;
+                option = 3; PMA_TreeAnalysis; %#ok<NASGU>
                 Rstorage(ind,1) = R2;
             end
 

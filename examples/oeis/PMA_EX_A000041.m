@@ -11,31 +11,20 @@
 clear; clc; close all
 
 n = 15; % number of nodes (currently completed for n = 29)
-catalognum = 1;
-switch catalognum
-    case 1
-        L = {'O'}; % labels
-        R.min = n; R.max = n; % replicate vector
-        P.min = 2; P.max = 2; % ports vector
-        NSC.simple = 0; % multi-edges allowed
-        NSC.connected = 0; % connected graph not required
-        NSC.loops = 1; % loops allowed
-    case 2 % alternative, less efficient catalog
-        L = {'R','O'}; % labels
-        R.min = [1;n]; R.max = [1;n]; % replicate vector
-        P.min = [1;1]; P.max = [n;2]; % ports vector
-        NSC.simple = 1; % simple components
-        NSC.connected = 1; % connected graph
-        NSC.loops = 0; % no loops
-        NSC.userCatalogNSC = @(Sub,C,R,P,NSC,opts) subcatfunc(Sub,C,R,P,NSC,opts);
-end
+L = {'O'}; % labels
+R.min = n; R.max = n; % replicate vector
+P.min = 2; P.max = 2; % ports vector
+NSC.simple = 0; % multi-edges allowed
+NSC.connected = 0; % connected graph not required
+NSC.loops = 1; % loops allowed
 
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
 opts.algorithm = 'tree_v11BFS';
 opts.isomethod = 'py-igraph';
-opts.parallel = false;
+opts.parallel = false; % only 1 catalog
 opts.algorithms.Nmax = 1e7;
 opts.algorithms.isoNmax = inf;
 opts.displevel = 1;
@@ -51,25 +40,3 @@ n2 = N(n);
 % compare number of graphs
 disp("correct?")
 disp(string(isequal(length(G1),n2)))
-
-function [Ls,Rs,Ps] = subcatfunc(~,Ls,Rs,Ps,~,~)
-    % initialize
-    failed = false(size(Ps,1),1);
-
-    % check tree graph condition
-    for idx = 1:size(Ps,1)
-        Pst = repelem(Ps(idx,:),Rs(idx,:));
-        n = length(Pst);
-        c1 = sum(Pst);
-        c2 = 2*(n-1);
-        if c1 ~= c2
-            failed(idx) = true;
-            continue
-        end
-    end
-
-    % remove failed subcatalogs
-    Ls(failed,:) = [];
-    Ps(failed,:) = [];
-    Rs(failed,:) = [];
-end

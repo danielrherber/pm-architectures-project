@@ -11,7 +11,7 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-n = 7; % number of nodes (currently completed for n = 11)
+n = 8; % number of nodes (currently completed for n = 13)
 L = {'A';'B'}; % labels
 R.min = [1;1]; R.max = [n;n]; % replicate vector
 P.min = [1;1]; P.max = [n;n]; % ports vector
@@ -20,10 +20,12 @@ NSC.connected = 1; % connected graph not required
 NSC.loops = 0; % no loops
 NSC.directA = [0,1;1,0];
 NSC.Np = [2*n 2*n]; % edge bounds
+NSC.userCatalogNSC = @PMA_BipartiteSubcatalogFilters;
 
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
 opts.algorithm = 'tree_v11BFS';
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'python';

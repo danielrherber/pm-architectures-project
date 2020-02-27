@@ -31,6 +31,11 @@ function Graphs = PMA_GenerateFeasibleGraphs(L,R,P,NSC,opts,Sorts)
         return
     end
 
+    % NOTE: for counting the number of candidate graphs using profiler
+    % for k = 1:size(G,1)
+    %     disp('')
+    % end
+
     % remove basic isomorphism failures
     if opts.filterflag
         [G,I,N] = PMA_PortIsoFilter(G,I,ports.phi,opts);
@@ -108,6 +113,11 @@ function Graphs = PMA_GenerateFeasibleGraphs(L,R,P,NSC,opts,Sorts)
 
     % remove empty graphs
     Graphs(~F) = [];
+
+    % NOTE: for counting the number of feasible graphs using profiler
+    % for k = 1:length(Graphs)
+    %     disp('')
+    % end
 
     % output some stats to the command window
     if (opts.displevel > 0) % minimal

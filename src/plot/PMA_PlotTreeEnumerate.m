@@ -13,7 +13,7 @@ end
 
 % options
 markersize = 20;
-fontsize = 14;
+fontsize = 19; % 14;
 s = 0.08;
 nodeflag = false;
 labelflag = false;
@@ -81,7 +81,7 @@ Y = Y - 1;
 hp.YData = Y;
 
 % get color spec
-c = PMA_LabelColors(dec2base(Ln,36),1);
+c = PMA_LabelColors(dec2base(Ln,36),opts.plots.colorlib);
 
 % total number of nodes in the tree
 Nnodes = length(labellist);
@@ -140,6 +140,7 @@ ax.Layer = 'top';
 box on
 ax.XTick = [];
 ax.YTick = 0:Np;
+ax.FontSize = fontsize-2;
 ylabel('Edges Available','fontsize',fontsize,'Color',[0 0 0])
 
 % change axis limits

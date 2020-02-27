@@ -23,17 +23,17 @@ switch catalognum
         P = [1;1;repmat(2,n,1)]; % ports vector
 end
 NSC.simple = 1; % simple components
-NSC.connected = 1; % connected graph not required
-NSC.loops = 0; % loops
-NSC.userCatalogNSC = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.connected = 1; % connected graph required
+NSC.loops = 0; % no loops
 
 % options
-opts.algorithms.Nmax = uint64(1e6);
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
 opts.algorithm = 'tree_v11DFS_mex';
-opts.parallel = 12;
-opts.isomethod = 'none'; % needed
+opts.algorithms.Nmax = 1e6;
+opts.parallel = true;
+opts.isomethod = 'none'; % not needed
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
@@ -47,25 +47,3 @@ toc
 % compare number of graphs
 disp("correct?")
 disp(string(isequal(length(G1),n2)))
-
-function [Ls,Rs,Ps] = subcatfunc(L,Ls,Rs,Ps,NSC,opts)
-    % initialize
-    failed = false(size(Ps,1),1);
-
-    % check tree graph condition
-    for idx = 1:size(Ps,1)
-        Pst = repelem(Ps(idx,:),Rs(idx,:));
-        n = length(Pst);
-        c1 = sum(Pst);
-        c2 = 2*(n-1);
-        if c1 ~= c2
-            failed(idx) = true;
-            continue
-        end
-    end
-
-    % remove failed subcatalogs
-    Ls(failed,:) = [];
-    Ps(failed,:) = [];
-    Rs(failed,:) = [];
-end

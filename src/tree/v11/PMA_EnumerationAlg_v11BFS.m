@@ -48,13 +48,13 @@ for iter = 1:Ne
     ind = 0;
 
     % go through the current queue and add one edge
-    for node = 1:length(Queue)% must be row vector
+    for nodeIdx = 1:length(Queue)% must be row vector
 
         % extract current node inputs from storage
-        V = Vstorage(node,:);
-        E = Estorage(node,:);
-        A = Astorage(:,:,node);
-        T = Tstorage(node,:);
+        V = Vstorage(nodeIdx,:);
+        E = Estorage(nodeIdx,:);
+        A = Astorage(:,:,nodeIdx);
+        T = Tstorage(nodeIdx,:);
 
         % START ENHANCEMENT: touched vertex promotion
         istouched = logical(Vf-V); % vertices that have been touched

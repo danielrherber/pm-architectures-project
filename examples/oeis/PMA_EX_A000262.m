@@ -27,19 +27,20 @@ switch catalognum
         opts.isomethod = 'python'; % needed
 end
 NSC.simple = 1; % simple components
-NSC.connected = 1; % connected graph not required
-NSC.loops = 0; % loops
+NSC.connected = 1; % connected graph required
+NSC.loops = 0; % no loops
 NSC.Nr = [n+1 n+1];
 NSC.Np = [2*n 2*n]; % tree condition
 
 % options
-opts.algorithms.Nmax = uint64(1e5);
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
 opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithms.Nmax = 1e5;
 opts.algorithms.isoNmax = 0;
 opts.isomethod = 'none';
-opts.parallel = 12;
+opts.parallel = 6;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

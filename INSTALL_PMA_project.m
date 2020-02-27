@@ -55,7 +55,7 @@ function INSTALL_PMA_project(varargin)
     RunSilent('AddSubmissionContents(mfilename)',silentflag)
 
 	% open examples
-    if ~silentflag, OpenThisFile('PMAex_md161635_caseStudy1'); end
+    if ~silentflag, OpenThisFile('PMA_EX_MD161635_CS1'); end
     if ~silentflag, OpenThisFile('PMA_EX_A001187'); end
 
 	% close this file

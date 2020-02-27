@@ -84,7 +84,8 @@ Nbin = 1; % number of bins
 [nvertices,nedges] = deal(zeros(n,1,'uint64'));
 ndeterminant = zeros(n,1,'int64');
 multiflag = false(n,1);
-[dlabels,dloops,dedges,dtriangles,ddegrees,dconnected,dspectrum,dports] = deal(cell(n,1));
+[dlabels,dloops,dedges,ddegrees,dconnected,dspectrum,dlabelspectrum,...
+    dports,adjacency] = deal(cell(n,1));
 if method == 1 % matlab
    G0 = graph(); % empty graph
    G = cell(n,1);
@@ -116,7 +117,8 @@ for i = 1:n
             At = At + At';
     end
 
-
+    % store adjacency matrix
+    adjacency{i} = At;
 
     % compute metrics
     multiflag(i) = any(At(:)>1);
@@ -127,7 +129,7 @@ for i = 1:n
     edges = nonzeros(At(:))';
     dedges{i} = uint8(edges);
     multiflag(i) = any(edges>1);
-    dtriangles{i} = uint16(diag((At-diag(diag(At)))^3))';
+    % dtriangles{i} = uint16(diag((At-diag(diag(At)))^3))';
     ddegrees{i} = uint8(sum(At,1));
     dloops{i} = uint16(diag(At))';
     spectrum = svd(At)'; % eig(At)'
@@ -169,7 +171,7 @@ end
 % convert cell arrays into matrices
 dedges = PMA_PadCatRowVectors(dedges{:});
 dlabels = PMA_PadCatRowVectors(dlabels{:}); % already sorted
-dtriangles = PMA_PadCatRowVectors(dtriangles{:});
+% dtriangles = PMA_PadCatRowVectors(dtriangles{:});
 ddegrees = PMA_PadCatRowVectors(ddegrees{:});
 dloops = PMA_PadCatRowVectors(dloops{:});
 dconnected = PMA_PadCatRowVectors(dconnected{:});
@@ -178,17 +180,33 @@ if inputtype == 2
     dports = PMA_PadCatRowVectors(dports{:});
 end
 
+% compute label-shifted spectrum
+[~,~,IC] = unique(dlabels); % obtain unique indices
+dlabels2 = reshape(IC,size(dlabels));
+% check if zeros are present
+if ~all(dlabels,'all')
+    dlabels2 = dlabels2 - 1; % shift by 1 to retain original zeros
+end
+% go through each graph
+for i = 1:n
+    dlabel = dlabels2(i,:); % extract
+    dlabel(dlabel==0) = []; % remove zero indices
+    labelspectrum = svd(adjacency{i}+double(diag(dlabel)))'; % eig(At)'
+    dlabelspectrum{i} = single(labelspectrum/max(labelspectrum));
+end
+dlabelspectrum = PMA_PadCatRowVectors(dlabelspectrum{:}); % already sorted
+
 % sort various metrics
 dedges = sort(dedges,2);
 switch inputtype
     %----------------------------------------------------------------------
     case 1 % filtering from a structure of graphs
-        dtriangles = sort(dtriangles,2);
+        % dtriangles = sort(dtriangles,2);
         ddegrees = sort(ddegrees,2);
         dloops = sort(dloops,2);
     %----------------------------------------------------------------------
     case 2 % called within the BFS graph generation algorithm
-        dtriangles = PMA_BinBasedSorting(dtriangles,Ln);
+        % dtriangles = PMA_BinBasedSorting(dtriangles,Ln);
         ddegrees = PMA_BinBasedSorting(ddegrees,Ln);
         dloops = PMA_BinBasedSorting(dloops,Ln);
         dports = PMA_BinBasedSorting(dports,Ln);
@@ -198,9 +216,9 @@ switch inputtype
 %         dports = sort(dports,2);
 end
 
-% sort graphs by spectrum
+% sort graphs by label-shifted spectrum
 % Isort = 1:length(Graphs); % original method
-[~,Isort] = sortrows(dspectrum);
+[~,Isort] = sortrows(dlabelspectrum);
 Isort = Isort(:)';
 
 % initialize number of nonisomorphic graphs found
@@ -268,8 +286,8 @@ for i = Isort(2:end)
         Ibin = Ibin(Ikeep);
 
         % compare triangle distributions
-        Ikeep = all(dtriangles(Ibin,:)==dtriangles(i,:),2);
-        Ibin = Ibin(Ikeep);
+        % Ikeep = all(dtriangles(Ibin,:)==dtriangles(i,:),2);
+        % Ibin = Ibin(Ikeep);
 
         % compare connected component distributions
         Ikeep = all(dconnected(Ibin,:)==dconnected(i,:),2);
@@ -279,6 +297,11 @@ for i = Isort(2:end)
         [S,Isort] = sort(vecnorm(dspectrum(Ibin,:)-dspectrum(i,:),inf,2));
         Ibin = Ibin(Isort); % sort
         Ibin(S > 1e-6) = []; % remove spectrum that are very different
+
+        % compare label-shifted spectrum
+        [S,Isort] = sort(vecnorm(dlabelspectrum(Ibin,:)-dlabelspectrum(i,:),inf,2));
+        Ibin = Ibin(Isort); % sort
+        Ibin(S > 1e-6) = []; % remove label-shifted spectrum that are very different
 
         % check no graphs to compare against
         if isempty(Ibin)

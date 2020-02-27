@@ -21,7 +21,7 @@ NSC.loops = 0; % no loops
 % options
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v11BFS';
 opts.algorithms.Nmax = 1e7;
 opts.isomethod = 'python';
 opts.parallel = true;

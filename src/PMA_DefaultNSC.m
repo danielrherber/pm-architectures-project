@@ -12,7 +12,8 @@ function [NSC,L,P,R] = PMA_DefaultNSC(NSC,L,P,R)
 %--------------------------------------------------------------------------
 % parse (L,R,P)
 % check labels
-L = L(:)'; % ensure row vector
+% standardize orientation
+L = L(:)'; % row vector
 if any(cellfun(@any,isstrprop(L,'digit')))
     error('L should not contain any digits')
 end
@@ -23,7 +24,8 @@ if isstruct(P)
         error('P.min and P.max needed')
     end
 
-    P.min = P.min(:)'; P.max = P.max(:)'; % ensure row vector
+    % standardize orientation
+    P.min = P.min(:)'; P.max = P.max(:)'; % row vector
 
 else
     Pt = P(:)'; clear P % ensure row vector
@@ -36,7 +38,9 @@ if isstruct(R)
     if ~isfield(R,'min') || ~isfield(R,'min')
         error('R.min and R.max needed')
     end
-    R.min = R.min(:)'; R.max = R.max(:)'; % ensure row vector
+
+    % standardize orientation
+    R.min = R.min(:)'; R.max = R.max(:)'; % row vector
 else
     Rt = R(:)'; clear R % ensure row vector
     R.max = Rt;
@@ -207,6 +211,60 @@ end
 if ~isfield(NSC,'userGraphNSC')
     NSC.userGraphNSC = []; % none by default
     % NSC.userGraphNSC = @(pp,A,feasibleFlag) myGraphNSCfunc(pp,A,feasibleFlag);
+end
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% linear penalty constraints on the catalog
+if ~isfield(NSC,'PenaltyMatrix')
+    NSC.PenaltyMatrix = []; % none by default
+    % NEED: examples
+end
+if ~isfield(NSC,'PenaltyValue')
+    NSC.PenaltyValue = []; % none by default
+    % NEED: examples
+end
+
+% standardize orientation
+NSC.PenaltyValue = NSC.PenaltyValue(:)'; % row vector
+
+% check dimensions
+if ~isempty(NSC.PenaltyMatrix)
+    if size(NSC.PenaltyMatrix,2) ~= Nt
+       error('dimensions of NSC.PenaltyMatrix are invalid')
+    end
+end
+if ~isempty(NSC.PenaltyValue)
+    if any(size(NSC.PenaltyValue) ~= [1 size(NSC.PenaltyMatrix,1)])
+       error('dimensions of NSC.PenaltyValue are invalid')
+    end
+end
+%--------------------------------------------------------------------------
+
+%--------------------------------------------------------------------------
+% linear satisfaction constraints on the catalog
+if ~isfield(NSC,'SatisfactionMatrix')
+    NSC.SatisfactionMatrix = []; % none by default
+    % NEED: examples
+end
+if ~isfield(NSC,'SatisfactionValue')
+    NSC.SatisfactionValue = []; % none by default
+    % NEED: examples
+end
+
+% standardize orientation
+NSC.SatisfactionValue = NSC.SatisfactionValue(:)'; % row vector
+
+% check dimensions
+if ~isempty(NSC.SatisfactionMatrix)
+    if size(NSC.SatisfactionMatrix,2) ~= Nt
+       error('dimensions of NSC.SatisfactionMatrix are invalid')
+    end
+end
+if ~isempty(NSC.SatisfactionValue)
+    if any(size(NSC.SatisfactionValue) ~= [1 size(NSC.SatisfactionMatrix,1)])
+       error('dimensions of NSC.SatisfactionValue are invalid')
+    end
 end
 %--------------------------------------------------------------------------
 
