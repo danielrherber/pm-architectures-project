@@ -31,8 +31,18 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
         Rs = r;
     end
 
+    % extract
+    Rmin = Rs.min; Rmax = Rs.max;
+    Pmin = Ps.min; Pmax = Ps.max;
+    nscNrmin = NSC.Nr(1); nscNrmax = NSC.Nr(2);
+    nscNpmin = NSC.Np(1); nscNpmax = NSC.Np(2);
+    PENmatrix = NSC.PenaltyMatrix; PENvalue = NSC.PenaltyValue;
+    SATmatrix = NSC.SatisfactionMatrix; SATvalue = NSC.SatisfactionValue;
+
     % enumerate subcatalogs
-    [Ls,Rs,Ps] = PMA_SubcatalogEnumerationAlg_v2(Rs,Ps,NSC,opts);
+    [Ls,Rs,Ps] = PMA_SubcatalogEnumerationAlg_v2(Rmin,Rmax,Pmin,Pmax,...
+        nscNrmin,nscNrmax,nscNpmin,nscNpmax,PENmatrix,PENvalue,SATmatrix,...
+        SATvalue,opts.displevel);
 
     %----------------------------------------------------------------------
     % subcatalog filters
@@ -43,9 +53,9 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
     Ls = Ls(passed,:); Rs = Rs(passed,:); Ps = Ps(passed,:);
 
     % find and remove zero port subcatalogs
-    Npsubcatalogs = sum(Rs.*Ps,2);
-    passed = Npsubcatalogs ~= 0;
-    Ls = Ls(passed,:); Rs = Rs(passed,:); Ps = Ps(passed,:);
+    % Npsubcatalogs = sum(Rs.*Ps,2);
+    % passed = Npsubcatalogs ~= 0;
+    % Ls = Ls(passed,:); Rs = Rs(passed,:); Ps = Ps(passed,:);
 
     % (connected, simple, no loops) graph subcatalog filter
     if NSC.flag.Cflag && all(NSC.simple) && ~NSC.flag.Lflag
@@ -69,7 +79,7 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
     % output some stats to the command window
     if (opts.displevel > 0) % minimal
         ttime = toc; % stop the timer
-        disp(['Now ',num2str(Nsubcatalogs),' subcatalogs in ',num2str(ttime),' s'])
+        disp(['Enumerating ',num2str(Nsubcatalogs),' subcatalogs after ',num2str(ttime),' s'])
     end
 
     % local NSC variables
@@ -95,10 +105,10 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
     strN = num2str(Nsubcatalogs);
 
     % randomize the ordering of the catalogs
-%     DataPerm = randperm(Nsubcatalogs);
-%     Ls = Ls(DataPerm,:);
-%     Rs = Rs(DataPerm,:);
-%     Ps = Ps(DataPerm,:);
+    % DataPerm = randperm(Nsubcatalogs);
+    % Ls = Ls(DataPerm,:);
+    % Rs = Rs(DataPerm,:);
+    % Ps = Ps(DataPerm,:);
 
     % sort the catalogs by total number of ports
     [~,DataPerm] = sort(sum(Ps,2),'descend');
@@ -147,7 +157,7 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
         % extract reduced potential adjacency matrix
         nsc.directA = localdirectA(ln,ln);
 
-        %
+        % extract multiedge adjacency matrix
         nsc.multiedgeA = localmultiedgeA(ln,ln);
 
         % extract nsc vectors
@@ -164,15 +174,6 @@ function FinalGraphs = PMA_GenerateWithSubcatalogs(L,Rs,Ps,NSC,opts)
         if localBflag
             nsc.lineTriple = PMA_ExtractLineConstraints(nsc.lineTriple,ln);
         end
-%         org = find(ln);
-%         new = 1:numel(org);
-%         for t = size(nsc.lineTriple,1):-1:1
-%             if ~all(ismember(nsc.lineTriple(t,:),find(ln)))
-%                 nsc.lineTriple(t,:) = []; % remove the constraint
-%             else
-%                 nsc.lineTriple(t,:) = PMA_changem(nsc.lineTriple(t,:),new,org);
-%             end
-%         end
 
         % update flags
         nsc.flag.Cflag = localCflag;

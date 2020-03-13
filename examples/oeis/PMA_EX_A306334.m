@@ -1,17 +1,15 @@
 %--------------------------------------------------------------------------
-% PMA_EX_A001710
-% A001710, number of necklaces one can make with n distinct beads: n!
-% bead permutations, divide by two to represent flipping the necklace over,
-% divide by n to represent rotating the necklace
-% number of connected labeled graphs on n nodes with exactly 1 cycle
-% 1, 1, 3, 12, 60, 360, 2520, 20160, 181440, 1814400, 19958400, ...
+% PMA_EX_A306334
+% A306334, a(n) is the number of different linear hydrocarbon molecules
+% with n carbon atoms
+% 1, 3, 4, 10, 18, 42, 84, 192, 409, 926, 2030, 4577, 10171, 22889, 51176, ...
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function varargout = PMA_EX_A001710(varargin)
+function varargout = PMA_EX_A306334(varargin)
 
 % options (see function below)
 opts = localOpts;
@@ -24,21 +22,23 @@ if ~isempty(varargin)
     t1 = tic; % start timer
 else
     clc; close all
-    n = 6; % number of nodes (currently completed for n = 11)
+    n = 6; % number of nodes (currently completed for n = 9)
 end
 
-L = cellstr(strcat(dec2base((1:n+1)+9,36))); % labels
-R.min = ones(n+1,1); R.max = R.min; % replicates vector
-P.min = repmat(min(2,n),n+1,1); P.max = P.min; % ports vector
-NSC.simple = 1; % simple components
+L = {'C'}; % labels
+R.min = n; R.max = n; % replicates
+P.min = min(1,n-1); P.max = 4; % ports
 NSC.connected = 1; % connected graph required
 NSC.loops = 0; % no loops
+NSC.Np = [2*(n-1) 4*(n-1)+2]; % *not the best upper bound
+NSC.userGraphNSC = @(pp,A,feasibleFlag) myGraphNSCfunc(pp,A,feasibleFlag);
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
-% number of graphs based on OEIS A001710
-N = [1,1,3,12,60,360,2520,20160,181440,1814400,19958400,239500800];
+% number of graphs based on OEIS A306334
+N = [1,3,4,10,18,42,84,192,409,926,2030,4577,10171,22889,51176,115070,...
+    257987,579868,1301664,2925209,];
 n2 = N(n);
 
 % compare number of graphs and create outputs
@@ -57,10 +57,34 @@ end
 function opts = localOpts
 
 opts.algorithm = 'tree_v11DFS_mex';
-opts.algorithms.Nmax = 2e7;
-opts.isomethod = 'none'; % not needed
+opts.algorithms.Nmax = 1e6;
+opts.algorithms.isoNmax = inf;
+opts.isomethod = 'python';
+opts.parallel = true;
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.plots.randomize = true;
 
+end
+
+function [pp,A,feasibleFlag] = myGraphNSCfunc(pp,A,feasibleFlag)
+
+% only if the graph is currently feasible
+if ~feasibleFlag
+    return % exit, graph infeasible
+end
+
+% check if path graph
+if any(sum(A~=0)>2)
+    feasibleFlag = false;
+    return % exit, graph infeasible
+end
+
+% check for cycles
+cycleFlag = PMA_DetectCycle(logical(A));
+if cycleFlag
+    feasibleFlag = false;
+    return % exit, graph infeasible
+end
+    
 end

@@ -8,9 +8,22 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clear; clc; close all
+function varargout = PMA_EX_A000262(varargin)
 
-n = 7; % number of nodes (currently completed for n = 9)
+% options (see function below)
+opts = localOpts;
+
+% parse inputs
+if ~isempty(varargin)
+    n = varargin{1}; % extract n
+    opts.plots.plotmax = 0;
+    opts.displevel = 0;
+    t1 = tic; % start timer
+else
+    clc; close all
+    n = 7; % number of nodes (currently completed for n = 9)
+end
+
 catalognum = 1;
 switch catalognum
     case 1
@@ -32,16 +45,6 @@ NSC.loops = 0; % no loops
 NSC.Nr = [n+1 n+1];
 NSC.Np = [2*n 2*n]; % tree condition
 
-% options
-opts.plots.plotmax = 5;
-opts.plots.labelnumflag = false;
-opts.plots.randomize = true;
-opts.algorithm = 'tree_v11DFS_mex';
-opts.algorithms.Nmax = 1e5;
-opts.algorithms.isoNmax = 0;
-opts.isomethod = 'none';
-opts.parallel = 6;
-
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
@@ -51,6 +54,28 @@ for k = 1:n
    n2 = n2 + nchoosek(n,k)*nchoosek(n-1,k-1)*factorial(n-k);
 end
 
-% compare number of graphs
-disp("correct?")
-disp(string(isequal(length(G1),n2)))
+% compare number of graphs and create outputs
+if isempty(varargin)
+    disp("correct?")
+    disp(string(isequal(length(G1),n2)))
+else
+    varargout{1} = n;
+    varargout{2} = isequal(length(G1),n2);
+    varargout{3} = toc(t1); % timer
+end
+
+end
+
+% options
+function opts = localOpts
+
+opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithms.Nmax = 1e5;
+opts.algorithms.isoNmax = 0;
+opts.isomethod = 'none';
+opts.parallel = true; % 6;
+opts.plots.plotmax = 5;
+opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
+
+end

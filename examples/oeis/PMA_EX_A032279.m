@@ -9,25 +9,28 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clear; clc; close all
+function varargout = PMA_EX_A032279(varargin)
 
-n = 15; % number of nodes (currently completed for n = 30)
+% options (see function below)
+opts = localOpts;
+
+% parse inputs
+if ~isempty(varargin)
+    n = varargin{1}; % extract n
+    opts.plots.plotmax = 0;
+    opts.displevel = 0;
+    t1 = tic; % start timer
+else
+    clc; close all
+    n = 15; % number of nodes (currently completed for n = 30)
+end
+
 L = {'W','B'}; % labels
-R.min = [n-5 5]; R.max = [n-5 5]; % replicate vector
-P.min = [2 2]; P.max = [2 2]; % ports vector
+R.min = [n-5 5]; R.max = [n-5 5]; % replicates
+P.min = [2 2]; P.max = [2 2]; % ports
 NSC.simple = 1; % simple components
 NSC.connected = 1; % connected graph
 NSC.loops = 0; % no loops
-
-% options
-opts.plots.plotmax = 5;
-opts.plots.labelnumflag = false;
-opts.plots.colorlib = @CustomColorLib;
-opts.algorithm = 'tree_v11DFS_mex';
-opts.algorithms.Nmax = 1e7;
-opts.algorithms.isoNmax = inf;
-opts.isomethod = 'python';
-opts.parallel = true;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
@@ -38,10 +41,33 @@ N = [1,1,3,5,10,16,26,38,57,79,111,147,196,252,324,406,507,621,759,913,...
     6681,7467,8311,9234,10222,11298,12446,13691,15015,16445];
 n2 = N(n-4);
 
-% compare number of graphs
-disp("correct?")
-disp(string(isequal(length(G1),n2)))
+% compare number of graphs and create outputs
+if isempty(varargin)
+    disp("correct?")
+    disp(string(isequal(length(G1),n2)))
+else
+    varargout{1} = n;
+    varargout{2} = isequal(length(G1),n2);
+    varargout{3} = toc(t1); % timer
+end
 
+end
+
+% options
+function opts = localOpts
+
+opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithms.Nmax = 1e7;
+opts.algorithms.isoNmax = inf;
+opts.isomethod = 'python';
+opts.parallel = true;
+opts.plots.plotmax = 5;
+opts.plots.labelnumflag = false;
+opts.plots.colorlib = @CustomColorLib;
+
+end
+
+% custom color library
 function c = CustomColorLib(L)
 c = zeros(length(L),3); % initialize
 for k = 1:length(L) % go through each label and assign a color

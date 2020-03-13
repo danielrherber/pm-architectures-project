@@ -10,25 +10,28 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clear; clc; close all
+function varargout = PMA_EX_A108246(varargin)
 
-n = 7; % number of nodes (currently completed for n = 9)
+% options (see function below)
+opts = localOpts;
+
+% parse inputs
+if ~isempty(varargin)
+    n = varargin{1}; % extract n
+    opts.plots.plotmax = 0;
+    opts.displevel = 0;
+    t1 = tic; % start timer
+else
+    clc; close all
+    n = 8; % number of nodes (currently completed for n = 10)
+end
+
 L = cellstr(strcat(dec2base((1:n)+9,36))); % labels
-R.min = ones(n,1); R.max = ones(n,1); % replicate vector
-P.min = repelem(2,n,1); P.max = repelem(2,n,1); % ports vector
+R.min = ones(n,1); R.max = ones(n,1); % replicates
+P.min = repelem(2,n,1); P.max = repelem(2,n,1); % ports
 % NSC.multiedgeA = ones(n); % no multiedges
 NSC.simple = 1; % no multiedges
 NSC.loops = 1; % single loop allowed
-
-% options
-opts.plots.plotmax = 5;
-opts.plots.labelnumflag = false;
-opts.plots.randomize = true;
-opts.algorithm = 'tree_v11DFS_mex';
-opts.algorithms.Nmax = 1e6;
-opts.algorithms.isoNmax = inf;
-opts.isomethod = 'python';
-opts.parallel = false;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
@@ -37,6 +40,28 @@ G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 N = [1,1,2,8,38,208,1348,10126,86174,819134,8604404,98981944,1237575268];
 n2 = N(n);
 
-% compare number of graphs
-disp("correct?")
-disp(string(isequal(length(G1),n2)))
+% compare number of graphs and create outputs
+if isempty(varargin)
+    disp("correct?")
+    disp(string(isequal(length(G1),n2)))
+else
+    varargout{1} = n;
+    varargout{2} = isequal(length(G1),n2);
+    varargout{3} = toc(t1); % timer
+end
+
+end
+
+% options
+function opts = localOpts
+
+opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithms.Nmax = 1e6;
+opts.algorithms.isoNmax = inf;
+opts.isomethod = 'none'; % none needed with certain methods
+opts.parallel = false;
+opts.plots.plotmax = 5;
+opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
+
+end

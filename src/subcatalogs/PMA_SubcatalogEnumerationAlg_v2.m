@@ -8,15 +8,9 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [L,R,P] = PMA_SubcatalogEnumerationAlg_v2(Rin,Pin,NSC,opts)
-
-% extract
-Rmin = Rin.min; Rmax = Rin.max;
-Pmin = Pin.min; Pmax = Pin.max;
-nscNrmin = NSC.Nr(1); nscNrmax = NSC.Nr(2);
-nscNpmin = NSC.Np(1); nscNpmax = NSC.Np(2);
-PENmatrix = NSC.PenaltyMatrix; PENvalue = NSC.PenaltyValue;
-SATmatrix = NSC.SatisfactionMatrix; SATvalue = NSC.SatisfactionValue;
+function [L,R,P] = PMA_SubcatalogEnumerationAlg_v2(Rmin,Rmax,Pmin,Pmax,...
+    nscNrmin,nscNrmax,nscNpmin,nscNpmax,PENmatrix,PENvalue,SATmatrix,...
+    SATvalue,displevel)
 
 % set flags
 if nscNrmax == uint64(inf)
@@ -29,10 +23,15 @@ if nscNpmax == uint64(inf)
 else
     Npflag = true;
 end
-if isempty(PENmatrix)
+if isempty(PENvalue)
     PENflag = false;
 else
     PENflag = true;
+end
+if isempty(SATvalue)
+    SATflag = false;
+else
+    SATflag = true;
 end
 
 % overall maximum ports and replicates for any type
@@ -46,7 +45,7 @@ Ps = cell(NPmax+1,NPmax,NRmax); % +1 offset because of 0 indexing
 Nt = length(Rmin);
 
 % initialize
-R = {[]}; P = {[]}; L = {[]}; PEN = 0;
+R = zeros(1,0); P = zeros(1,0); L = zeros(1,0); PEN = 0;
 
 % go through each type
 for k = 1:Nt
@@ -54,19 +53,22 @@ for k = 1:Nt
     if k == 1
         Nc = 1; % initially only 1 catalog
     else
-        Nc = size(R,2); % compute the previous number of catalogs
+        Nc = size(R,1); % compute the previous number of catalogs
     end
 
     % initialize
-    Lnow = {}; Rnow = {}; Pnow = {}; PENnow = [];
+    Rg = cell(Nc,1); Pg = cell(Nc,1); Lg = cell(Nc,1); PENg = cell(Nc,1);
+    idx = 0;
 
     % go through previous catalogs
     for ic = 1:Nc
         % extract previous catalog
-        Rc = R{ic}; % replicates
-        Pc = P{ic}; % ports
-        Lc = L{ic}; % labels
-        PENc = PEN(ic); % penalty values
+        Rc = R(ic,:); % replicates
+        Pc = P(ic,:); % ports
+        Lc = L(ic,:); % labels
+        if PENflag
+            PENc = PEN(ic); % penalty values
+        end
 
         % go through each number of replicates
         for r = Rmin(k):Rmax(k)
@@ -86,7 +88,7 @@ for k = 1:Nt
             % enhancement: port counts
             %--------------------------------------------------------------
             % find all subcatalogs that don't have too many ports
-            if ic ~= 1
+            if Npflag
                 I = sum(Rc.*Pc,2) + sum(Rp.*Pp,2) <= nscNpmax;
 
                 % extract feasible subcatalogs
@@ -112,8 +114,6 @@ for k = 1:Nt
                 Rp = Rp(I,:);
                 Pp = Pp(I,:);
                 PENp = PENp(I,:);
-            else
-                PENp = zeros(size(Rp,1),1);
             end
             %--------------------------------------------------------------
 
@@ -125,71 +125,102 @@ for k = 1:Nt
             Rlocal = [repmat(Rc,NI,1),Rp];
             Plocal = [repmat(Pc,NI,1),Pp];
 
-            % append feasible subcatalogs
-            for ip = 1:NI
-                Lnow{end+1} = Llocal;
-                Rnow{end+1} = Rlocal(ip,:);
-                Pnow{end+1} = Plocal(ip,:);
-                PENnow(end+1,:) = PENp(ip,:);
+            % increment index
+            idx = idx + 1;
+
+            % if extra storage is needed
+            if size(Rg,1) < idx
+                Lg = [Lg;cell(2*Nc,1)];
+                Rg = [Rg;cell(2*Nc,1)];
+                Pg = [Pg;cell(2*Nc,1)];
+                if PENflag
+                    PENg = [PENg;cell(2*Nc,1)];
+                end
             end
+
+            % add
+            Lg{idx} = repmat(Llocal,NI,1);
+            Rg{idx} = Rlocal;
+            Pg{idx} = Plocal;
+            if PENflag
+                PENg{idx} = PENp;
+            end
+
         end
     end
 
+    % determine which subcatalog groupings are empty
+    Iremove = cellfun(@isempty, Rg);
+
+    % check if any subcatalog groupings should be removed
+    if any(Iremove)
+        % remove empty entries
+        Lg(Iremove) = []; Rg(Iremove) = []; Pg(Iremove) = [];
+    end
+
+    % compute rows and columns for each subcatalog grouping
+    [Rnrows,Rncols] = cellfun(@size, Rg);
+
+    % if padding is needed
+    if any(diff(Rncols))
+
+        % maximum number of entries in a subcatalog grouping
+        Nmax = max(Rncols);
+
+        % go through each subcatalog grouping
+        for ic = 1:length(Rncols)
+
+            % compute padding matrix
+            zpad = zeros(Rnrows(ic),Nmax-Rncols(ic));
+
+            % pad
+            Lg{ic} = [Lg{ic},zpad];
+            Rg{ic} = [Rg{ic},zpad];
+            Pg{ic} = [Pg{ic},zpad];
+        end
+
+    end
+
     % assign current list of catalogs
-    L = Lnow;
-    R = Rnow;
-    P = Pnow;
-    PEN = PENnow;
+    L = vertcat(Lg{:}); R = vertcat(Rg{:}); P = vertcat(Pg{:});
+    if PENflag
+        PEN = vertcat(PENg{:});
+    end
 
     % output some stats to the command window
-    if (opts.displevel > 0) % minimal
+    if (displevel > 1) % minimal
         ttime = toc; % stop the timer
-        disp(['Created ',num2str(length(R)),' subcatalogs in ',num2str(ttime),' s'])
+        disp(strcat(string(length(R))," subcatalogs in ",string(ttime)," s"))
     end
 
 end
 
-% counts for each subcatalog
-Lcounts = cellfun(@length,L);
-
-% maximum subcatalog size
-Nmax = max(Lcounts);
-
-% pad vectors with zeros
-L = PMA_PadCatRowVectors(L{:});
-R = PMA_PadCatRowVectors(R{:});
-P = PMA_PadCatRowVectors(P{:});
-
 % check minimum number of replicates
 if Nrflag
     Ik = sum(R,2) >= nscNrmin;
-    L = L(Ik,:);
-    R = R(Ik,:);
-    P = P(Ik,:);
+    L = L(Ik,:); R = R(Ik,:); P = P(Ik,:);
 end
 
 % check minimum number of ports
 if Npflag
     Ik = sum(P.*R,2) >= nscNpmin;
-    L = L(Ik,:);
-    R = R(Ik,:);
-    P = P(Ik,:);
+    L = L(Ik,:); R = R(Ik,:); P = P(Ik,:);
 end
 
 % check linear satisfaction constraints
-for k = 1:size(SATmatrix,1)
-    PENl = PMA_changem(L,[0 SATmatrix(k,:)],0:size(L,2));
-    Ik = dot(PENl,double(R),2) >= SATvalue(k);
-    L = L(Ik,:);
-    R = R(Ik,:);
-    P = P(Ik,:);
+if SATflag
+    for k = 1:length(SATvalue)
+        PENl = PMA_changem(L,[0 SATmatrix(k,:)],0:size(L,2));
+        Ik = dot(PENl,double(R),2) >= SATvalue(k);
+        L = L(Ik,:); R = R(Ik,:); P = P(Ik,:);
+    end
 end
 
 % convert data type
-R = double(R);
-P = double(P);
+R = double(R); P = double(P);
 
 end
+
 %
 function [R,P,Rs,Ps] = PMA_SubcatalogEnumerationAlg_Ports(n,pmin,pmax,...
     Rs,Ps,nscNrmax,Rflag,nscNpmax,Pflag)
@@ -200,8 +231,8 @@ function [R,P,Rs,Ps] = PMA_SubcatalogEnumerationAlg_Ports(n,pmin,pmax,...
 % no replicates
 if n == 0
     % assign
-    R = zeros(1,0,'uint8');
-    P = zeros(1,0,'uint8');
+    R = zeros(1,1,'uint8');
+    P = zeros(1,1,'uint8');
     return
 end
 
@@ -234,120 +265,132 @@ PMIN = pmin;
 % initialize
 R = zeros(1,n,'uint8');
 P = zeros(1,n,'uint8');
+Rdone = cell(n,1); Pdone = cell(n,1);
 
 % go through each replicate
 for k = 1:n
-    % reset
-    idx = 0;
 
-    % size of previous catalogs
+    % check if any catalogs remain
+    if isempty(R)
+        R = []; P = []; % clear
+        break % continue, too many replicates to continue
+    end
+
+    % number of remaining replicates
+    Nr = n - sum(R,2);
+
+    % find all catalogs that have no remaining ports
+    done = (Nr == 0);
+
+    % check if any catalogs have all replicates allocated
+    if any(done)
+        % assign done
+        Rdone{k} = R(done,:);
+        Pdone{k} = P(done,:);
+
+        % remove done
+        R(done,:) = []; P(done,:) = []; Nr(done) = [];
+    end
+
+    % current number of catalogs
     Nc = size(R,1);
 
-    % maximum number of new catalogs (better bound?)
-    Nmax = Nc*(pmax-PMIN+1)*(n-k+1);
-    Nadd = 1e5;
-    Nmax = min(Nadd,Nmax);
+    % sequence of replicate counts
+    rs = 1:max(Nr);
 
-    % preallocate
-    Rnow = zeros(Nmax,n,'uint8');
-    Pnow = zeros(Nmax,n,'uint8');
+    % initialize
+    rstorage = cell(1,length(rs));
+    r2 = cell(1,Nc);
 
-    % go through previous catalogs
-    for ic = 1:Nc
-        % copy previous catalog
-        Rlocal = R(ic,:); % replicates
-        Plocal = P(ic,:); % ports
+    % create increasing replicate sequence (e.g. {[1],[1,2],[1,2,3]}
+    for ip = 1:length(rs)
+        rstorage{ip} = 1:rs(ip);
+    end
 
-        % number of remaining replicates
-        Nr = n - sum(Rlocal);
+    % assign appropriate replicate sequences
+    r2(:) = rstorage(Nr);
 
-        % continue if no replicates remain
-        if (Nr == 0)
-            % increment counter
-            idx = idx + 1;
+    % replicate
+    R = repelem(R,Nr,1);
+    P = repelem(P,Nr,1);
 
-            % check if we need to increase storage size
-            if idx > size(Rnow,1)
-                Rnow = [Rnow;zeros(Nmax,n,'uint8')];
-                Pnow = [Pnow;zeros(Nmax,n,'uint8')];
-            end
+    % assign current number of ports
+    R(:,k) = horzcat(r2{:})';
 
-            % assign
-            Rnow(idx,:) = Rlocal;
-            Pnow(idx,:) = Plocal;
-            continue
+    %----------------------------------------------------------------------
+    % enhancement: replicate counts
+    %----------------------------------------------------------------------
+    if Rflag
+        failed = (sum(R,2) > nscNrmax);
+        if all(failed)
+            R = []; P = []; % clear
+            break % continue, too many replicates to continue
         end
 
-        % go through assigning the number of replicates to the bin
-        for r = 1:Nr
-            % update minimum value of port quantity
-            if k == 1
-                % for first replicate quantity, don't change pmin
-                % pmin = pmin;
-            else
-                % increment value by 1 to ensure increasing port quantities
-                pmin = Plocal(k-1)+1;
-            end
+        % remove failed
+        R(failed,:) = []; P(failed,:) = [];
+    end
+    %----------------------------------------------------------------------
 
-            % assign current number of replicates
-            Rlocal(k) = r;
+    % current number of catalogs
+    Nc = size(R,1);
 
-            %--------------------------------------------------------------
-            % enhancement: replicate counts
-            %--------------------------------------------------------------
-            if Rflag
-                if (sum(Rlocal) > nscNrmax)
-                    continue % continue, too many replicates
-                end
-            end
-            %--------------------------------------------------------------
+    % update minimum value of port quantity
+    % increment value by 1 to ensure increasing port quantities
+    if k == 1
+        pmin = repelem(PMIN,Nc,1);
+    else
+        pmin = max(P,[],2)+1;
+    end
 
-            %--------------------------------------------------------------
-            % enhancement: linear penalty constraints
-            %--------------------------------------------------------------
-            % NEED
-            %--------------------------------------------------------------
+    % sequence of port counts
+    ps = min(pmin):pmax;
 
-            % go through each possible port quantity
-            for p = pmin:pmax
-                % assign current number of ports
-                Plocal(k) = p;
+    % change to linear indexing
+    pmin2 = PMA_changem(pmin,1:length(ps),ps);
 
-                %----------------------------------------------------------
-                % enhancement: port counts
-                %----------------------------------------------------------
-                if Pflag
-                    if (sum(Rlocal.*Plocal,2) > nscNpmax)
-                        continue % continue, too many ports
-                    end
-                end
-                %----------------------------------------------------------
+    % initialize
+    pstorage = cell(1,length(ps)+1+max(pmin));
+    p2 = cell(1,Nc);
 
-                % increment counter
-                idx = idx + 1;
+    % create shrinking port sequence (e.g. {[1,2,3],[2,3],[3]}
+    for ip = 1:length(ps)
+        pstorage{ip} = ps(ip):pmax;
+    end
 
-                % check if we need to increase storage size
-                if idx > size(Rnow,1)
-                    Rnow = [Rnow;zeros(Nmax,n,'uint8')];
-                    Pnow = [Pnow;zeros(Nmax,n,'uint8')];
-                    disp(1)
-                end
+    % assign empty array to appropriate entries
+    pstorage(length(ps)+1:end) = {zeros(1,0)};
 
-                % assign
-                Rnow(idx,:) = Rlocal;
-                Pnow(idx,:) = Plocal;
-            end % for p = pmin:pmax
-        end % for r = 1:Nr
-    end % for ic = 1:Nc
+    % assign appropriate port sequences
+    p2(:) = pstorage(pmin2);
 
-    % extract the current catalogs
-    Rnow = Rnow(1:idx,:);
-    Pnow = Pnow(1:idx,:);
+    % replicate
+    R = repelem(R,pmax+1-pmin,1);
+    P = repelem(P,pmax+1-pmin,1);
 
-    % assign current list of catalogs
-    R = Rnow;
-    P = Pnow;
+    % assign current number of ports
+    P(:,k) = horzcat(p2{:})';
+
+    %----------------------------------------------------------------------
+    % enhancement: port counts
+    %----------------------------------------------------------------------
+    if Pflag
+        failed = (sum(R.*P,2) > nscNpmax);
+        if all(failed)
+            R = []; P = []; % clear
+            break % continue, too many ports to continue
+        end
+
+        % remove failed
+        R(failed,:) = []; P(failed,:) = [];
+    end
+    %----------------------------------------------------------------------
+
 end
+
+% combine
+R = [vertcat(Rdone{:});R];
+P = [vertcat(Pdone{:});P];
 
 % assign to storage elements
 Rs{PMIN+1,pmax,n} = R;

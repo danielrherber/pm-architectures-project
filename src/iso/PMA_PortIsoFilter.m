@@ -9,7 +9,7 @@
 %--------------------------------------------------------------------------
 function [M,I,N] = PMA_PortIsoFilter(M,I,phi,opts)
 
-% convery M data type
+% convert M data type
 M = uint16(M);
 
 % substitute values in data array

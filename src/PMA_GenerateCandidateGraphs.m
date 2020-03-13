@@ -20,6 +20,15 @@ if (displevel > 1) % verbose
     disp(['At least ',num2str(floor(L)),' unique graphs for (L,R,P) using Eqn. (12)'])
 end
 
+% check if catalog has no ports
+if ~any(P)
+    % return single graph
+    CandidateGraphs = zeros(1,0); % no edges
+    I = 0; % no perfect matching
+    N = 1; % single graph
+    return
+end
+
 % select the desired algorithm to generate candidate graphs
 switch opts.algorithm
     %------------------------------------------------------------------

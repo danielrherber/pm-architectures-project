@@ -1,14 +1,15 @@
 %--------------------------------------------------------------------------
-% PMA_EX_A000142
-% A000142, generate all permutations of n vertices
-% 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, ...
+% PMA_EX_A000029
+% A000029, number of necklaces with n beads of 2 colors, allowing turning
+% over (these are also called bracelets) 
+% 2, 3, 4, 6, 8, 13, 18, 30, 46, 78, 126, 224, 380, 687, 1224, 2250, ...
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function varargout = PMA_EX_A000142(varargin)
+function varargout = PMA_EX_A000029(varargin)
 
 % options (see function below)
 opts = localOpts;
@@ -21,30 +22,30 @@ if ~isempty(varargin)
     t1 = tic; % start timer
 else
     clc; close all
-    n = 8; % number of nodes (currently completed for n = 9)
+    n = 7; % number of nodes (currently completed for n = 20)
 end
 
-catalognum = 1;
-switch catalognum
+switch n
     case 1
-        L = ['STR';string(dec2base((1:n)+9,36))]; % labels
-        R.min = ones(n+1,1); R.max = R.min; % replicate vector
-        P.min = ones(n+1,1); P.max = [1;repmat(2,n,1)]; % ports vector
-    case 2 % old catalog with fixed ports
-        L = ['STR';'END';cellstr(strcat(dec2base((1:n)+9,36)))]; % labels
-        R.min = ones(n+2,1); R.max = R.min; % replicates vector
-        P = [1;1;repmat(2,n,1)]; % ports vector
+        L = {'B','W'};
+        R.min = [0 0]; R.max = [n n];
+        P.min = [0 0]; P.max = P.min;
+    otherwise
+        L = {'B','W'};
+        R.min = [0 0]; R.max = [n n];
+        P.min = [2 2]; P.max = P.min;
 end
-NSC.simple = 1; % simple components
+NSC.Nr = [n n];
 NSC.connected = 1; % connected graph required
 NSC.loops = 0; % no loops
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
-
-% number of graphs based on OEIS A000142
-G2 = perms(1:n);
-n2 = length(G2);
+    
+% number of graphs based on OEIS A000029
+N = [2,3,4,6,8,13,18,30,46,78,126,224,380,687,1224,2250,4112,7685,14310,...
+    27012,50964,96909,184410];
+n2 = N(n);
 
 % compare number of graphs and create outputs
 if isempty(varargin)
@@ -61,12 +62,28 @@ end
 % options
 function opts = localOpts
 
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v11BFS';
 opts.algorithms.Nmax = 1e6;
-opts.isomethod = 'none'; % not needed
-opts.parallel = true;
+opts.algorithms.isoNmax = inf;
+opts.isomethod = 'py-igraph';
+opts.parallel = false; % only 1 catalog
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.plots.randomize = true;
+opts.plots.colorlib = @CustomColorLib;
 
+end
+
+% custom color library
+function c = CustomColorLib(L)
+c = zeros(length(L),3); % initialize
+for k = 1:length(L) % go through each label and assign a color
+    switch upper(L{k})
+        case 'W'
+            ct = [0.9 0.9 0.9];
+        case 'B'
+            ct = [0.4 0.4 0.4];
+    end
+    c(k,:) = ct; % assign
+end
 end

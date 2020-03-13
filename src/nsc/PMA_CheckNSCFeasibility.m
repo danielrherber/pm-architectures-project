@@ -7,7 +7,8 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [A,L,Ln,rmphi,Amout,feasibleFlag] = PMA_CheckNSCFeasibility(PM,Nc,phi,Iunsort,ports,Sflag,Bflag,Bm,customfunFlag,CustFeasChecks)
+function [A,L,Ln,rmphi,Amout,feasibleFlag] = PMA_CheckNSCFeasibility(PM,...
+    Nc,phi,Iunsort,ports,Sflag,Bflag,Bm,customfunFlag,CustFeasChecks)
 
     % dummy outputs
     A = []; L = []; Ln = []; rmphi = []; Amout = [];

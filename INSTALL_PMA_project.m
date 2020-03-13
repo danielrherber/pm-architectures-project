@@ -27,8 +27,14 @@ function INSTALL_PMA_project(varargin)
 
 	warning('off','MATLAB:dispatcher:nameConflict');
 
+    % display banner text
+    RunSilent('DisplayBanner',silentflag)
+
     % add contents to path
     RunSilent('AddSubmissionContents(mfilename)',silentflag)
+
+    % Check toolboxes and versions
+    RunSilent('MinimumVersionChecks',silentflag)
 
     % download required web zips
     RunSilent('RequiredWebZips',silentflag)
@@ -36,7 +42,7 @@ function INSTALL_PMA_project(varargin)
     % delete assert.m in MFX 10922
     disp('--- Deleting assert.m in MFX 10922')
     listing = dir(which(mfilename));
-    delete(fullfile(listing.folder,'include','MFX 10922','matlab_bgl','test','assert.m'));
+    evalc("delete(fullfile(listing.folder,'include','MFX 10922','matlab_bgl','test','assert.m'))");
     disp(' ')
 
     % add contents to path (because of assert.m deletion above)
@@ -60,6 +66,9 @@ function INSTALL_PMA_project(varargin)
 
 	% close this file
     RunSilent('CloseThisFile(mfilename)',silentflag)
+
+    % display banner text
+    RunSilent('DisplayBanner',silentflag)
 
 	warning('on','MATLAB:dispatcher:nameConflict');
 
@@ -344,4 +353,87 @@ function RunFiles(files)
         disp(' ')
     end
 
+end
+%--------------------------------------------------------------------------
+function MinimumVersionChecks
+    disp('--- Checking toolbox versions')
+
+    % initialize index
+    ind = 0;
+
+    % initialize structure
+    test = struct('toolbox','','version','','required','');
+
+    % test 1: MATLAB
+    ind = ind + 1; % increment
+    test(ind).toolbox = 'matlab';
+    test(ind).version = '0'; % any?
+    test(ind).required = true;
+
+    % test 2: MATLAB Coder
+    ind = ind + 1; % increment
+    test(ind).toolbox = 'matlabcoder';
+    test(ind).version = '0'; % any?
+    test(ind).required = false;
+
+    % test 3: Parallel Computing Toolbox
+    ind = ind + 1; % increment
+    test(ind).toolbox = 'parallel';
+    test(ind).version = '0'; % any?
+    test(ind).required = false;
+
+    % download and unzip
+    VersionChecks(test)
+
+    disp(' ')
+end
+%--------------------------------------------------------------------------
+function VersionChecks(test)
+
+    % initialize counter
+    counter = 0;
+
+    % go through each file
+    for k = 1:length(test)
+        try
+            if verLessThan(test(k).toolbox,test(k).version) % failed
+                if test(k).required % required
+                    str = ['Failed (REQUIRED): ',test(k).toolbox];
+                else % recommended
+                    str = ['Failed (optional): ',test(k).toolbox];
+                end
+
+            else % passed
+                str = ['Passed: ',test(k).toolbox];
+                counter = counter + 1;
+
+            end
+
+        catch % failed to check the toolbox
+            str = ['Failed to check toolbox: ', test(k).toolbox];
+
+        end
+        if ~strcmpi(test(k).version,'0')
+            str = [str,' -v', test(k).version];
+        end
+
+        % display to command window
+        disp(str)
+
+    end
+
+    % check if all tests were passed
+    if counter == length(test) % successful
+        disp('All toolbox and version checks passed')
+    else % failure
+        warning('Not all toolbox and version checks were successful')
+    end
+end
+%--------------------------------------------------------------------------
+function DisplayBanner
+    disp('---------------------------------------------------------------')
+    disp('                   <strong>PM Architectures Project</strong>                    ')
+    disp('Primary contributor: Daniel R. Herber (danielrherber on GitHub)')
+    disp('Link: <a href = "https://github.com/danielrherber/pm-architectures-project">https://github.com/danielrherber/pm-architectures-project</a>')
+    disp('---------------------------------------------------------------')
 end

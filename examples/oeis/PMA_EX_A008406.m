@@ -20,20 +20,20 @@ clear; clc; close all
 n = 5; % number of nodes
 k = 6; % number of edges
 L = {'A'}; % labels
-R.min = n; R.max = n; % replicate vector
-P.min = 0; P.max = n-1; % ports vector
+R.min = n; R.max = n; % replicates
+P.min = 0; P.max = n-1; % ports
 NSC.simple = 1; % simple components
 NSC.connected = 0; % connected graph not required
 NSC.loops = 0; % loops
 NSC.Np = [2*k 2*k]; % edge bounds
 
 % options
-opts.algorithms.Nmax = 1e5;
-opts.plots.plotmax = 10;
-opts.plots.labelnumflag = false;
 opts.algorithm = 'tree_v11BFS';
+opts.algorithms.Nmax = 1e5;
 opts.isomethod = 'python';
 opts.parallel = true;
+opts.plots.plotmax = 10;
+opts.plots.labelnumflag = false;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);

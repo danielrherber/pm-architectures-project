@@ -1,17 +1,15 @@
 %--------------------------------------------------------------------------
-% PMA_EX_A001710
-% A001710, number of necklaces one can make with n distinct beads: n!
-% bead permutations, divide by two to represent flipping the necklace over,
-% divide by n to represent rotating the necklace
-% number of connected labeled graphs on n nodes with exactly 1 cycle
-% 1, 1, 3, 12, 60, 360, 2520, 20160, 181440, 1814400, 19958400, ...
+% PMA_EX_A060542
+% A060542, number of ways of dividing 3n labeled items into 3 unlabeled
+% boxes with n items in each box
+% 1, 15, 280, 5775, 126126, 2858856, 66512160, 1577585295, 37978905250, ...
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function varargout = PMA_EX_A001710(varargin)
+function varargout = PMA_EX_A060542(varargin)
 
 % options (see function below)
 opts = localOpts;
@@ -24,21 +22,23 @@ if ~isempty(varargin)
     t1 = tic; % start timer
 else
     clc; close all
-    n = 6; % number of nodes (currently completed for n = 11)
+    n = 3; % number of nodes (currently completed for n = 4)
 end
 
-L = cellstr(strcat(dec2base((1:n+1)+9,36))); % labels
-R.min = ones(n+1,1); R.max = R.min; % replicates vector
-P.min = repmat(min(2,n),n+1,1); P.max = P.min; % ports vector
-NSC.simple = 1; % simple components
-NSC.connected = 1; % connected graph required
+L1 = 'BOX'; L2 = cellstr(string(dec2base((1:3*n)+9,36)))';
+L = horzcat(L1,L2); % labels
+R.min = [3;ones(3*n,1)]; R.max = R.min; % replicates
+P.min = [n;ones(3*n,1)]; P.max = P.min; % ports
+NSC.connected = 0; % connected graph not required
 NSC.loops = 0; % no loops
+NSC.directA = double(~blkdiag(ones(1),ones(3*n)));
+NSC.userCatalogNSC = @PMA_BipartiteSubcatalogFilters;
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
-% number of graphs based on OEIS A001710
-N = [1,1,3,12,60,360,2520,20160,181440,1814400,19958400,239500800];
+% number of graphs based on OEIS A289158
+N = [1,15,280,5775,126126,2858856,66512160,1577585295];
 n2 = N(n);
 
 % compare number of graphs and create outputs
@@ -56,9 +56,11 @@ end
 % options
 function opts = localOpts
 
-opts.algorithm = 'tree_v11DFS_mex';
-opts.algorithms.Nmax = 2e7;
-opts.isomethod = 'none'; % not needed
+opts.algorithm = 'tree_v11BFS';
+opts.algorithms.Nmax = 1e6;
+opts.algorithms.isoNmax = inf;
+opts.isomethod = 'python';
+opts.parallel = true;
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
 opts.plots.randomize = true;

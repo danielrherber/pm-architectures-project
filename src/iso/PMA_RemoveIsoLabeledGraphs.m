@@ -210,11 +210,20 @@ switch inputtype
         ddegrees = PMA_BinBasedSorting(ddegrees,Ln);
         dloops = PMA_BinBasedSorting(dloops,Ln);
         dports = PMA_BinBasedSorting(dports,Ln);
-%         dtriangles = sort(dtriangles,2);
-%         ddegrees = sort(ddegrees,2);
-%         dloops = sort(dloops,2);
-%         dports = sort(dports,2);
 end
+
+% map graph invariants to bin indices
+tol = 1e-6; % absolute tolerance for spectrum
+[~,~,blabelspectrum] = uniquetol(dlabelspectrum,tol,'ByRows',true,'DataScale',1);
+[~,~,bspectrum] = uniquetol(dspectrum,tol,'ByRows',true,'DataScale',1);
+[~,~,blabels] = unique(dlabels,'rows');
+[~,~,bdegrees] = unique(ddegrees,'rows');
+[~,~,bconnected] = unique(dconnected,'rows');
+[~,~,bedges] = unique(dedges,'rows');
+[~,~,bloops] = unique(dloops,'rows');
+[~,~,bnedges] = unique(nedges);
+[~,~,bnvertices] = unique(nvertices);
+[~,~,bndeterminant] = unique(ndeterminant);
 
 % sort graphs by label-shifted spectrum
 % Isort = 1:length(Graphs); % original method
@@ -251,20 +260,44 @@ for i = Isort(2:end)
         % extract bin indices
         Ibin = bin{c};
 
-        % compare number of edges
-        Ikeep = nedges(Ibin)==nedges(i);
+        % compare label-shifted spectrum
+        Ikeep = blabelspectrum(Ibin)==blabelspectrum(i);
         Ibin = Ibin(Ikeep);
 
-        % compare number of vertices
-        Ikeep = nvertices(Ibin)==nvertices(i);
+        % compare spectrum
+        Ikeep = bspectrum(Ibin)==bspectrum(i);
         Ibin = Ibin(Ikeep);
 
-        % compare determinants
-        Ikeep = abs(ndeterminant(Ibin)-ndeterminant(i)) <= sqrt(eps);
+        % compare label distributions
+        Ikeep = blabels(Ibin)==blabels(i);
+        Ibin = Ibin(Ikeep);
+
+        % compare connected component distributions
+        Ikeep = bconnected(Ibin)==bconnected(i);
         Ibin = Ibin(Ikeep);
 
         % compare degree distributions
-        Ikeep = all(ddegrees(Ibin,:)==ddegrees(i,:),2);
+        Ikeep = bdegrees(Ibin)==bdegrees(i);
+        Ibin = Ibin(Ikeep);
+
+        % compare edge distributions
+        Ikeep = bedges(Ibin)==bedges(i);
+        Ibin = Ibin(Ikeep);
+
+        % compare loop distributions
+        Ikeep = bloops(Ibin)==bloops(i);
+        Ibin = Ibin(Ikeep);
+
+        % compare number of edges
+        Ikeep = bnedges(Ibin)==bnedges(i);
+        Ibin = Ibin(Ikeep);
+
+        % compare number of vertices
+        Ikeep = bnvertices(Ibin)==bnvertices(i);
+        Ibin = Ibin(Ikeep);
+
+        % compare determinants
+        Ikeep = bndeterminant(Ibin)==bndeterminant(i);
         Ibin = Ibin(Ikeep);
 
         % compare remaining port distributions
@@ -273,35 +306,9 @@ for i = Isort(2:end)
             Ibin = Ibin(Ikeep);
         end
 
-        % compare edge distributions
-        Ikeep = all(dedges(Ibin,:)==dedges(i,:),2);
-        Ibin = Ibin(Ikeep);
-
-        % compare label distributions
-        Ikeep = all(dlabels(Ibin,:)==dlabels(i,:),2);
-        Ibin = Ibin(Ikeep);
-
-        % compare loop distributions
-        Ikeep = all(dloops(Ibin,:)==dloops(i,:),2);
-        Ibin = Ibin(Ikeep);
-
         % compare triangle distributions
         % Ikeep = all(dtriangles(Ibin,:)==dtriangles(i,:),2);
         % Ibin = Ibin(Ikeep);
-
-        % compare connected component distributions
-        Ikeep = all(dconnected(Ibin,:)==dconnected(i,:),2);
-        Ibin = Ibin(Ikeep);
-
-        % compare spectrum
-        [S,Isort] = sort(vecnorm(dspectrum(Ibin,:)-dspectrum(i,:),inf,2));
-        Ibin = Ibin(Isort); % sort
-        Ibin(S > 1e-6) = []; % remove spectrum that are very different
-
-        % compare label-shifted spectrum
-        [S,Isort] = sort(vecnorm(dlabelspectrum(Ibin,:)-dlabelspectrum(i,:),inf,2));
-        Ibin = Ibin(Isort); % sort
-        Ibin(S > 1e-6) = []; % remove label-shifted spectrum that are very different
 
         % check no graphs to compare against
         if isempty(Ibin)
@@ -414,22 +421,6 @@ if (displevel > 0) % minimal
 end
 
 
-end
-% convert a cell array of vectors into a matrix by padding
-function M = Cell2MatrixwithPadding(C)
-    % length of each entry in the cell array
-    lenC = cellfun('length',C);
-
-    % only add padding if needed
-    if min(lenC) ~= max(lenC)
-        % go through each entry and add the necessary padding to the end
-        for i = 1:length(C)
-            C{i} = [C{i},zeros(1,max(lenC)-lenC(i))];
-        end
-    end
-
-    % combine into a matrix
-    M = vertcat(C{:});
 end
 
 % try

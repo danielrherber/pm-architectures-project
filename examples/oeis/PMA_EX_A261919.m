@@ -9,24 +9,33 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-clear; clc; close all
+function varargout = PMA_EX_A261919(varargin)
 
-n = 6; % number of nodes (currently completed for n = 8)
+% options (see function below)
+opts = localOpts;
+
+% parse inputs
+if ~isempty(varargin)
+    n = varargin{1}; % extract n
+    opts.plots.plotmax = 0;
+    opts.displevel = 0;
+    t1 = tic; % start timer
+else
+    clc; close all
+    n = 6; % number of nodes (currently completed for n = 8)
+end
+
 L = {'A'}; % labels
-R.min = n; R.max = n; % replicate vector
-P.min = 2; P.max = n-1; % ports vector
+R.min = n; R.max = n; % replicates
 NSC.simple = 1; % simple components
 NSC.connected = 0; % connected graph not required
 NSC.loops = 0; % no loops
-
-% options
-opts.plots.plotmax = 5;
-opts.plots.labelnumflag = false;
-opts.algorithm = 'tree_v11DFS_mex';
-opts.algorithms.Nmax = 1e6;
-opts.algorithms.isoNmax = inf;
-opts.isomethod = 'python';
-opts.parallel = true;
+switch n
+    case {1,2}
+        P.min = 2; P.max = 2; % ports
+    otherwise
+        P.min = 2; P.max = n-1; % ports
+end
 
 % obtain all unique, feasible graphs
 G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
@@ -35,6 +44,28 @@ G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 N = [0,0,1,3,11,62,510,7459,197867,9808968,902893994];
 n2 = N(n);
 
-% compare number of graphs
-disp("correct?")
-disp(string(isequal(length(G1),n2)))
+% compare number of graphs and create outputs
+if isempty(varargin)
+    disp("correct?")
+    disp(string(isequal(length(G1),n2)))
+else
+    varargout{1} = n;
+    varargout{2} = isequal(length(G1),n2);
+    varargout{3} = toc(t1); % timer
+end
+
+end
+
+% options
+function opts = localOpts
+
+opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithms.Nmax = 1e6;
+opts.algorithms.isoNmax = inf;
+opts.isomethod = 'python';
+opts.parallel = true;
+opts.plots.plotmax = 5;
+opts.plots.labelnumflag = false;
+opts.plots.randomize = true;
+
+end
