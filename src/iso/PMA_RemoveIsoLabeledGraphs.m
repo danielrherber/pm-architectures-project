@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function UniqueGraphs = PMA_RemoveIsoLabeledGraphs(varargin)
+function [UniqueGraphs,varargout] = PMA_RemoveIsoLabeledGraphs(varargin)
 
 % parse inputs
 switch length(varargin)
@@ -31,15 +31,28 @@ switch length(varargin)
         error('Unknown inputs to PMA_RemoveIsoLabeledGraphs')
 end
 
+% parse outputs
+if length(nargout) == 1
+    isoGraphIdxFlag = true;
+else
+    isoGraphIdxFlag = false;
+end
+
 % if no graphs
 if isempty(Graphs)
     UniqueGraphs = []; % report empty if no graphs present
+    if isoGraphIdxFlag
+      varargout{1} = []; % report empty if no graphs present
+    end
     return
 end
 
 % if only one graph
 if length(Graphs) == 1
     UniqueGraphs = Graphs;
+    if isoGraphIdxFlag
+       varargout{1} = 1;
+    end
     return
 end
 
@@ -92,6 +105,9 @@ if method == 1 % matlab
 end
 if method == 2 % python
     pylist = cell(n,1);
+end
+if isoGraphIdxFlag
+   isoGraphIdx = zeros(n,1);
 end
 
 % compute various metrics once
@@ -339,6 +355,7 @@ for i = Isort(2:end)
                     % plot(G1,'NodeLabel',C_pydlabels);
                     % ha = gca; ha.Children.YData = ha.Children.YData + 3;
                     % plot(G2,'NodeLabel',pydlabels{j});
+                    isoGraphIdx(i) = j;
                     break
                 end
             end
@@ -347,6 +364,7 @@ for i = Isort(2:end)
                 IsoFlag = py.detectiso_networkx.detectiso(C_pyadj,pylist{j},...
                     C_pydlabels,pydlabels{j},C_nv,nvertices(j));
                 if IsoFlag
+                    isoGraphIdx(i) = j;
                     break
                 end
             end
@@ -359,6 +377,7 @@ for i = Isort(2:end)
                         'EdgeVariables','Weight');
                 end
                 if IsoFlag
+                    isoGraphIdx(i) = j;
                     break
                 end
             end
@@ -411,6 +430,18 @@ switch inputtype
     %----------------------------------------------------------------------
     case 2  % called within the BFS graph generation algorithm
         UniqueGraphs = Graphs(horzcat(bin{:}));
+end
+
+% (potentially) output isomorphic graph index array
+if isoGraphIdxFlag
+    % find unique graphs
+    I2 = find(~isoGraphIdx);
+
+    % assign index as itself
+    isoGraphIdx(I2) = I2;
+
+    % assign
+    varargout{1} = isoGraphIdx;
 end
 
 % output some stats to the command window

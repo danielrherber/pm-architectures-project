@@ -9,10 +9,10 @@
 %--------------------------------------------------------------------------
 function [M,id] = PMA_TreeSaveGraphs(E,M,id,displevel)
     id = id + 1; % increment index of total graphs
-    M(id,:) = E; % append current graph (a matching)
-    if id == size(M,1) % check if we need more storage
+    if id > size(M,1) % check if we need more storage
         M = vertcat(M,zeros(size(M),'uint8')); % double size
     end
+    M(id,:) = E; % append current graph (a matching)
     if (displevel > 1) % verbose
         if (mod(id,uint64(10000)) == 0) || (id == 1)
             % check if this is the first graph generated

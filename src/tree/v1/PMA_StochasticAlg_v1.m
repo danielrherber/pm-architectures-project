@@ -25,7 +25,7 @@ function [SavedGraphs,id] = PMA_StochasticAlg_v1(V,E,SavedGraphs,id,A,cVf,dispfl
     if isempty(I)
         return
     else
-        iR = I(randi(length(I)));
+        iR = I(randi(length(I))); % equal probabilities for each edge
     end
 
     V2 = V; % local for loop variables
