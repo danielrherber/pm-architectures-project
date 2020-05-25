@@ -16,10 +16,7 @@ opts = localOpts;
 
 % parse inputs
 if ~isempty(varargin)
-    n = varargin{1}; % extract n
-    opts.plots.plotmax = 0;
-    opts.displevel = 0;
-    t1 = tic; % start timer
+    flag = 'inputs'; PMA_EX_OEIScommon; %#ok<NASGU>
 else
     clc; close all
     n = 5; % number of nodes (currently completed for n = 8)
@@ -38,21 +35,14 @@ switch n
 end
 
 % obtain all unique, feasible graphs
-G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
+[G1,opts] = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
 % number of graphs based on OEIS A134818
 N = [1,3,9,37,146,772,4449,30307,228605,1921464,17652327,176162548];
 n2 = N(n);
 
 % compare number of graphs and create outputs
-if isempty(varargin)
-    disp("correct?")
-    disp(string(isequal(length(G1),n2)))
-else
-    varargout{1} = n;
-    varargout{2} = isequal(length(G1),n2);
-    varargout{3} = toc(t1); % timer
-end
+flag = 'outputs'; PMA_EX_OEIScommon; %#ok<NASGU>
 
 end
 

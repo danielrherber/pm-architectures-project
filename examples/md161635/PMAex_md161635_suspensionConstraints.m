@@ -16,11 +16,12 @@ if ~feasibleFlag
     return % exit, graph infeasible
 end
 
+% extract
+L = pp.labels.C; % extract labels
 %--------------------------------------------------------------------------
 % s-u parallel connection path check
 %--------------------------------------------------------------------------
-L = pp.labels.C; % extract labels
-I = logical(strcmpi(L,'s')+strcmpi(L,'u')+contains(L,'p','IgnoreCase',true)); % determine relevant indices
+I = contains(L,{'s','u','p'},'IgnoreCase',true);
 At = A(I,I); % extra relevant subgraph
 [~,~,W] = PMA_ConnCompBins(At); % calculate connectivity matrix
 % check if a parallel connection path exists
@@ -32,7 +33,6 @@ end
 %--------------------------------------------------------------------------
 % check for parallel cycles
 %--------------------------------------------------------------------------
-L = pp.labels.C; % extract labels
 pIndex = find(contains(L,'p','IgnoreCase',true)); % determine relevant indices
 % for each parallel component type
 for k = 1:length(pIndex)
@@ -53,7 +53,6 @@ end
 %--------------------------------------------------------------------------
 % extract
 Vfull = pp.NSC.Vfull;
-L = pp.labels.C;
 while 1
     I = find(Vfull==2); % find 2-port components
     [row,col] = find(A(:,I)); % find row location of connections to 2-port components
@@ -83,6 +82,7 @@ end % end while 1
 % assign
 pp.NSC.Vfull = Vfull;
 pp.labels.C = L;
-pp.labels.N = base2dec(L,36)';
+% pp.labels.N = nbase2dec(L,36)';
+pp.labels.N = nan; % need to be updated later
 
 end

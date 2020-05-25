@@ -250,6 +250,14 @@ function [Graphs,Nfeasible] = PMA_GenerateWithSubcatalog(l,r,p,nsc,opts,sorts)
     % number of feasible graphs found
     Nfeasible = length(Graphs);
 
+    % return if no feasible graphs
+    if Nfeasible == 0
+        return
+    end
+
+    % update Ln (base 10) from L (base 36)
+    Graphs = PMA_UpdateLn(Graphs);
+
     % remove labeled graph isomorphisms for this subcatalog
     Graphs = PMA_RemoveIsoLabeledGraphs(Graphs,opts);
 end

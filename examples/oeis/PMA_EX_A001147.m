@@ -16,10 +16,7 @@ opts = localOpts;
 
 % parse inputs
 if ~isempty(varargin)
-    n = varargin{1}; % extract n
-    opts.plots.plotmax = 0;
-    opts.displevel = 0;
-    t1 = tic; % start timer
+    flag = 'inputs'; PMA_EX_OEIScommon; %#ok<NASGU>
 else
     clc; close all
     n = 12; % number of nodes (currently completed for n = 16)
@@ -33,21 +30,14 @@ NSC.connected = 0; % connected graph not required
 NSC.loops = 0; % loops allowed
 
 % obtain all unique, feasible graphs
-G1 = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
+[G1,opts] = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
 % compare to MFX 52301
 G2 = PM_perfectMatchings(n);
 n2 = size(G2,1);
 
 % compare number of graphs and create outputs
-if isempty(varargin)
-    disp("correct?")
-    disp(string(isequal(length(G1),n2)))
-else
-    varargout{1} = n;
-    varargout{2} = isequal(length(G1),n2);
-    varargout{3} = toc(t1); % timer
-end
+flag = 'outputs'; PMA_EX_OEIScommon; %#ok<NASGU>
 
 end
 

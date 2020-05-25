@@ -28,7 +28,7 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
 
     % expand reduced potential adjacency matrix
     A = PMA_ExpandPossibleAdj(NSC.directA,R,NSC);
-    
+
     % expand reduced potential multiedge adjacency matrix
     Am = PMA_ExpandPossibleAdj(NSC.multiedgeA,R,NSC);
 
@@ -124,6 +124,9 @@ function [G,I,N] = PMA_TreeGather(Ln,P,R,NSC,opts,phi)
         case 'tree_v11BFS_mex'
             G = PMA_EnumerationAlg_v11BFS_mex(cVf,Vf,iInitRep,phi,simple,...
                 A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
+        case 'tree_v12DFS_mex'
+            [G,~] = PMA_EnumerationAlg_v12DFS_mex(Vf,E,G,id,cVf,Vf,iInitRep,...
+                simple,Am,Bf,B,Mf,M,displevel);
         %------------------------------------------------------------------
         % analysis
         %------------------------------------------------------------------

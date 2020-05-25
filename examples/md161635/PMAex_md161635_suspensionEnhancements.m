@@ -46,7 +46,7 @@ NSC.userGraphNSC = @(pp,A,feasibleFlag) PMAex_md161635_suspensionConstraints(pp,
 
 % options
 opts.algorithm = 'tree_v11DFS_mex';
-opts.Nmax = 1e7; % maximum number of graphs to preallocate for
+opts.Nmax = 1e6; % maximum number of graphs to preallocate for
 opts.parallel = true; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 opts.isomethod = 'python'; % option 'matlab' is available in 2016b or later versions

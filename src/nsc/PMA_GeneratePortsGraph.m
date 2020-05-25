@@ -67,7 +67,7 @@ end
 grph.I = I; grph.J = J; grph.V = V; % complete subgraph indices
 labels.P = labelsP; % port labels
 labels.C = labelsL; % component labels
-labels.N = base2dec(labelsL,36)'; % decimal component labels
+labels.N = nbase2dec(labelsL,36)'; % decimal component labels
 ports.phi = phi;
 ports.graph = grph;
 ports.labels = labels;

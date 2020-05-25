@@ -39,7 +39,7 @@ function PMA_PlotMatlab(A,L,PM,I,opts)
     c = PMA_LabelColors(L,opts.colorlib);
 
     % get unique data for the labels
-    [~,ia1,ic1] = unique(base2dec(L,36));
+    [~,ia1,ic1] = unique(nbase2dec(L,36));
 
 	% create a new figure and save handle
     hf = figure;

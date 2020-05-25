@@ -94,6 +94,9 @@ function RequiredRunFiles %#ok<DEFNU>
     ind = ind + 1;
     files(ind).file = 'PMA_EnumerationAlg_v11BFS_coder';
 
+    ind = ind + 1;
+    files(ind).file = 'PMA_EnumerationAlg_v12DFS_coder';
+
     % run the files
     RunFiles(files)
 end
@@ -135,6 +138,11 @@ function RequiredWebZips %#ok<DEFNU>
 	zips(ind).folder = 'MFX 52301';
 	zips(ind).test = 'PM_perfectMatchings';
 
+	ind = ind + 1;
+	zips(ind).url = 'https://www.mathworks.com/matlabcentral/mlc-downloads/downloads/2d16c5de-8933-4c99-9d72-b142b7168266/704ea8df-9339-4248-9c10-aa8bcb7d2d10/packages/zip/nbase2dec.zip';
+	zips(ind).folder = 'MFX 68575';
+	zips(ind).test = 'fbase2dec';
+
     % obtain full function path
     full_fun_path = which(mfilename('fullpath'));
     outputdir = fullfile(fileparts(full_fun_path),'include');
@@ -169,19 +177,19 @@ function PythonSetupCheck %#ok<DEFNU>
 	% need python
 	[version, ~, ~] = pyversion;
     if isempty(version)
-	    disp('python is NOT available X')
+	    disp('X Not found: python')
     else
         CheckFlag = CheckFlag + 1;
-	    disp('python is available')
+	    disp(strcat("Available: python ",string(py.platform.python_version)))
     end
 
 	% need numpy
     try
         py.numpy.matrixlib.defmatrix.matrix([]);
         CheckFlag = CheckFlag + 1;
-	    disp('numpy  is available')
+	    disp(strcat("Available: numpy ",string(py.numpy.version.version)))
     catch
-	    disp('numpy  is NOT available X')
+	    disp('X Not found: numpy')
     end
 
 	% need python_igraph
@@ -191,9 +199,11 @@ function PythonSetupCheck %#ok<DEFNU>
         if CheckFlag == 2
             igraphFlag = true;
         end
-        disp('igraph is available')
+        d = py.dict(); py.exec('import igraph', d);
+	    disp(strcat("Available: igraph ",...
+            string(py.eval('igraph.__version__',d))))
     catch
-        disp('igraph is NOT available X')
+	    disp('X Not found: igraph')
     end
 
     % need python_networkx
@@ -203,9 +213,11 @@ function PythonSetupCheck %#ok<DEFNU>
         if CheckFlag == 2
             networkxFlag = true;
         end
-        disp('networkx is available')
+        d = py.dict(); py.exec('import networkx', d);
+	    disp(strcat("Available: networkx ",...
+            string(py.eval('networkx.__version__',d))))
     catch
-        disp('networkx is NOT available X')
+	    disp('X Not found: networkx')
     end
 
     % if all required python packages are available

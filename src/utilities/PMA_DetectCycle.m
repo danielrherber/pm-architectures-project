@@ -54,11 +54,6 @@ end % function PMA_DetectCycle
 % extend current path by one additional vertex
 function cycleFlag = nextVert(inclVert, len, origin, target, limit, A, cycleFlag)
 
-    % stop if cycle found
-    if cycleFlag
-        return
-    end
-
     % increase length by one
     len = len + 1;
 
@@ -68,6 +63,7 @@ function cycleFlag = nextVert(inclVert, len, origin, target, limit, A, cycleFlag
         ca = cand(mx);
         if (ca == target) % found a cycle
             cycleFlag = true;
+            return
         elseif (len < limit) % extend again
             inclVert1 = inclVert;
             inclVert1(ca) = 0; % block vertex just added to path
@@ -78,3 +74,12 @@ function cycleFlag = nextVert(inclVert, len, origin, target, limit, A, cycleFlag
         end
     end
 end % function nextVert
+
+% % https://math.stackexchange.com/questions/910931/determine-cycle-from-adjacency-matrix/911040#911040
+% L = diag(sum(A))- logical(A);
+% if trace(L) >= 2*rank(L,0.1) + 2
+%     cycleFlag = true;
+% else
+%     cycleFlag = false;
+% end
+% return
