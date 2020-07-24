@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMAex_md161635_suspensionEnhancements.m
+% PMA_EX_MD161635_SuspensionEnhancements.m
 % Replicates the results from Case Study 3 in the paper below
 % Uses the enhancements in the technical report
 %--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ NSC.lineTriple(3,:) = [1,8,2]; % s-p-u
 NSC.lineTriple(4,:) = [2,8,1]; % u-p-s
 
 % custom graph NSC function
-NSC.userGraphNSC = @(pp,A,feasibleFlag) PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag);
+NSC.userGraphNSC = @(pp,A,feasibleFlag) PMA_EX_MD161635_SuspensionConstraints(pp,A,feasibleFlag);
 
 % options
 opts.algorithm = 'tree_v11DFS_mex';

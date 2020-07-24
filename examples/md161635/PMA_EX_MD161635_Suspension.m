@@ -1,8 +1,9 @@
 %--------------------------------------------------------------------------
-% PMAex_idetc201660212_suspension.m
+% PMA_EX_MD161635_Suspension.m
 % This example replicates the results from Case Study 3 in the paper below
 %--------------------------------------------------------------------------
-% http://systemdesign.illinois.edu/publications/Her16b.pdf
+% Herber DR, Guo T, Allison JT. Enumeration of Architectures With Perfect
+% Matchings. ASME. J. Mech. Des. 2017; 139(5):051403. doi:10.1115/1.4036132
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
@@ -17,7 +18,8 @@ C = {'s','u','m', 'k', 'b', 'f', 'p', 'p'}; % label vector
 % constraints
 NSC.M = [1 1 0 0 0 0 0 0];
 NSC.simple = 1;
-NSC.self = 1; % allow self-loops
+NSC.connected = 1;
+% NSC.self = 1; % allow self-loops
 % provide potential adjacency matrix
 A = ones(length(P));
 A(2,1) = 0;
@@ -36,14 +38,12 @@ opts.algorithm = 'tree_v1';
 opts.Nmax = 2e8; % maximum number of graphs to preallocate for
 opts.parallel = 12; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
-NSC.userGraphNSC = @(pp,A,feasibleFlag) PMAex_idetc201660212_suspensionConstraints(pp,A,feasibleFlag);
-opts.isomethod = 'python'; % option 'Matlab' is available in 2016b or later versions
-
-opts.plots.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio' % 'matlab'
-opts.plots.plotmax = 20; % maximum number of graphs to display/save
-opts.plots.name = mfilename; % name of the example
-opts.plots.path = mfoldername(mfilename('fullpath'),[opts.plots.name,'_figs']); % path to save figures to
-opts.plots.labelnumflag = 0; % add replicate numbers when plotting
+NSC.userGraphNSC = @(pp,A,feasibleFlag) PMA_EX_MD161635_SuspensionConstraints(pp,A,feasibleFlag);
+opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'
+opts.plotmax = 0; % maximum number of graphs to display/save
+opts.name = mfilename; % name of the example
+opts.path = mfoldername(mfilename('fullpath'),[opts.name,'_figs']); % path to save figures to
+opts.isomethod = 'python'; % option 'matlab' is available in 2016b or later versions
 
 % generate graphs
 FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);

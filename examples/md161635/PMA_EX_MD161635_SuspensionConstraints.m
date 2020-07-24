@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMAex_md161635_suspensionConstraints.m
+% PMA_EX_MD161635_SuspensionConstraints.m
 % Additional network structure constraints for Case Study 3 in the paper
 % below
 %--------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [pp,A,feasibleFlag] = PMAex_md161635_suspensionConstraints(pp,A,feasibleFlag)
+function [pp,A,feasibleFlag] = PMA_EX_MD161635_SuspensionConstraints(pp,A,feasibleFlag)
 
 % only if the graph is currently feasible
 if ~feasibleFlag

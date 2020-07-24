@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMAex_idetc201660212_suspensionConstraints.m
+% PMA_EX_IDETC2016_SuspensionConstraints.m
 % Additional network structure constraints for Case Study 3 in the paper
 % below
 %--------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [pp,A,feasibleFlag] = PMAex_idetc201660212_suspensionConstraints(pp,A,feasibleFlag)
+function [pp,A,feasibleFlag] = PMA_EX_IDETC2016_SuspensionConstraints(pp,A,feasibleFlag)
     %----------------------------------------------------------------------
     % s-u parallel connection path check
     %----------------------------------------------------------------------

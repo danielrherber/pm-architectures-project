@@ -45,7 +45,7 @@ end
 function opts = localOpts
 
 opts.algorithm = 'tree_v11BFS';
-opts.algorithms.Nmax = 1e7;
+opts.algorithms.Nmax = 1e5;
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'python';
 opts.parallel = true;

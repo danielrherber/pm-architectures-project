@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMAex_idetc201660212_caseStudy1.m
+% PMA_EX_IDETC2016_CS1.m
 % This example replicates the results from Case Study 1 in the paper below
 %--------------------------------------------------------------------------
 % http://systemdesign.illinois.edu/publications/Her16b.pdf

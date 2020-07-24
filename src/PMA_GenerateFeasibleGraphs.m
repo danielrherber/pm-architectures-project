@@ -16,6 +16,18 @@ function Graphs = PMA_GenerateFeasibleGraphs(L,R,P,NSC,opts,Sorts)
     % number of ports
     Np = P'*R;
 
+    % return single empty graph if no ports
+    if Np == 0
+        labelsL = repelem(L,R); labelsL = labelsL(:); % replicate the labels
+        Graphs(1).A = zeros(length(labelsL)); % empty graph
+        Graphs(1).L = labelsL;
+        Graphs(1).Ln = nbase2dec(labelsL,36)';
+        Graphs(1).removephi = [];
+        Graphs(1).N = 0; % not a perfect matching
+        Graphs(1).Am = zeros(length(labelsL)); % empty graph
+        return
+    end
+
     % number of components
     Nc = sum(R);
 

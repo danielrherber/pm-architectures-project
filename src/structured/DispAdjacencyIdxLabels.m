@@ -7,7 +7,7 @@
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function AdjType = DispAdjacencyIdxLabels(C,P,S)
+function AdjType = DispAdjacencyIdxLabels(L,P,S)
 
 % prompt the user to say simple reduced or structured reduced
 prompt = 'Do you want simple reduced (1) or structure reduced (2): ';
@@ -25,11 +25,11 @@ end
 if strcmp(choice,'1')
 
     % calculate total # of entries
-    real_num = length(C);
+    real_num = length(L);
 
     % display numbers and colored labels
     for k = 1:real_num
-        disp([num2str(k),' - ',C{k}])
+        disp([num2str(k),' - ',L{k}])
     end
 
 % option: structured reduced
@@ -46,6 +46,7 @@ elseif strcmp(choice,'2')
 
     % display numbers and colored labels
     for k = 1:real_num
+
         % find first nonzero value
         I = find(P,1,'first');
 
@@ -54,10 +55,10 @@ elseif strcmp(choice,'2')
 
         % if simple
         if S(I) == 0
-            disp([num2str(k),' - ',C{I}]) % don't display a number
+            disp([num2str(k),' - ',L{I}]) % don't display a number
         % if structured
         elseif S(I) == 1
-            disp([num2str(k),' - ',C{I},num2str(Porg(I)-P(I))])
+            disp([num2str(k),' - ',L{I},num2str(Porg(I)-P(I))])
         end
 
     end
