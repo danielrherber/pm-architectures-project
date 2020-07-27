@@ -220,6 +220,7 @@ end
 SavedGraphs = Estorage(xInd,:);
 
 end % function PMA_EnumerationAlg_v11BFS
+
 function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v11BFS(V2,E2,A2,T2,R2,iR,cVf,iter,L,Nc,phi,Ne,Mflag,Vf,Bflag,iL,counts,B,M)
 
 % remove another port creating an edge

@@ -69,7 +69,7 @@ while 1
         A(remove,:) = []; % remove component
         A = A - diag(diag(A)); % remove diagonal entries
         % the diagonal entry is always present in this procedure
-        % generate the new colored label
+        % generate the new label
         newlabel = [L{keep},L{remove}]; % combine previous
         newlabel = sort(newlabel); % sort for uniqueness
         L{keep} = newlabel; % assign new label

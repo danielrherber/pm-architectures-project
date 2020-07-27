@@ -20,4 +20,4 @@ W = logical(W^np); % np is number of steps for connectivity
 
 end
 
-% NOTE: check data type things
+% NOTE: check data types

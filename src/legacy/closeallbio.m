@@ -10,7 +10,7 @@
 %--------------------------------------------------------------------------
 function closeallbio
 
-    % call new function
-    PMA_closeallbio;
+% call new function
+PMA_closeallbio;
 
 end

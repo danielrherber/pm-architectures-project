@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_TEST_LineConstraintOrdering.m
-% test line-connectivity constraints when (C,R,P) is reordered
+% Test line-connectivity constraints when (C,R,P) is reordered
 %--------------------------------------------------------------------------
 % NOTE: this test function was used to fix a bug where NSC.lineTriple was not
 % sorted properly in PMA_ReorderCRP.m
@@ -16,13 +16,17 @@ sortflag = 0; % 1:on, 0:off
 N = 2; % number of B replicates
 
 switch testnum
+    %----------------------------------------------------------------------
     case 1 % A-B\C
-        NSC.lineTriple(1,:) = [1,2,3];
+    NSC.lineTriple(1,:) = [1,2,3];
+    %----------------------------------------------------------------------
     case 2 % A-B\C and B-C\A
-        NSC.lineTriple(1,:) = [1,2,3];
-        NSC.lineTriple(2,:) = [2,3,1];
+    NSC.lineTriple(1,:) = [1,2,3];
+    NSC.lineTriple(2,:) = [2,3,1];
+    %----------------------------------------------------------------------
     otherwise % no constraints
-        NSC = [];
+    NSC = [];
+    %----------------------------------------------------------------------
 end
 
 % problem specification

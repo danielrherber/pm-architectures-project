@@ -1,18 +1,16 @@
 %--------------------------------------------------------------------------
-% Structured_RemovedColoredIsosMatlabSimple.m
-% Given a set of structured colored graphs, determine the set of 
-% nonisomorphic structured colored graphs, MATLAB only implementation with
+% PMA_STRUCT_RemovedColoredIsosMatlabSimple.m
+% Given a set of structured labeled graphs, determine the set of
+% nonisomorphic structured labeled graphs, MATLAB only implementation with
 % the simple checks
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
-
-% Additional Contributor: Shangtingli,Undergraduate Student,University of 
-
+% Additional contributor: Shangtingli on GitHub
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function Graphs = Structured_RemovedColoredIsosMatlabSimple(Graphs,opts,iStruct,np)
+function Graphs = PMA_STRUCT_RemovedColoredIsosMatlabSimple(Graphs,opts,iStruct,np)
 
 % obtain cell arrays used for the simple checks
 if opts.structured.simplecheck
@@ -32,7 +30,7 @@ if n < 2000 % parallel computing would be slower
     parallelTemp = 0; % no parallel computing
     Nbin = 1; % number of bins
 else
-    parallelTemp = opts.parallel; 
+    parallelTemp = opts.parallel;
 %     Nbin = opts.Nbin; % need to add
     Nbin = 1; % number of bins
 end
@@ -64,6 +62,7 @@ nNonIso = nNonIso + 1;
 
 % check remaining graphs for uniqueness
 for i = 2:n
+
     % get candidate graph information
     G1 = G{i};
     IntIndice1 = IntData{i};
@@ -71,7 +70,7 @@ for i = 2:n
 
     % initialize
     results = ones(min(Nbin,nNonIso),1);
-    
+
     % parfor (c = 1:min(Nbin,nNonIso), parallelTemp) % this works now but is slow
 	for c = 1:min(Nbin,nNonIso)
 
@@ -122,7 +121,7 @@ for i = 2:n
         nNonIso = nNonIso + 1;
     end
 end
-    
+
 % combine all the bins
 UniqueGraphs = []; % initialize
 for c = 1:Nbin % go through each bin

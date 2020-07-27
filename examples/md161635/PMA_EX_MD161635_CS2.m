@@ -33,14 +33,14 @@ switch num
         NSC.M = [1 1 1 1 1];
         NSC.simple = 1; % no multiedges
         NSC.connected = 1; % connected graph
-        NSC.loops = 0; % no loops 
+        NSC.loops = 0; % no loops
     case 4 % Case Study 2, #4 constraints
         if newalgo % new
             clear R % remove previous
             R.min = [1 2 1 1 1]; % replicates vector, min
             R.max = [1 2 2 1 1]; % replicates vector, max
             NSC.connected = 1; % connected graph
-            NSC.loops = 0; % no loops 
+            NSC.loops = 0; % no loops
         else % old
             P = [1 1 2 2 3 4]; % ports vector
             R = [1 2 1 1 1 1]; % replicates vector

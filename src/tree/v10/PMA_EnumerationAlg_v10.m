@@ -208,28 +208,29 @@ end
 SavedGraphs = Estorage(xInd,:);
 
 end % function PMA_EnumerationAlg_v10
+
 function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V2,E2,A2,T2,R2,iR,cVf,iter,L,Nc,phi,Ne,Mflag,Vf,Bflag,iL,counts,B,M)
 
-    % remove another port creating an edge
-    R = cVf(iR)-V2(iR); % right port
+% remove another port creating an edge
+R = cVf(iR)-V2(iR); % right port
 
-    % combine left, right ports for an edge
-    E2(2*iter-1) = L;
-    E2(2*iter) = R;
+% combine left, right ports for an edge
+E2(2*iter-1) = L;
+E2(2*iter) = R;
 
-    % convert multiple subscripts to linear index
-    T2(iter) = Nc*phi(L) - Nc + phi(R); % similar to sub2ind
+% convert multiple subscripts to linear index
+T2(iter) = Nc*phi(L) - Nc + phi(R); % similar to sub2ind
 
-    V2(iR) = V2(iR)-1; % remove port (local copy)
+V2(iR) = V2(iR)-1; % remove port (local copy)
 
-    % START ENHANCEMENT: saturated subgraphs
-    if iter < Ne
-    if Mflag
-        iNonSat = find(V2); % find the nonsaturated components
-        if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
-            nUncon = sum(M(iNonSat));
-            if (nUncon == 0) % define a one set of edges and stop
-                % NEED: implement this for v10, currently just continues
+% START ENHANCEMENT: saturated subgraphs
+if iter < Ne
+if Mflag
+    iNonSat = find(V2); % find the nonsaturated components
+    if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
+        nUncon = sum(M(iNonSat));
+        if (nUncon == 0) % define a one set of edges and stop
+            % NEED: implement this for v10, currently just continues
 %                 for j = 1:sum(V2) % add remaining edges in default order
 %                     k = find(V2,1); % find first nonzero entry
 %                     LR = cVf(k)-V2(k);
@@ -240,32 +241,32 @@ function [V2,E2,A2,T2,R2] = TreeEnumerationInner_v10(V2,E2,A2,T2,R2,iR,cVf,iter,
 %                 end
 % %                         [SavedGraphs,id] = TreeSaveGraphs(E2,SavedGraphs,id,dispflag);
 %                 continue
-                return
-            elseif (nUncon == sum(M))
-                % continue iterating
-            else
-                R2 = true; % this graph is infeasible
-                return % stop
-            end
+            return
+        elseif (nUncon == sum(M))
+            % continue iterating
+        else
+            R2 = true; % this graph is infeasible
+            return % stop
         end
     end
-    end
-    % END ENHANCEMENT: saturated subgraphs
+end
+end
+% END ENHANCEMENT: saturated subgraphs
 
-    % START ENHANCEMENT: multi-edges
-    if any(counts(iL)) || any(counts(iR)) % if either component needs unique connections
-        if (iR ~= iL) % don't do for self loops
-            A2(iR,iL) = uint8(0); % limit this connection
-            A2(iL,iR) = uint8(0); % limit this connection
-        end
+% START ENHANCEMENT: multi-edges
+if any(counts(iL)) || any(counts(iR)) % if either component needs unique connections
+    if (iR ~= iL) % don't do for self loops
+        A2(iR,iL) = uint8(0); % limit this connection
+        A2(iL,iR) = uint8(0); % limit this connection
     end
-    % END ENHANCEMENT: multi-edges
+end
+% END ENHANCEMENT: multi-edges
 
-    % START ENHANCEMENT: line-connectivity constraints
-    if Bflag
-        A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections
-        A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections
-        A2([iR,iL],:) = A2(:,[iR,iL])'; % make symmetric
-    end
-    % END ENHANCEMENT: line-connectivity constraints
+% START ENHANCEMENT: line-connectivity constraints
+if Bflag
+    A2(:,iR) = A2(:,iR).*B(:,iR,iL); % potentially limit connections
+    A2(:,iL) = A2(:,iL).*B(:,iL,iR); % potentially limit connections
+    A2([iR,iL],:) = A2(:,[iR,iL])'; % make symmetric
+end
+% END ENHANCEMENT: line-connectivity constraints
 end

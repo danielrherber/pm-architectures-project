@@ -10,6 +10,7 @@
 %--------------------------------------------------------------------------
 function [M,id] = TreeSaveGraphs(E,M,id,displevel)
 
-    [M,id] = PMA_TreeSaveGraphs(E,M,id,displevel);
+% call new function
+[M,id] = PMA_TreeSaveGraphs(E,M,id,displevel);
 
 end

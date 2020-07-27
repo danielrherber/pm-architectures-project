@@ -29,7 +29,7 @@ FinalGraphs = PMA_GenerateWithSubcatalogs(L,R,P,NSC,opts);
 
 % structured graphs
 if isfield(NSC,'S')
-    FinalGraphs = Structured_UniqueUsefulGraphs(L,R,P,NSC,opts,FinalGraphs);
+    FinalGraphs = PMA_STRUCT_UniqueUsefulGraphs(L,R,P,NSC,opts,FinalGraphs);
 end
 
 % plot the unique designs

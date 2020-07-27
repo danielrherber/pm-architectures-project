@@ -76,5 +76,5 @@ if cycleFlag
     feasibleFlag = false;
     return % exit, graph infeasible
 end
-    
+
 end

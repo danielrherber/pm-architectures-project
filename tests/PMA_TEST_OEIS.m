@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_TEST_OEIS.m
-% test for OEIS sequences (also useful for testing most of the methods all
+% Test for OEIS sequences (also useful for testing most of the methods all
 % at once)
 %--------------------------------------------------------------------------
 %
@@ -15,87 +15,90 @@ opts = [];
 
 % create the test scenario
 switch testnum
+    %----------------------------------------------------------------------
     case 1 % single function, multiple n values
-        F = strings(1,0); N = cell(1,0);
-        F(end+1) = "PMA_EX_A000014";
-        N{end+1} = 1:10;
-        opts.algorithm = 'tree_v11BFS';
-
+    F = strings(1,0); N = cell(1,0);
+    F(end+1) = "PMA_EX_A000014";
+    N{end+1} = 1:10;
+    opts.algorithm = 'tree_v11BFS';
+    %----------------------------------------------------------------------
     case 2 % several functions, single n values
-        F(1) = "PMA_EX_A000014";
-        F(2) = "PMA_EX_A000014";
-        N{1} = 3;
-        N{2} = 14;
+    F(1) = "PMA_EX_A000014";
+    F(2) = "PMA_EX_A000014";
+    N{1} = 3;
+    N{2} = 14;
+    %----------------------------------------------------------------------
     case 3 % primary test
-        F = strings(1,0); N = cell(1,0);
-        F(end+1) = "PMA_EX_A000014";
-        N{end+1} = 1:11;
-        F(end+1) = "PMA_EX_A000029";
-        N{end+1} = 1:10;
-        F(end+1) = "PMA_EX_A000041";
-        N{end+1} = 1:12;
-        F(end+1) = "PMA_EX_A000081";
-        N{end+1} = 1:8;
-        F(end+1) = "PMA_EX_A000088";
-        N{end+1} = 1:5;
-        F(end+1) = "PMA_EX_A000110";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A000142";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A000262";
-        N{end+1} = 1:5;
-        F(end+1) = "PMA_EX_A000598";
-        N{end+1} = 1:8;
-        F(end+1) = "PMA_EX_A000664";
-        N{end+1} = 1:6;
-        F(end+1) = "PMA_EX_A001147";
-        N{end+1} = 2:2:12;
-        F(end+1) = "PMA_EX_A001187";
-        N{end+1} = 1:4;
-        F(end+1) = "PMA_EX_A001190";
-        N{end+1} = 1:8;
-        F(end+1) = "PMA_EX_A001349";
-        N{end+1} = 1:5;
-        F(end+1) = "PMA_EX_A001710";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A002094";
-        N{end+1} = 1:9;
-        F(end+1) = "PMA_EX_A002851";
-        N{end+1} = 1:5;
-        F(end+1) = "PMA_EX_A002905";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A004108";
-        N{end+1} = 1:5;
-        F(end+1) = "PMA_EX_A005176";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A005177";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A005333";
-        N{end+1} = 1:2;
-        F(end+1) = "PMA_EX_A005814";
-        N{end+1} = 1:2;
-        F(end+1) = "PMA_EX_A032279";
-        N{end+1} = 5:13;
-        F(end+1) = "PMA_EX_A053419";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A054921";
-        N{end+1} = 1:4;
-        F(end+1) = "PMA_EX_A056156";
-        N{end+1} = 1:6;
-        F(end+1) = "PMA_EX_A060542";
-        N{end+1} = 1:3;
-        F(end+1) = "PMA_EX_A108246";
-        N{end+1} = 1:7;
-        F(end+1) = "PMA_EX_A134818";
-        N{end+1} = 1:4;
-        F(end+1) = "PMA_EX_A191970";
-        N{end+1} = 1:5;
-        F(end+1) = "PMA_EX_A261919";
-        N{end+1} = 1:4;
-        F(end+1) = "PMA_EX_A289158";
-        N{end+1} = 1:3;
-        F(end+1) = "PMA_EX_A306334";
-        N{end+1} = 1:6;
+    F = strings(1,0); N = cell(1,0);
+    F(end+1) = "PMA_EX_A000014";
+    N{end+1} = 1:11;
+    F(end+1) = "PMA_EX_A000029";
+    N{end+1} = 1:10;
+    F(end+1) = "PMA_EX_A000041";
+    N{end+1} = 1:12;
+    F(end+1) = "PMA_EX_A000081";
+    N{end+1} = 1:8;
+    F(end+1) = "PMA_EX_A000088";
+    N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A000110";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A000142";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A000262";
+    N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A000598";
+    N{end+1} = 1:8;
+    F(end+1) = "PMA_EX_A000664";
+    N{end+1} = 1:6;
+    F(end+1) = "PMA_EX_A001147";
+    N{end+1} = 2:2:12;
+    F(end+1) = "PMA_EX_A001187";
+    N{end+1} = 1:4;
+    F(end+1) = "PMA_EX_A001190";
+    N{end+1} = 1:8;
+    F(end+1) = "PMA_EX_A001349";
+    N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A001710";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A002094";
+    N{end+1} = 1:9;
+    F(end+1) = "PMA_EX_A002851";
+    N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A002905";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A004108";
+    N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A005176";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A005177";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A005333";
+    N{end+1} = 1:2;
+    F(end+1) = "PMA_EX_A005814";
+    N{end+1} = 1:2;
+    F(end+1) = "PMA_EX_A032279";
+    N{end+1} = 5:13;
+    F(end+1) = "PMA_EX_A053419";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A054921";
+    N{end+1} = 1:4;
+    F(end+1) = "PMA_EX_A056156";
+    N{end+1} = 1:6;
+    F(end+1) = "PMA_EX_A060542";
+    N{end+1} = 1:3;
+    F(end+1) = "PMA_EX_A108246";
+    N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A134818";
+    N{end+1} = 1:4;
+    F(end+1) = "PMA_EX_A191970";
+    N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A261919";
+    N{end+1} = 1:4;
+    F(end+1) = "PMA_EX_A289158";
+    N{end+1} = 1:3;
+    F(end+1) = "PMA_EX_A306334";
+    N{end+1} = 1:6;
+    %----------------------------------------------------------------------
 end
 
 % n format string

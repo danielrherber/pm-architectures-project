@@ -24,6 +24,7 @@ S = cumsum(0:2:2*max(Ntotal));
 
 % go through each subcatalog
 for idx = 1:size(Ps,1)
+
     % sort replicate vectors
     Rst = Rs(idx,Is(idx,:));
 
@@ -38,6 +39,7 @@ for idx = 1:size(Ps,1)
 
     % go through each vertex
     for k = 1:Ntotal(idx)
+
         % failure condition (Erdos-Gallai theorem)
         if C1(k) > S(k) + sum(min(Ds(k+1:n),k))
             failed(idx) = true;

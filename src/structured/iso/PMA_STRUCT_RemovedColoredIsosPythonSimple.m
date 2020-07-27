@@ -1,17 +1,21 @@
 %--------------------------------------------------------------------------
-% Structured_RemovedColoredIsosPython.m
-% Given a set of structured colored graphs, determine the set of 
-% nonisomorphic structured colored graphs, Python implementation
+% PMA_STRUCT_RemovedColoredIsosPythonSimple.m
+% Given a set of structured labeled graphs, determine the set of
+% nonisomorphic structured labeled graphs, Python implementation with the
+% simple checks
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
-
-% Additional Contributor: Shangtingli,Undergraduate Student,University of 
-
+% Additional contributor: Shangtingli on GitHub
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function UniqueGraphs = Structured_RemovedColoredIsosPython(Graphs,opts)
+function UniqueGraphs = PMA_STRUCT_RemovedColoredIsosPythonSimple(Graphs,opts,iStruct,np)
+
+% obtain cell arrays used for the simple checks
+if opts.structured.simplecheck
+    [IntData,ExtData] = PMA_STRUCT_SimpleCheckConnections(Graphs,iStruct,np);
+end
 
 % output to the command window
 if (opts.displevel > 1) % verbose
@@ -20,9 +24,9 @@ end
 
 % import isomorphism checking function
 origdir = pwd; % original directory
-pydir = mfoldername('RemovedColoredIsosPython','python'); % python directory
+pydir = mfoldername('PMA_RemoveIsoLabeledGraphs','python'); % python directory
 cd(pydir) % change directory
-py.importlib.import_module('detectiso_igraph'); % import module 
+py.importlib.import_module('detectiso_igraph'); % import module
 
 % number of graphs to check
 n = length(Graphs);
@@ -32,7 +36,7 @@ if n < 2000 % parallel computing would be slower
     parallelTemp = 0; % no parallel computing
     Nbin = 1; % number of bins
 else
-    parallelTemp = opts.parallel; 
+    parallelTemp = opts.parallel;
 %     Nbin = opts.Nbin; % need to add
     Nbin = 1; % number of bins
 end
@@ -63,6 +67,8 @@ for i = 1:n
     Graphs(i).colors = colors{i};
     Graphs(i).sumadj = sumadj(i);
     Graphs(i).pylist = pylist{i};
+    Graphs(i).IntData = IntData{i};
+    Graphs(i).ExtData = ExtData{i};
 end
 
 % first graph is always unique so store it
@@ -78,7 +84,9 @@ for i = 2:n
     % get candidate graph information
     nnode1 = nnode(i);
     color1 = colors{i};
-    pyadj1 = pylist{i};        
+    pyadj1 = pylist{i};
+    IntIndice1 = IntData{i};
+    ExtArray1 = ExtData{i};
 
     % initialize
     results = ones(min(Nbin,nNonIso),1);
@@ -90,11 +98,19 @@ for i = 2:n
         IsoFlag = 0; % initialize isoFlag
 
         while (j > 0) && (IsoFlag == 0)
-            pyadj2 = bin(c).Graphs(j).pylist;
-            color2 = bin(c).Graphs(j).colors;
-            nnode2 = bin(c).Graphs(j).nnode;
-            IsoFlag = py.detectiso_igraph.detectiso(pyadj1,pyadj2,...
-                        color1,color2,nnode1,nnode2);
+            IntIndice2 = bin(c).Graphs(j).IntData;
+            % check if the internal connections are the same
+            if isequal(IntIndice1,IntIndice2)
+                ExtArray2 = bin(c).Graphs(j).ExtData;
+                % check if the external connections are the same
+                if isequal(ExtArray1,ExtArray2)
+                    pyadj2 = bin(c).Graphs(j).pylist;
+                    color2 = bin(c).Graphs(j).colors;
+                    nnode2 = bin(c).Graphs(j).nnode;
+                    IsoFlag = py.detectiso_igraph.detectiso(pyadj1,pyadj2,...
+                                color1,color2,nnode1,nnode2,3);
+                end
+            end
             % if IsoFlag
             %     typearray(i) = bin(c).Graphs(j).N;
             % end
@@ -122,8 +138,8 @@ for i = 2:n
         % increment since a unique graph was found
         nNonIso = nNonIso + 1;
     end
-    
-    % output some stats to the command window    
+
+    % output some stats to the command window
     if (opts.displevel > 1) % verbose
         if (mod(i,Ndispnum) == 0) || (i == 2)
             % check if this is the first graph generated
@@ -140,7 +156,7 @@ for i = 2:n
 end
 
 % return to the original directory
-cd(origdir);
+% cd(origdir);
 
 % combine all the bins
 UniqueGraphs = []; % initialize
@@ -155,6 +171,8 @@ UniqueGraphs = rmfield(UniqueGraphs,'colors');
 UniqueGraphs = rmfield(UniqueGraphs,'pylist');
 UniqueGraphs = rmfield(UniqueGraphs,'nnode');
 UniqueGraphs = rmfield(UniqueGraphs,'sumadj');
+UniqueGraphs = rmfield(UniqueGraphs,'IntData');
+UniqueGraphs = rmfield(UniqueGraphs,'ExtData');
 
 % output some stats to the command window
 if (opts.displevel > 0) % minimal

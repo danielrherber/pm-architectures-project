@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_TEST_ParallelToggle.m
-% tests for the function PMA_ParallelToggle
+% Tests for the function PMA_ParallelToggle
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -16,6 +16,7 @@ tests = [1 6 8 10]; % delete then start using second inputs
 
 % run through the tests
 for test = tests(:)'
+
     % different tests
     switch test
         case 0
@@ -49,4 +50,5 @@ for test = tests(:)'
     % display to command window
     disp(string(test))
     disp(gcp('nocreate'))
+
 end

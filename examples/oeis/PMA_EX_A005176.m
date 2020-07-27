@@ -56,9 +56,9 @@ opts.plots.randomize = true;
 end
 
 function [Ls,Rs,Ps] = subcatfunc(~,Ls,Rs,Ps,~,~)
-    % condition
-    passed = sum(Rs~=0,2) == 1;
+% condition
+passed = sum(Rs~=0,2) == 1;
 
-    % extract
-    Ls = Ls(passed,:); Rs = Rs(passed,:); Ps = Ps(passed,:);
+% extract
+Ls = Ls(passed,:); Rs = Rs(passed,:); Ps = Ps(passed,:);
 end

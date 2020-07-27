@@ -11,7 +11,7 @@
 %--------------------------------------------------------------------------
 function FinalGraphs = PMA_RemoveIsoColoredGraphsPython(Graphs,opts)
 
-    % call new function
-    FinalGraphs = PMA_RemoveIsoLabeledGraphs(Graphs,opts);
+% call new function
+FinalGraphs = PMA_RemoveIsoLabeledGraphs(Graphs,opts);
 
 end

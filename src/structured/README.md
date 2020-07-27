@@ -18,13 +18,13 @@ NSC.S = [1 0 1 0 0]
 
 ---
 ### Examples
-* See [ex_Structured_Example1.m](../examples/structured/ex_Structured_Example1.m) for simple example with structured components
+* See [PMA_EX_STRUCT_Example1.m](../examples/structured/PMA_EX_STRUCT_Example1.m) for simple example with structured components
 ```matlab
-open ex_Structured_Example1.m
+open PMA_EX_STRUCT_Example1.m
 ```
-* See [ex_Structured_Bayrak2016.m](../examples/structured/ex_Structured_Bayrak2016.m) for an engineering example on hybrid powertrains
+* See [PMA_EX_STRUCT_Bayrak2016.m](../examples/structured/PMA_EX_STRUCT_Bayrak2016.m) for an engineering example on hybrid powertrains
 ```matlab
-open ex_Structured_Bayrak2016.m
+open PMA_EX_STRUCT_Bayrak2016.m
 ```
 * The image below is a visual representation of the difference between simple and structured graphs.
 ![structured.svg](optional/structured.svg)

@@ -1,13 +1,14 @@
 %--------------------------------------------------------------------------
-% DispAdjacencyIdxLabels.m
-%
+% PMA_STRUCT_DispAdjacencyIdxLabels.m
+% Helps display final label list and construct directA
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
+% Additional contributor: Shangtingli on GitHub
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function AdjType = DispAdjacencyIdxLabels(L,P,S)
+function AdjType = PMA_STRUCT_DispAdjacencyIdxLabels(L,P,S)
 
 % prompt the user to say simple reduced or structured reduced
 prompt = 'Do you want simple reduced (1) or structure reduced (2): ';
@@ -27,7 +28,7 @@ if strcmp(choice,'1')
     % calculate total # of entries
     real_num = length(L);
 
-    % display numbers and colored labels
+    % display numbers and labels
     for k = 1:real_num
         disp([num2str(k),' - ',L{k}])
     end
@@ -44,7 +45,7 @@ elseif strcmp(choice,'2')
     % calculate total # of entries
     real_num = sum(S.*P) + sum(~S); % structured + simple
 
-    % display numbers and colored labels
+    % display numbers and labels
     for k = 1:real_num
 
         % find first nonzero value

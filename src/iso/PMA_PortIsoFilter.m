@@ -18,30 +18,31 @@ Msum = PMA_changem(M,phi,1:length(phi));
 % obtain the unique connected component adjacency matrices
 options = 1;
 switch options
+    %----------------------------------------------------------------------
     case 1
-        % note, this is really a fix for the port-type iso filter
-        % based on connected components graph being exactly the same
-        n = length(phi)/2;
+    % note, this is really a fix for the port-type iso filter
+    % based on connected components graph being exactly the same
+    n = length(phi)/2;
 
-        % fixed size of the connected components adjacency matrix
-        N = max(phi);
+    % fixed size of the connected components adjacency matrix
+    N = max(phi);
 
-        % convert multiple subscripts to linear index
-        P = zeros(size(Msum,1),n,'uint16'); % initialize
-        for k = 1:n
-            P(:,k) = N*(Msum(:,2*k)-1) + Msum(:,2*k-1); % similar to sub2ind
-        end
+    % convert multiple subscripts to linear index
+    P = zeros(size(Msum,1),n,'uint16'); % initialize
+    for k = 1:n
+        P(:,k) = N*(Msum(:,2*k)-1) + Msum(:,2*k-1); % similar to sub2ind
+    end
 
-        % sort the elements in each row
-        P = sort(P,2,'descend'); % descending is a bit faster
+    % sort the elements in each row
+    P = sort(P,2,'descend'); % descending is a bit faster
 
-        % obtain the unique connected component adjacency matrices
-        [~,IA] = unique(P,'rows','stable');
-
+    % obtain the unique connected component adjacency matrices
+    [~,IA] = unique(P,'rows','stable');
+    %----------------------------------------------------------------------
     case 2 % see the note above
-        % extract on the unique rows
-        [~,IA] = unique(Msum,'rows');
-
+    % extract on the unique rows
+    [~,IA] = unique(Msum,'rows');
+    %----------------------------------------------------------------------
 end
 
 % get new set of graphs

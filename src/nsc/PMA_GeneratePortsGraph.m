@@ -52,6 +52,7 @@ loops = repelem(NSC.loops,R);
 % get edges for each component's complete subgraph
 I = []; J = []; V = []; % initialize
 for idx = 1:n
+
     % find indices of a the complete graph (lower triangular part)
     [Ij,Jj,Vj] = find(tril(ones(Vfull(idx)),-1));
 
@@ -61,6 +62,7 @@ for idx = 1:n
 
 	% increment port index
     idxp = idxp + Vfull(idx);
+
 end
 
 %% assign to output structure
@@ -78,3 +80,5 @@ NSC.M = uint8(mandatory(:)'); % expand mandatory vector
 NSC.simple = uint8(simple(:)'); % expand simple vector
 NSC.loops = uint8(loops(:)'); % expand loops vector
 ports.NSC = NSC;
+
+end

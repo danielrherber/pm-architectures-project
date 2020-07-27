@@ -11,7 +11,7 @@
 %--------------------------------------------------------------------------
 function FinalGraphs = UniqueUsefulGraphs(C,R,P,NSC,opts)
 
-    % call new function
-    FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
+% call new function
+FinalGraphs = PMA_UniqueFeasibleGraphs(C,R,P,NSC,opts);
 
 end

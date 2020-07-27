@@ -1,16 +1,15 @@
 %--------------------------------------------------------------------------
-% Structured_SimpleCheckConnections.m
+% PMA_STRUCT_SimpleCheckConnections.m
 % Create the required data for the simple checks
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
-
-% Additional Contributor: Shangtingli,Undergraduate Student,University of 
-
+% Additional contributor: Shangtingli on GitHub
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [IntData,ExtData] = Structured_SimpleCheckConnections(Graphs,iStruct,np)
+function [IntData,ExtData] = PMA_STRUCT_SimpleCheckConnections(Graphs,iStruct,np)
+
 % get the number of graphs
 n = length(Graphs);
 
@@ -19,7 +18,7 @@ strStart = iStruct;
 strEnd = iStruct+np-1;
 
 % ExtData is an array captures the external connections
-% since all the graphs expand the same structured component at the 
+% since all the graphs expand the same structured component at the
 % current level, every cell in ExtData represents the connection orders
 % of the same structured component of each graph in Graphs
 ExtData = cell(1,n);
@@ -29,10 +28,11 @@ IntData = cell(1,n);
 
 % get the data for the internal and external connections
 for idx = 1:n
+
     % get the current graph
     graph = Graphs(idx);
 
-    % 
+    %
     [uniqueLabels,uniqueIndex] = Structured_CreateConnectedLabels(graph,iStruct,np);
 
     % create the array for connected labels (not guaranteed to be
@@ -43,8 +43,9 @@ for idx = 1:n
     [intIdx,~] = find(graph.A(strStart:strEnd,strStart:strEnd)>1);
     IntData{idx}= intIdx';
 
-    % for every uniqueLabel 
+    % for every uniqueLabel
     for j = 1:length(uniqueLabels)
+
        % get the index representing the connected component
        Indices = uniqueIndex{j};
 
@@ -54,6 +55,7 @@ for idx = 1:n
 
        % sort the portNumbers and store in Arr
        Arr{j} = sort(portNums');
+
     end
 
     % finally covert Arr to an array for easy comparison
@@ -62,9 +64,11 @@ for idx = 1:n
 end
 
 end
+
 % uniqueLabels -> labels connected to structured component
 % uniqueIndex -> indices representing the labels in uniqueLabels
 function [uniqueLabels,uniqueIndex] = Structured_CreateConnectedLabels(graph,iStruct,np)
+
 % start/end of ports of structured component in the adjacency matrix
 Start = iStruct;
 End = iStruct+np-1;
@@ -80,8 +84,8 @@ extcheckA = graph.A(externalIdx,Start:End);
 % and indices of the labels (may not be unique)
 connectedLabels = cell(1,np);
 connectedIndex = zeros(1,np);
-
 for k = 1:np
+
     % get part of adjacency matrix for construction of the map
     extColumn = extcheckA(:,k);
 
@@ -104,8 +108,8 @@ uniqueIndex = cell(1,length(uniqueLabels));
 % to ports of structured component
 for l = 1:length(uniqueLabels)
    IndexC = strfind(connectedLabels, uniqueLabels{l});
-   Index = find(not(cellfun('isempty', IndexC))); 
+   Index = find(not(cellfun('isempty', IndexC)));
    uniqueIndex{l} = connectedIndex(Index);
 end
-    
+
 end

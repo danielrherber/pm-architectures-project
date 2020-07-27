@@ -1,4 +1,3 @@
 !.gitignore
-/_private
 /output
 *.mat

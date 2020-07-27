@@ -41,7 +41,7 @@ NSC.loops = 0; % no loops
 
 % obtain all unique, feasible graphs
 [G1,opts] = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
-    
+
 % number of graphs based on OEIS A000014
 N = [1,1,0,1,1,2,2,4,5,10,14,26,42,78,132,249,445,842,1561,2988,5671,10981];
 n2 = N(n);

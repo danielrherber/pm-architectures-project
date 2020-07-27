@@ -1,7 +1,7 @@
 %--------------------------------------------------------------------------
 % PMA_EX_A000029
 % A000029, number of necklaces with n beads of 2 colors, allowing turning
-% over (these are also called bracelets) 
+% over (these are also called bracelets)
 % 2, 3, 4, 6, 8, 13, 18, 30, 46, 78, 126, 224, 380, 687, 1224, 2250, ...
 %--------------------------------------------------------------------------
 %
@@ -38,7 +38,7 @@ NSC.loops = 0; % no loops
 
 % obtain all unique, feasible graphs
 [G1,opts] = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
-    
+
 % number of graphs based on OEIS A000029
 N = [2,3,4,6,8,13,18,30,46,78,126,224,380,687,1224,2250,4112,7685,14310,...
     27012,50964,96909,184410];

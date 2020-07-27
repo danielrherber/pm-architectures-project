@@ -22,11 +22,13 @@ n = numel(r)-1;
 
 % determine connected component bins
 if nargout >= 2
+
     % initialize bins for all connected components
     bins = repelem(1:n,diff(r));
 
     % unsort
     bins(p) = bins;
+
 end
 
 % determine connectivity matrix (1 indicates a path between 2 vertices)

@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_BinBasedSorting.m
-% sort input vector based on bins
+% Sort input vector based on bins
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -14,11 +14,13 @@ function V = PMA_BinBasedSorting(V,B)
 
 % go through each type
 for k = 1:length(IA)
+
     % current bin indices
     b = IA(k) == IC;
 
     % sort current bin
     V(:,b) = sort(V(:,b),2);
+
 end
 
 end

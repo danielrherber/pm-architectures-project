@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_TEST_MultiedgeBounds.m
-% Test function for 
+% Test function for multiedge bounded methods such as tree_v12DFS
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
@@ -13,33 +13,31 @@ clear; clc; close all; closeallbio;
 testnum = 3;
 
 switch testnum
+    %----------------------------------------------------------------------
     case 1
-        % problem specification
-        L = {'R','G'}; % labels
-        P = [3 3]; % ports
-        R = [4 2]; % replicates
-        NSC = []; % no constraints
-%         NSC.simple = [0 0];
+    % problem specification
+    L = {'R','G'}; % labels
+    P = [3 3]; % ports
+    R = [4 2]; % replicates
+    NSC = []; % no constraints
+    % NSC.simple = [0 0];
+    %----------------------------------------------------------------------
     case 2
-        % problem specification
-        L = {'R'}; % labels
-        P = [3]; % ports
-        R = [10]; % replicates
-%         NSC.simple = [0]; % maximum number of edges between L1 and another component
-%         NSC.connected = true;
-        NSC.loops = 0;
-%         NSC.multiedgeA = 2;
-
+    % problem specification
+    L = {'R'}; % labels
+    P = [3]; % ports
+    R = [10]; % replicates
+    NSC.loops = 0;
+    %----------------------------------------------------------------------
     case 3
-        % problem specification
-        L = {'R'}; % labels
-        P = [6]; % ports
-        R = [3]; % replicates
-%         NSC.simple = [0]; % maximum number of edges between L1 and another component
-%         NSC.connected = true;
-        NSC.loops = 0;
-%         NSC.multiedgeA = 2;
-
+    % problem specification
+    L = {'R'}; % labels
+    P = [6]; % ports
+    R = [3]; % replicates
+    % NSC.simple = [0]; % maximum number of edges between L1 and another component
+    % NSC.connected = true;
+    % NSC.multiedgeA = 2;
+    %----------------------------------------------------------------------
 end
 
 % generate graphs
@@ -57,7 +55,6 @@ opts.plots.colorlib = 2; % color library
 opts.plots.randomize = true;
 
 end
-
 
 % A\-A % then 0
 % A-A % then 1

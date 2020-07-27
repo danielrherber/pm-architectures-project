@@ -11,7 +11,7 @@
 %--------------------------------------------------------------------------
 function FinalGraphs = PMA_RemoveIsoColoredGraphs(Graphs,opts)
 
-    % call new function
-    FinalGraphs = PMA_RemoveIsoLabeledGraphs(Graphs,opts);
+% call new function
+FinalGraphs = PMA_RemoveIsoLabeledGraphs(Graphs,opts);
 
 end

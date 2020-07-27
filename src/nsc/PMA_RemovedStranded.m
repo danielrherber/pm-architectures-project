@@ -26,6 +26,7 @@ end
 
 % check if we have a connected graph
 if n ~= 1
+
     % find stranded components
     R = ~all(W(:,logical(M)),2);
 
@@ -42,6 +43,7 @@ if n ~= 1
 
     % sort removed components
     pp.removephi = sort(find(R),1,'descend');
+
 end
 
 % if there are no remaining vertices, graph is infeasible (unuseful)

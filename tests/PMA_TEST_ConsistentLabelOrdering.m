@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % PMA_TEST_ConsistentLabelOrdering.m
-% if the initial label ordering is maintained and the set of graphs are
+% If the initial label ordering is maintained and the set of graphs are
 % identical between to similar problems
 %--------------------------------------------------------------------------
 %

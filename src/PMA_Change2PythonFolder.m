@@ -10,6 +10,7 @@
 function origdir = PMA_Change2PythonFolder(opts,toggleFlag,origdir)
 
 if toggleFlag % change to python folder
+
     % original directory
     origdir = pwd;
 
@@ -18,9 +19,12 @@ if toggleFlag % change to python folder
 
     % change directory
     cd(pydir)
+
 else % change to original directory
+
     % return to the original directory
     cd(origdir);
+
 end
 
 end
