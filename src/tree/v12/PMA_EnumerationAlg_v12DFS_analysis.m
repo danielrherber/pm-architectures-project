@@ -1,14 +1,16 @@
 %--------------------------------------------------------------------------
-% PMA_EnumerationAlg_v12DFS.m
-% Depth-first search implementation
+% PMA_EnumerationAlg_v12DFS_analysis.m
+% Depth-first search implementation (analysis version)
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function [SavedGraphs,id] = PMA_EnumerationAlg_v12DFS(V,E,SavedGraphs,id,...
-    cVf,Vf,iInitRep,A,Bflag,B,Mflag,M,displevel)
+function [SavedGraphs,id] = PMA_EnumerationAlg_v12DFS_analysis(V,E,SavedGraphs,id,...
+    cVf,Vf,iInitRep,A,Bflag,B,Mflag,M,displevel,prenode)
+
+option = 1; PMA_TreeAnalysis; %#ok<NASGU>
 
 % START ENHANCEMENT: touched vertex promotion
 istouched = logical(Vf-V); % vertices that have been touched
@@ -36,12 +38,13 @@ Vordering(iInitRep) = 1; % initial replicates are always 1
 Vallow = V.*Vordering.*A(iL,:);
 
 % find remaining nonzero entries
-I = find(Vallow);
+I = find(V); % modification for analysis function
 
 % loop through all nonzero entries
-for iRidx = 1:length(I)
+for iR = I
 
-    iR = I(iRidx);
+    option = 2; PMA_TreeAnalysis; %#ok<NASGU>
+    if continueflag; continue; end
 
     % local for loop variables
     V2 = V; A2 = A;
@@ -72,6 +75,7 @@ for iRidx = 1:length(I)
             elseif (nUncon == sum(M))
                 % continue iterating
             else
+                option = 3; PMA_TreeAnalysis; %#ok<NASGU>
                 continue % stop, this graph is infeasible
             end
         end
@@ -92,7 +96,7 @@ for iRidx = 1:length(I)
     % END ENHANCEMENT: line-connectivity constraints
 
     if any(V2) % recursive call if any remaining vertices
-        [SavedGraphs,id] = PMA_EnumerationAlg_v12DFS(V2,E2,SavedGraphs,id,cVf,Vf,iInitRep,A2,Bflag,B,Mflag,M,displevel);
+        [SavedGraphs,id] = PMA_EnumerationAlg_v12DFS_analysis(V2,E2,SavedGraphs,id,cVf,Vf,iInitRep,A2,Bflag,B,Mflag,M,displevel,node);
     else % save the complete perfect matching graph
         [SavedGraphs,id] = PMA_TreeSaveGraphs(E2,SavedGraphs,id,displevel);
         return

@@ -26,6 +26,8 @@ switch length(varargin)
         [Graphs,Tsort,Vsort,Ln,displevel,isomethod] = deal(varargin{:});
 
         Nc = length(Ln); % number of components (constant in BFS algorithm)
+        [I2,J2] = ind2sub(Nc,Tsort); % subscripts from linear index
+        Vcc = ones(1,size(I2,2)); % one for each edge
     %----------------------------------------------------------------------
     otherwise
         error('Unknown inputs to PMA_RemoveIsoLabeledGraphs')
@@ -128,9 +130,9 @@ for i = 1:n
         %------------------------------------------------------------------
         case 2 % called within the BFS graph generation algorithm
             % obtain adjacency matrix
-            At = zeros(Nc,'double');
-            At(Tsort(i,:)) = 1;
-            At = At + At';
+            At = full(sparse(I2(i,:),J2(i,:),Vcc,Nc,Nc));
+            At = At + At'; % symmetric
+            At = At - diag(diag(At))/2;
     end
 
     % store adjacency matrix

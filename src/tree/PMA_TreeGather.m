@@ -106,7 +106,10 @@ switch algorithm
             A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
     case 'tree_v12DFS'
         [G,~] = PMA_EnumerationAlg_v12DFS(Vf,E,G,id,cVf,Vf,iInitRep,...
-            simple,Am,Bf,B,Mf,M,displevel);
+            Am,Bf,B,Mf,M,displevel);
+    case 'tree_v12BFS'
+        G = PMA_EnumerationAlg_v12BFS(cVf,Vf,iInitRep,phi,...
+            Am,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
     %----------------------------------------------------------------------
     % mex
     %----------------------------------------------------------------------
@@ -126,7 +129,10 @@ switch algorithm
             A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
     case 'tree_v12DFS_mex'
         [G,~] = PMA_EnumerationAlg_v12DFS_mex(Vf,E,G,id,cVf,Vf,iInitRep,...
-            simple,Am,Bf,B,Mf,M,displevel);
+            Am,Bf,B,Mf,M,displevel);
+    case 'tree_v12BFS_mex'
+        G = PMA_EnumerationAlg_v12BFS_mex(cVf,Vf,iInitRep,phi,...
+            Am,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
     %----------------------------------------------------------------------
     % analysis
     %----------------------------------------------------------------------
@@ -144,6 +150,12 @@ switch algorithm
     case 'tree_v11BFS_analysis'
         G = PMA_EnumerationAlg_v11BFS_analysis(cVf,Vf,iInitRep,phi,simple,...
             A,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
+    case 'tree_v12DFS_analysis'
+        [G,~] = PMA_EnumerationAlg_v12DFS_analysis(Vf,E,G,id,cVf,Vf,iInitRep,...
+            Am,Bf,B,Mf,M,displevel,prenode);
+    case 'tree_v12BFS_analysis'
+        G = PMA_EnumerationAlg_v12BFS_analysis(cVf,Vf,iInitRep,phi,...
+            Am,Bf,B,Mf,M,Pf,If,Im,IN,Ln,Nmax,displevel);
     %----------------------------------------------------------------------
     % stochastic
     %----------------------------------------------------------------------
@@ -166,6 +178,10 @@ switch algorithm
     case 'tree_v11DFS_stochastic'
         error('need to implement')
     case 'tree_v11BFS_stochastic'
+        error('need to implement')
+    case 'tree_v12DFS_stochastic'
+        error('need to implement')
+    case 'tree_v12BFS_stochastic'
         error('need to implement')
     %----------------------------------------------------------------------
     case 'tree_test'
