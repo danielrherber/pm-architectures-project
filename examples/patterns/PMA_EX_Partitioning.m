@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EX_Partitioning
+% PMA_EX_Partitioning.m
 % The partitioning pattern arises when there is a set of entities that need
 % to be grouped into nonoverlapping subsets
 %--------------------------------------------------------------------------
@@ -61,7 +61,7 @@ NSC.userCatalogNSC = @PMA_BipartiteSubcatalogFilters;
 opts.plots.plotmax = 1;
 opts.plots.labelnumflag = false;
 opts.plots.randomize = true;
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12BFS_mex';
 opts.isomethod = 'none'; % not needed
 opts.parallel = true;
 opts.algorithms.Nmax = 1e5;

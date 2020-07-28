@@ -34,9 +34,9 @@ switch testnum
     L = {'R'}; % labels
     P = [6]; % ports
     R = [3]; % replicates
-    % NSC.simple = [0]; % maximum number of edges between L1 and another component
-    % NSC.connected = true;
-    % NSC.multiedgeA = 2;
+    NSC.simple = [0]; % maximum number of edges between L1 and another component
+    NSC.connected = true;
+    NSC.multiedgeA = 2;
     %----------------------------------------------------------------------
 end
 

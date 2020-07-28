@@ -32,12 +32,18 @@ if ~isfield(opts,'algorithm')
     % opts.algorithm = 'tree_v10_mex';
     % opts.algorithm = 'tree_v10_analysis';
     % opts.algorithm = 'tree_v10_stochastic';
-    opts.algorithm = 'tree_v11DFS';
+    % opts.algorithm = 'tree_v11DFS';
     % opts.algorithm = 'tree_v11DFS_mex';
     % opts.algorithm = 'tree_v11DFS_analysis';
     % opts.algorithm = 'tree_v11BFS';
     % opts.algorithm = 'tree_v11BFS_mex';
     % opts.algorithm = 'tree_v11BFS_analysis';
+    opts.algorithm = 'tree_v12DFS';
+    % opts.algorithm = 'tree_v12DFS_mex';
+    % opts.algorithm = 'tree_v12DFS_analysis';
+    % opts.algorithm = 'tree_v12BFS';
+    % opts.algorithm = 'tree_v12BFS_mex';
+    % opts.algorithm = 'tree_v1BFS_analysis';
 end
 
 % control parallel computing

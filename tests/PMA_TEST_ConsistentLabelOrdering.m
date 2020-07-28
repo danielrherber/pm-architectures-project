@@ -89,7 +89,7 @@ clear NSC C1 R1 P1 C2 R2 P2
 I = [2 1 3]; % sorting indices
 
 C1 = {'A','B','C'};
-R1.min = [0 0 0];
+R1.min = [1 0 0];
 R1.max = [2 2 2];
 P1 = [3 2 3];
 

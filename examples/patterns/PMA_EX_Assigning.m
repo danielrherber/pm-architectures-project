@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EX_Assigning
+% PMA_EX_Assigning.m
 % The assigning pattern has to do with assignments or allocations between
 % two predefined sets of entities
 %--------------------------------------------------------------------------
@@ -61,7 +61,7 @@ NSC.userCatalogNSC = @PMA_BipartiteSubcatalogFilters;
 % options
 opts.plots.plotmax = 10;
 opts.plots.labelnumflag = false;
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12BFS_mex';
 opts.isomethod = 'none';
 opts.parallel = false;
 opts.algorithms.Nmax = 1e2;

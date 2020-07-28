@@ -50,7 +50,7 @@ end
 % options
 function opts = localOpts
 
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12DFS_mex';
 opts.algorithms.Nmax = 1e7;
 opts.isomethod = 'none'; % no needed for the partitioning problem
 opts.parallel = true;

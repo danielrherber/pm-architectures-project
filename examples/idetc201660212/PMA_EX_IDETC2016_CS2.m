@@ -34,6 +34,7 @@ switch num
         C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
         NSC.M = [1 1 1 0 1 1];
         NSC.simple = 1;
+        NSC.loops = 0; % no loops
 end
 
 % options

@@ -45,12 +45,11 @@ NSC.lineTriple(4,:) = [2,8,1]; % u-p-s
 NSC.userGraphNSC = @(pp,A,feasibleFlag) PMA_EX_MD161635_SuspensionConstraints(pp,A,feasibleFlag);
 
 % options
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12BFS_mex';
 opts.Nmax = 1e6; % maximum number of graphs to preallocate for
 opts.parallel = true; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 opts.isomethod = 'python'; % option 'matlab' is available in 2016b or later versions
-
 opts.plots.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio' % 'matlab'
 opts.plots.plotmax = 0; % maximum number of graphs to display/save
 opts.plots.name = mfilename; % name of the example

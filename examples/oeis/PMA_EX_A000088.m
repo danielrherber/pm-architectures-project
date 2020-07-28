@@ -18,7 +18,7 @@ if ~isempty(varargin)
     flag = 'inputs'; PMA_EX_OEIScommon; %#ok<NASGU>
 else
     clc; close all
-    n = 10; % number of nodes (currently completed for n = 7)
+    n = 5; % number of nodes (currently completed for n = 7)
 end
 
 L = {'A'}; % labels
@@ -43,7 +43,7 @@ end
 % options
 function opts = localOpts
 
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12DFS_mex';
 opts.algorithms.isoNmax = inf;
 opts.algorithms.Nmax = 1e7;
 opts.isomethod = 'python';

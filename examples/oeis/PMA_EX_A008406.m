@@ -28,7 +28,7 @@ NSC.loops = 0; % loops
 NSC.Np = [2*k 2*k]; % edge bounds
 
 % options
-opts.algorithm = 'tree_v11BFS';
+opts.algorithm = 'tree_v12BFS';
 opts.algorithms.Nmax = 1e5;
 opts.isomethod = 'python';
 opts.parallel = true;

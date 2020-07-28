@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EX_Permuting
+% PMA_EX_Permuting.m
 % The permuting pattern seeks to arrange a set of elements in different
 % orderings
 %--------------------------------------------------------------------------
@@ -30,7 +30,7 @@ NSC.connected = 1; % connected graph required
 NSC.loops = 0; % no loops
 
 % options
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12BFS_mex';
 opts.algorithms.Nmax = 1e6;
 opts.isomethod = 'none'; % not needed
 opts.parallel = true;

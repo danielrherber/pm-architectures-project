@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EX_Downselecting
+% PMA_EX_Downselecting.m
 % The downselecting pattern is motivated by the tasks of the system
 % architect that require choosing a subset of among a set of candidate
 % entities
@@ -45,7 +45,7 @@ NSC.directA = zeros(NL); % no connections allowed
 opts.plots.plotmax = 10;
 opts.plots.labelnumflag = false;
 opts.plots.randomize = true;
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12BFS_mex';
 opts.isomethod = 'none'; % not needed
 opts.parallel = false;
 opts.algorithms.Nmax = 1e5;

@@ -27,7 +27,7 @@ NSC.directA = A;
 NSC.userCatalogNSC = @(L,Ls,Rs,Ps,NSC,opts) PMA_BipartiteSubcatalogFilters(L,Ls,Rs,Ps,NSC,opts);
 
 % options
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12DFS_mex';
 opts.algorithms.Nmax = 1e7;
 opts.isomethod = 'none'; % no needed for the partitioning problem
 opts.parallel = true;

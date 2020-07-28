@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EX_Combining
+% PMA_EX_Combining.m
 % The combining pattern seeks a combination of exactly one option for
 % each decision
 %--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ NSC.directA = zeros(NL);
 opts.plots.plotmax = 1;
 opts.plots.labelnumflag = false;
 opts.plots.randomize = true;
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12BFS_mex';
 opts.isomethod = 'none'; % no needed for the partitioning problem
 opts.parallel = 0;
 opts.algorithms.Nmax = 1e5;

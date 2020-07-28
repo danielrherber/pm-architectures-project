@@ -36,7 +36,7 @@ NSC.directA = A;
 % options
 opts.algorithm = 'tree_v1';
 opts.Nmax = 2e8; % maximum number of graphs to preallocate for
-opts.parallel = 12; % 12 threads for parallel computing, 0 to disable it
+opts.parallel = true; % parallel computing, false to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 NSC.userGraphNSC = @(pp,A,feasibleFlag) PMA_EX_MD161635_SuspensionConstraints(pp,A,feasibleFlag);
 opts.plotfun = 'bgl'; % 'circle' % 'bgl' % 'bio'

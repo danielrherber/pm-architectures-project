@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% PMA_EX_Connecting
+% PMA_EX_Connecting.m
 % The Connecting Pattern emphasizes the connectivity between a
 % predetermined set of entities. Given a set of entities, seen as the
 % vertices of a graph, an architecture fragment in the connecting pattern
@@ -19,7 +19,7 @@
 %--------------------------------------------------------------------------
 clear; clc; close all
 
-NL = length(L); % number of labels
+NL = 6; % number of labels
 L = cellstr(string(dec2base((1:NL)+9,36)))'; % labels
 R.min = ones(NL,1); R.max = R.min; % replicates
 P.min = zeros(NL,1); P.max = repelem(NL,NL,1); % ports
@@ -33,7 +33,7 @@ NSC.loops = 0; % no loops
 opts.plots.plotmax = 1;
 opts.plots.labelnumflag = false;
 opts.plots.randomize = true;
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12BFS_mex';
 opts.isomethod = 'none'; % no needed for the partitioning problem
 opts.parallel = true;
 opts.algorithms.Nmax = 1e5;

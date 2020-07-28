@@ -45,7 +45,7 @@ end
 % options
 function opts = localOpts
 
-opts.algorithm = 'tree_v11DFS_mex';
+opts.algorithm = 'tree_v12DFS_mex';
 opts.algorithms.Nmax = 1e6;
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'none'; % none needed with certain methods

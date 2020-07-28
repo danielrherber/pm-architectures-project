@@ -44,7 +44,7 @@ end
 % options
 function opts = localOpts
 
-opts.algorithm = 'tree_v11BFS';
+opts.algorithm = 'tree_v12BFS';
 opts.algorithms.Nmax = 1e7;
 opts.algorithms.isoNmax = inf;
 opts.isomethod = 'py-igraph';

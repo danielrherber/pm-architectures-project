@@ -54,7 +54,7 @@ disp(strcat("number of missing graphs: ",string(sum(Imissing))))
 hb = bar(1:(edges(end)-0.5),N-1,'FaceColor','flat');
 ylim([-1,max(N)])
 xlabel("Unique Graph Index")
-ylabel("# Number of Occurrences")
+ylabel("Number of Occurrences")
 
 % change color for missing graphs
 missingColor = [1 0 0];

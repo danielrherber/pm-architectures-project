@@ -46,21 +46,21 @@ switch num
             R = [1 2 1 1 1 1]; % replicates vector
             C = {'P','R', 'G', 'G', 'B', 'O'}; % label vector
             NSC.M = [1 1 1 0 1 1];
+            NSC.loops = 0; % no loops
         end
         NSC.simple = 1; % no multiedges
 end
 
 % options
 if newalgo
-    opts.algorithm = 'tree_v11DFS'; % new
+    opts.algorithm = 'tree_v12DFS'; % new
 else
     opts.algorithm = 'tree_v1'; % old
 end
-opts.algorithms.Nmax = 1e7; % maximum number of graphs to preallocate for
+opts.algorithms.Nmax = 1e5; % maximum number of graphs to preallocate for
 opts.parallel = false; % 12 threads for parallel computing, 0 to disable it
 opts.filterflag = 1; % 1 is on, 0 is off
 opts.isomethod = 'matlab'; % option 'Matlab' is available in 2016b or later versions
-
 opts.plots.plotfun = 'matlab'; % 'circle' % 'bgl' % 'bio' % 'matlab'
 opts.plots.plotmax = 20; % maximum number of graphs to display/save
 opts.plots.name = mfilename; % name of the example
