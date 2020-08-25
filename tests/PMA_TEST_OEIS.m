@@ -36,6 +36,8 @@ switch testnum
     N{end+1} = 1:10;
     F(end+1) = "PMA_EX_A000041";
     N{end+1} = 1:12;
+    F(end+1) = "PMA_EX_A000055";
+    N{end+1} = 1:10;
     F(end+1) = "PMA_EX_A000081";
     N{end+1} = 1:8;
     F(end+1) = "PMA_EX_A000088";
@@ -46,6 +48,8 @@ switch testnum
     N{end+1} = 1:7;
     F(end+1) = "PMA_EX_A000262";
     N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A000272";
+    N{end+1} = 1:4;
     F(end+1) = "PMA_EX_A000598";
     N{end+1} = 1:8;
     F(end+1) = "PMA_EX_A000664";
@@ -76,6 +80,8 @@ switch testnum
     N{end+1} = 1:2;
     F(end+1) = "PMA_EX_A005814";
     N{end+1} = 1:2;
+    F(end+1) = "PMA_EX_A006820";
+    N{end+1} = 1:6;
     F(end+1) = "PMA_EX_A032279";
     N{end+1} = 5:13;
     F(end+1) = "PMA_EX_A053419";
