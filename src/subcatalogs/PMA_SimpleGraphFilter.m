@@ -1,7 +1,7 @@
  %--------------------------------------------------------------------------
 % PMA_SimpleGraphFilter.m
 % Subcatalog checks for the existence of a graph if it is required to have
-% simply edges and no loops (Erdos-Gallai theorem)
+% simple edges and no loops (Erdos-Gallai theorem)
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------

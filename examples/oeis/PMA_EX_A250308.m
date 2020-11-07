@@ -1,14 +1,15 @@
 %--------------------------------------------------------------------------
-% PMA_EX_A005176
-% A005176, number of regular graphs with n nodes
-% 1, 2, 2, 4, 3, 8, 6, 22, 26, 176, 546, 19002, 389454, 50314870, ...
+% PMA_EX_A250308
+% A250308, number of unlabeled unrooted trees on 2n vertices with all
+% vertices of odd degree
+% 1, 1, 2, 3, 7, 13, 32, 74, 192, 497, 1379, 3844, 11111, 32500, 96977, ...
 %--------------------------------------------------------------------------
 %
 %--------------------------------------------------------------------------
 % Primary contributor: Daniel R. Herber (danielrherber on GitHub)
 % Link: https://github.com/danielrherber/pm-architectures-project
 %--------------------------------------------------------------------------
-function varargout = PMA_EX_A005176(varargin)
+function varargout = PMA_EX_A250308(varargin)
 
 % options (see function below)
 opts = localOpts;
@@ -18,22 +19,24 @@ if ~isempty(varargin)
     flag = 'inputs'; PMA_EX_OEIScommon; %#ok<NASGU>
 else
     clc; close all
-    n = 9; % number of nodes (currently completed for n = 11)
+    n = 6; % number of nodes (currently completed for n = 10)
 end
 
-L = {'A'}; % labels
-R.min = n; R.max = n; % replicates
-P.min = 0; P.max = n-1; % ports
-NSC.simple = 1; % simple components
-NSC.connected = 0; % connected graph not required
+L = {'B'}; % labels
+R.min = 2*n; R.max = R.min; % replicate vector
+P.min = 1; P.max = 2*n-1; % ports vector
+NSC.Np = [2*(2*n-1) 2*(2*n-1)]; % tree condition
+NSC.simple = 1; % no multiedges
+NSC.connected = 1; % connected graph required
 NSC.loops = 0; % no loops
-NSC.userCatalogNSC = @(Subcatalogs,C,R,P,NSC,opts) subcatfunc(Subcatalogs,C,R,P,NSC,opts);
+NSC.userCatalogNSC = @(L,Ls,Rs,Ps,NSC,opts) subcatfunc(L,Ls,Rs,Ps,NSC,opts);
 
 % obtain all unique, feasible graphs
 [G1,opts] = PMA_UniqueFeasibleGraphs(L,R,P,NSC,opts);
 
-% number of graphs based on OEIS A005176
-N = [1,2,2,4,3,8,6,22,26,176,546,19002,389454,50314870];
+% number of graphs based on OEIS A250308
+N = [1,1,2,3,7,13,32,74,192,497,1379,3844,11111,32500,96977,292600,...
+    894353,2758968,8590147,26947946];
 n2 = N(n);
 
 % compare number of graphs and create outputs
@@ -46,19 +49,19 @@ function opts = localOpts
 
 opts.algorithm = 'tree_v12BFS';
 opts.algorithms.Nmax = 1e6;
-opts.algorithms.isoNmax = inf;
+opts.algorithms.isoNmax = 1000;
 opts.isomethod = 'python';
 opts.parallel = true;
 opts.plots.plotmax = 5;
 opts.plots.labelnumflag = false;
-opts.plots.randomize = true;
 
 end
 
+% odd degrees condition
 function [Ls,Rs,Ps] = subcatfunc(~,Ls,Rs,Ps,~,~)
 
 % condition
-passed = sum(Rs~=0,2) == 1;
+passed = all(mod(Ps,2)|(Ps==0),2);
 
 % extract
 Ls = Ls(passed,:); Rs = Rs(passed,:); Ps = Ps(passed,:);

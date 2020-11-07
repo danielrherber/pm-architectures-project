@@ -20,7 +20,7 @@ switch testnum
     F = strings(1,0); N = cell(1,0);
     F(end+1) = "PMA_EX_A000014";
     N{end+1} = 1:10;
-    opts.algorithm = 'tree_v11BFS';
+    opts.algorithm = 'tree_v12BFS';
     %----------------------------------------------------------------------
     case 2 % several functions, single n values
     F(1) = "PMA_EX_A000014";
@@ -68,8 +68,12 @@ switch testnum
     N{end+1} = 1:9;
     F(end+1) = "PMA_EX_A002851";
     N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A002854";
+    N{end+1} = 1:6;
     F(end+1) = "PMA_EX_A002905";
     N{end+1} = 1:7;
+    F(end+1) = "PMA_EX_A003049";
+    N{end+1} = 1:6;
     F(end+1) = "PMA_EX_A004108";
     N{end+1} = 1:5;
     F(end+1) = "PMA_EX_A005176";
@@ -82,6 +86,8 @@ switch testnum
     N{end+1} = 1:2;
     F(end+1) = "PMA_EX_A006820";
     N{end+1} = 1:6;
+    F(end+1) = "PMA_EX_A007721";
+    N{end+1} = 1:6;
     F(end+1) = "PMA_EX_A032279";
     N{end+1} = 5:13;
     F(end+1) = "PMA_EX_A053419";
@@ -90,20 +96,30 @@ switch testnum
     N{end+1} = 1:4;
     F(end+1) = "PMA_EX_A056156";
     N{end+1} = 1:6;
+    F(end+1) = "PMA_EX_A058014";
+    N{end+1} = 1:5;
     F(end+1) = "PMA_EX_A060542";
     N{end+1} = 1:3;
+    F(end+1) = "PMA_EX_A095268";
+    N{end+1} = 1:6;
     F(end+1) = "PMA_EX_A108246";
     N{end+1} = 1:7;
     F(end+1) = "PMA_EX_A134818";
     N{end+1} = 1:4;
+    F(end+1) = "PMA_EX_A182012";
+    N{end+1} = 1:3;
     F(end+1) = "PMA_EX_A191970";
     N{end+1} = 1:5;
+    F(end+1) = "PMA_EX_A250308";
+    N{end+1} = 1:2;
     F(end+1) = "PMA_EX_A261919";
     N{end+1} = 1:4;
     F(end+1) = "PMA_EX_A289158";
     N{end+1} = 1:3;
     F(end+1) = "PMA_EX_A306334";
     N{end+1} = 1:6;
+    F(end+1) = "PMA_EX_A318870";
+    N{end+1} = 1:4;
     %----------------------------------------------------------------------
 end
 
