@@ -14,9 +14,9 @@ option = 1; PMA_TreeAnalysis; %#ok<NASGU>
 
 % START ENHANCEMENT: touched vertex promotion
 istouched = logical(Vf-V); % vertices that have been touched
-Itouched = find(istouched); % indices of all touched vertices
-Ifull = find(~istouched); % indices of all full vertices
-Isort = [Itouched,Ifull]; % maintain original ordering
+Itouched = find(istouched(:)); % indices of all touched vertices
+Ifull = find(~istouched(:)); % indices of all full vertices
+Isort = [Itouched;Ifull]; % maintain original ordering
 % [~,Ia] = sort(V(Itouched),'ascend'); % alternative sort than maintain
 % [~,Ia] = sort(V(Itouched),'descend'); % alternative sort than maintain
 % Isort = [Itouched(Ia),Ifull];
@@ -60,7 +60,7 @@ for iR = I
 
     % START ENHANCEMENT: saturated subgraphs
     if Mflag
-        iNonSat = find(V2); % find the nonsaturated components
+        iNonSat = find(V2(:)); % find the nonsaturated components
         if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
             nUncon = sum(M(iNonSat));
             if (nUncon == 0) % define a one set of edges and stop

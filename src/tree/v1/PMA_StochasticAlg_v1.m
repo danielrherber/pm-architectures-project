@@ -19,7 +19,7 @@ V(iL) = V(iL)-1; % remove left port
 Vallow = V.*A(iL,:);
 
 % find remaining nonzero entries
-I = find(Vallow);
+I = find(Vallow(:));
 
 % randomly select an available edge
 if isempty(I)

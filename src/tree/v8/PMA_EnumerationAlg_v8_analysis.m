@@ -45,7 +45,7 @@ for iR = I
 
     % START ENHANCEMENT: saturated subgraphs
     if Mflag
-        iNonSat = find(V2); % find the nonsaturated components
+        iNonSat = find(V2(:)); % find the nonsaturated components
         if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
             nUncon = sum(M(iNonSat));
             if (nUncon == 0) % define a one set of edges and stop

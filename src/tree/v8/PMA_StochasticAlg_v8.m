@@ -24,7 +24,7 @@ Vordering(iInitRep) = 1; % initial replicates are always 1
 Vallow = V.*Vordering.*A(iL,:);
 
 % find remaining nonzero entries
-I = find(Vallow);
+I = find(Vallow(:));
 
 % randomly select an available edge
 if isempty(I)
@@ -43,7 +43,7 @@ V2(iR) = V2(iR)-1; % remove port (local copy)
 
 % START ENHANCEMENT: saturated subgraphs
 if Mflag
-    iNonSat = find(V2); % find the nonsaturated components
+    iNonSat = find(V2(:)); % find the nonsaturated components
     if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
         nUncon = sum(M(iNonSat));
         if (nUncon == 0) % define a one set of edges and stop

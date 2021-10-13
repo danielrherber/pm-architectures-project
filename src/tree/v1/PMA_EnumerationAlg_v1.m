@@ -18,7 +18,7 @@ V(iL) = V(iL)-1; % remove left port
 Vallow = V.*A(iL,:);
 
 % find remaining nonzero entries
-I = find(Vallow);
+I = find(Vallow(:));
 
 % loop through all nonzero entries
 for iRidx = 1:length(I)

@@ -12,9 +12,9 @@ function [SavedGraphs,id] = PMA_EnumerationAlg_v12DFS(V,E,SavedGraphs,id,...
 
 % START ENHANCEMENT: touched vertex promotion
 istouched = logical(Vf-V); % vertices that have been touched
-Itouched = find(istouched); % indices of all touched vertices
-Ifull = find(~istouched); % indices of all full vertices
-Isort = [Itouched,Ifull]; % maintain original ordering
+Itouched = find(istouched(:)); % indices of all touched vertices
+Ifull = find(~istouched(:)); % indices of all full vertices
+Isort = [Itouched;Ifull]; % maintain original ordering
 % [~,Ia] = sort(V(Itouched),'ascend'); % alternative sort than maintain
 % [~,Ia] = sort(V(Itouched),'descend'); % alternative sort than maintain
 % Isort = [Itouched(Ia),Ifull];
@@ -36,7 +36,7 @@ Vordering(iInitRep) = 1; % initial replicates are always 1
 Vallow = V.*Vordering.*A(iL,:);
 
 % find remaining nonzero entries
-I = find(Vallow);
+I = find(Vallow(:));
 
 % loop through all nonzero entries
 for iRidx = 1:length(I)
@@ -57,7 +57,7 @@ for iRidx = 1:length(I)
 
     % START ENHANCEMENT: saturated subgraphs
     if Mflag
-        iNonSat = find(V2); % find the nonsaturated components
+        iNonSat = find(V2(:)); % find the nonsaturated components
         if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
             nUncon = sum(M(iNonSat));
             if (nUncon == 0) % define a one set of edges and stop

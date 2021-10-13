@@ -56,9 +56,9 @@ for iter = 1:Ne
 
         % START ENHANCEMENT: touched vertex promotion
         istouched = logical(Vf-V); % vertices that have been touched
-        Itouched = find(istouched); % indices of all touched vertices
-        Ifull = find(~istouched); % indices of all full vertices
-        Isort = [Itouched,Ifull]; % maintain original ordering
+        Itouched = find(istouched(:)); % indices of all touched vertices
+        Ifull = find(~istouched(:)); % indices of all full vertices
+        Isort = [Itouched;Ifull]; % maintain original ordering
         % [~,Ia] = sort(V(Itouched),'ascend'); % alternative sort than maintain
         % [~,Ia] = sort(V(Itouched),'descend'); % alternative sort than maintain
         % Isort = [Itouched(Ia),Ifull];
@@ -80,7 +80,7 @@ for iter = 1:Ne
         Vallow = V.*Vordering.*A(iL,:);
 
         % find remaining nonzero entries
-        I = find(V); % modification for analysis function
+        I = find(V(:)); % modification for analysis function
 
         % loop through all nonzero entries
         for iRidx = 1:length(I)
@@ -250,7 +250,7 @@ V2(iR) = V2(iR)-1; % remove port (local copy)
 % START ENHANCEMENT: saturated subgraphs
 if iter < Ne
 if Mflag
-    iNonSat = find(V2); % find the nonsaturated components
+    iNonSat = find(V2(:)); % find the nonsaturated components
     if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
         nUncon = sum(M(iNonSat));
         if (nUncon == 0) % define a one set of edges and stop

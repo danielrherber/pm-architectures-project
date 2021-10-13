@@ -24,7 +24,7 @@ Vordering(iInitRep) = 1; % initial replicates are always 1
 Vallow = V.*Vordering.*A(iL,:);
 
 % find remaining nonzero entries
-I = find(Vallow);
+I = find(Vallow(:));
 
 % loop through all nonzero entries
 for iRidx = 1:length(I)
@@ -41,7 +41,7 @@ for iRidx = 1:length(I)
 
     % START ENHANCEMENT: saturated subgraphs
     if Mflag
-        iNonSat = find(V2); % find the nonsaturated components
+        iNonSat = find(V2(:)); % find the nonsaturated components
         if isequal(V2(iNonSat),Vf(iNonSat)) % check for saturated subgraph
             nUncon = sum(M(iNonSat));
             if (nUncon == 0) % define a one set of edges and stop

@@ -26,6 +26,8 @@ algorithm{end+1} = 'tree_v8_analysis';
 algorithm{end+1} = 'tree_v10_analysis';
 algorithm{end+1} = 'tree_v11DFS_analysis';
 algorithm{end+1} = 'tree_v11BFS_analysis';
+algorithm{end+1} = 'tree_v12DFS_analysis';
+algorithm{end+1} = 'tree_v12BFS_analysis';
 
 % test number
 num = 1;
