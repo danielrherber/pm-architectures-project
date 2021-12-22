@@ -17,16 +17,17 @@ Generate the set of unique useful graphs with a perfect matching-based approach.
 ### Install
 * Download the [project files](https://github.com/danielrherber/pm-architectures-project/archive/master.zip) and extract the .zip to a writable location
 * Run [INSTALL_PMA_project.m](INSTALL_PMA_project.m) in the MATLAB Command Window until no errors are seen
-(*automatically adds project files to your MATLAB path, downloads the required files, checks your Python setup, and opens an example*)
+(*automatically adds project files to your MATLAB path, downloads the required files, checks your Python setup, and opens some examples*)
 
 ```matlab
 INSTALL_PMA_project
 ```
-* See [PMA_EX_A001187.m](examples/oeis/PMA_EX_A001187.m) and  [PMA_EX_MD161635_CS1.m](examples/md161635/PMA_EX_MD161635_CS1.m) for examples with problem setup and options
+* See [PMA_EX_A001187.m](examples/oeis/PMA_EX_A001187.m) and [PMA_EX_MD161635_CS1.m](examples/md161635/PMA_EX_MD161635_CS1.m) for some starting examples with problem setup and options
 ```matlab
 open PMA_EX_A001187
 open PMA_EX_MD161635_CS1
 ```
+* See the [examples](examples/) folder for more ways to use this project (including many [OEIS](examples/oeis/) examples and system architecture [patterns](examples/patterns/))
 
 ### Citation
 Many elements of this project are discussed in the following papers. Please cite them if you use the project.
