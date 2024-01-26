@@ -20,7 +20,7 @@ end
 
 % check port sequence
 if isstruct(P)
-    if ~isfield(P,'min') || ~isfield(P,'min')
+    if ~isfield(P,'min') || ~isfield(P,'max')
         error('P.min and P.max needed')
     end
 
@@ -35,7 +35,7 @@ end
 
 % check replicate sequence
 if isstruct(R)
-    if ~isfield(R,'min') || ~isfield(R,'min')
+    if ~isfield(R,'min') || ~isfield(R,'max')
         error('R.min and R.max needed')
     end
 
